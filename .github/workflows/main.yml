@@ -31,7 +31,6 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-modules-
-
       - name: Install Shopify CLI
         run: npm install -g @shopify/cli
 
@@ -49,7 +48,6 @@ jobs:
             --theme ${{ secrets.SHOPIFY_FEATURE_THEME }} \
             --store ${{ secrets.SHOPIFY_STORE }} \
             --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
-
   deploy_feature_shade:
     name: Deploy to feature shade
     runs-on: self-hosted
@@ -71,7 +69,6 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-modules-
-
       - name: Install Shopify CLI
         run: npm install -g @shopify/cli
 
@@ -90,7 +87,6 @@ jobs:
             --store ${{ secrets.SHOPIFY_STORE }} \
             --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }} \
             --allow-live
-
   deploy_feature_shade_alter:
     name: Deploy to feature shade alter
     runs-on: self-hosted
@@ -112,7 +108,6 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-modules-
-
       - name: Install Shopify CLI
         run: npm install -g @shopify/cli
 
@@ -153,7 +148,6 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-modules-
-
       - name: Install Shopify CLI
         run: npm install -g @shopify/cli
 
@@ -171,7 +165,6 @@ jobs:
             --theme ${{ secrets.SHOPIFY_STAGING_THEME }} \
             --store ${{ secrets.SHOPIFY_STORE }} \
             --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
-
   deploy_main:
     name: Deploy to Main
     runs-on: self-hosted
@@ -193,7 +186,6 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-modules-
-
       - name: Install Shopify CLI
         run: npm install -g @shopify/cli
 

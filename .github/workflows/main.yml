@@ -44,7 +44,7 @@ jobs:
         run: |
           shopify theme push \
             --nodelete \
-            --ignore config/settings_data.json templates/*/*.json templates/*.json sections/*.json locales/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
+            --ignore config/settings_data.json templates/*/*.json templates/*.json  locales/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
             --theme ${{ secrets.SHOPIFY_FEATURE_THEME }} \
             --store ${{ secrets.SHOPIFY_STORE }} \
             --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
@@ -82,7 +82,7 @@ jobs:
         run: |
           shopify theme push \
             --nodelete \
-            --ignore config/settings_data.json templates/*/*.json templates/*.json sections/*.json locales/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
+            --ignore config/settings_data.json templates/*/*.json templates/*.json  locales/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
             --theme ${{ secrets.SHOPIFY_SHADE_THEME }} \
             --store ${{ secrets.SHOPIFY_STORE }} \
             --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }} \
@@ -121,7 +121,7 @@ jobs:
         run: |
           shopify theme push \
             --nodelete \
-            --ignore config/settings_data.json templates/*/*.json templates/*.json sections/*.json locales/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
+            --ignore config/settings_data.json templates/*/*.json templates/*.json  locales/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
             --theme ${{ secrets.SHOPIFY_SHADE_THEME_ALTER }} \
             --store ${{ secrets.SHOPIFY_STORE }} \
             --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }} \
@@ -161,7 +161,7 @@ jobs:
         run: |
           shopify theme push \
             --nodelete \
-            --ignore config/settings_data.json templates/*/*.json templates/*.json locales/*.json sections/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
+            --ignore config/settings_data.json templates/*/*.json templates/*.json locales/*.json  jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
             --theme ${{ secrets.SHOPIFY_STAGING_THEME }} \
             --store ${{ secrets.SHOPIFY_STORE }} \
             --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
@@ -199,7 +199,7 @@ jobs:
         run: |
           shopify theme push \
             --nodelete \
-            --ignore config/settings_data.json templates/*/*.json templates/*.json sections/*.json locales/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
+            --ignore config/settings_data.json templates/*/*.json templates/*.json  locales/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
             --theme ${{ secrets.SHOPIFY_PRODUCTION_THEME }} \
             --store ${{ secrets.SHOPIFY_STORE }} \
             --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }} \

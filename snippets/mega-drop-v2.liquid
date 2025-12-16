@@ -1,0 +1,74 @@
+<div>
+    {% liquid
+      assign has_image_block = false
+      for block in section.blocks
+        if block.settings.parent_nav_title == link.title and block.type == 'image_block'
+            assign has_image_block = true
+        endif
+      endfor
+    %}
+    <div data-role="mega-drop"  class="sw-hidden lg:sw-absolute lg:sw-bottom-0 lg:sw-translate-y-full lg:sw-w-full lg:sw-left-0 lg:sw-h-full lg:sw-bg-[#fff] lg:sw-min-h-[350px] sw-shadow-md">
+        <div class="sw-py-10 sw-px-24 sw-relative">
+            <div class="sw-grid sw-grid-cols-5 sw-gap-5 sw-justify-center">
+                {% if link.levels > 0 %}
+                        {% assign child_link_size = link.links.size %}
+                        {% assign max_link_size = 6 %}
+                        {% for i in (1..max_link_size) %}
+                            {% assign current_temination_index = i | times : max_link_size %}
+                            {% assign start_index = current_temination_index | minus : max_link_size | plus : 1 %}
+                            {% if child_link_size > start_index %}
+                                <div data-role="navigation">
+                                    {% for child_link in link.links %}
+                                        {% assign current_index = forloop.index %}
+                                        {% if current_index >= start_index and current_index <= current_temination_index %}
+                                            <a href="{{ child_link.url }}" class="sw-text-[14px] sw-font-primary sw-font-normal sw-mb-[10px] hover:sw-font-semibold">{{ child_link.title }}</a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                {% endif %}
+                {% if has_image_block %}
+                    {% for block in section.blocks %}
+                        {% if block.type == 'image_block' and block.settings.parent_nav_title == link.title %}
+                            {% liquid
+                            assign block_image = block.settings.image
+                            assign block_title = block.settings.image_title
+                            assign block_redirection = block.settings.redirection_link
+                            assign image_ratio = 1
+                            if block_image
+                                assign image_ratio = block_image.aspect_ratio
+                            endif
+                            %}
+                            <div class="">
+                                <div class="sw-relative sw-overflow-hidden sw-bg-[#b1b1b1]" style="padding-bottom:{{ 1 | divided_by : image_ratio | times : 100 }}%">
+                                    <picture>
+                                        <source
+                                        media="(max-width: 1024px)"
+                                        srcset="
+                                            {{ block_image | image_url: width: 300 }} 300w,
+                                            {{ block_image | image_url: width: 600 }} 600w,
+                                            ">
+                                        {{ block_image |
+                                        image_url: width: 300 |
+                                        image_tag:
+                                            widths: '300, 600',
+                                            sizes: '(min-width: 1024px) 298px, 78.75vw',
+                                            style: 'width: 300px',
+                                            loading:'lazy',
+                                            style:'position:absolute;top:0;left:0;width:100%;height:auto;object-fit:cover;'
+                                        }}
+                                    </picture>
+                                    {% if block_redirection != blank %}
+                                            <a href="{{ block_redirection }}" class="sw-block sw-w-full sw-h-full sw-absolute sw-top-0 sw-left-0"></a>
+                                    {% endif %}
+                                </div>
+                                <a href="{{ block_redirection }}" class="sw-text-center sw-text-[14px] sw-mt-1">{{ block_title }}</a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

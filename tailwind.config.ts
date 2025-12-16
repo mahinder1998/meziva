@@ -15,23 +15,26 @@ module.exports = {
     './blocks/*.liquid',
   ],
   theme: {
-    fontFamily:{
-      body:['Open Sans'],
-      heading:['Inter'],
-    },
+   fontFamily: {
+        // use like: sw-font-heading / sw-font-body if you mapped classes
+        heading: ["Poppins", "ui-sans-serif", "system-ui", "sans-serif"],
+        body: ["Open Sans", "ui-sans-serif", "system-ui", "sans-serif"]
+      },
     extend: {
       boxShadow: {
         'tiny': '0px 0px 2px 0px rgba(0, 0, 0, 0.25)',
         'popup': '0px 0px 2px 0px rgba(0, 0, 0, 0.25)'
       },
-      backgroundImage:{
-        'tags': 'linear-gradient(90deg, #FFE693 0%, #FFF8E1 100%)',
-        'soft-pink': 'linear-gradient(180deg, #FFF3F4 0%, #FFFAFA 100%)',
-        'offer-orange': 'linear-gradient(180deg, #FFE8BF 30%, #FFF7E9 100%)',
-        'offer-pink': ' linear-gradient(180deg, #FFD8DE 30%, #FFF3F4 100%)',
-        'mainbg': 'linear-gradient(180deg, #FFF3F4 0%, #FFFFFF 100%)',
+      colors: {
+        sw: {
+          primary: "#FF60A6",
+          accent: "#724430",
+          text: "#111111",
+          // optional neutrals for backgrounds
+          bg: "#FFF6FA",
+          surface: "#FFFFFF"
+        }
       },
-    
       translate:{
         '-1/2': '-50%',
       }

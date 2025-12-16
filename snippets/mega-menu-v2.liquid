@@ -1,0 +1,35 @@
+{% liquid
+  assign desktop_nav = section.settings.desktop_navigation
+%}
+<div data-role="mega-menu" class="sw-w-full">
+    <div class="sw-hidden lg:sw-block">
+        <div class="">
+          <div class="sw-flex sw-gap-[14px] lg:sw-gap-3 sw-gap-y-0 sw-flex-wrap sw-justify-center">
+            {% for link in desktop_nav.links %}
+              <div data-role="parent-nav">
+                {% liquid
+                  assign nesting = false
+                  assign style = false
+                  for block in section.blocks
+                    if block.type == 'image_block' and block.settings.parent_nav_title == link.title
+                      assign nesting = true
+                    endif
+                    if block.type == 'style' and block.settings.navigation_title == link.title
+                      assign style = true
+                      assign color = block.settings.text_color
+                    endif
+                  endfor
+                  if link.levels > 0
+                    assign nesting = true
+                  endif
+                %}
+                <a href="{{ link.url }}" {% if style %} style="color:{{ color }}" {% endif %} class="sw-text-[#fff] sw-font-primary hover:sw-text-[#fff] sw-py-4 sw-font-normal sw-text-[14px] sw-relative after:sw-absolute after:sw-top-[96%] sw-uppercase after:sw-w-0 after:sw-border-b-2 hover:after:sw-w-full after:sw-transition-all after:sw-duration-[400ms] after:sw-left-0">{{ link.title }}</a>
+                {% if nesting %}
+                  {% render 'mega-drop-v2',block:section.blocks,link: link %}
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,483 @@
+{% render 'vite-tag' with 'header-v2.js' %}
+
+{% style %}
+  #shopify-section-{{ section.id }}{
+      position:sticky;
+      top:0px;
+      z-index:1000;
+
+      /* NEW: Nav color vars (admin controlled) */
+      --nav-text-color: {{ section.settings.nav_text_color }};
+      --nav-accent-color: {{ section.settings.nav_accent_color }};
+  }
+
+  /* NEW: Safe nav/link coloring (doesn't remove existing functionality) */
+  #shopify-section-{{ section.id }} a,
+  #shopify-section-{{ section.id }} [data-role="nav-link"],
+  #shopify-section-{{ section.id }} .mega-menu a,
+  #shopify-section-{{ section.id }} nav a {
+    color: var(--nav-text-color);
+  }
+
+  #shopify-section-{{ section.id }} a:hover,
+  #shopify-section-{{ section.id }} [aria-current="page"],
+  #shopify-section-{{ section.id }} .is-active > a {
+    color: var(--nav-accent-color);
+  }
+
+  /* OPTIONAL: If icons follow currentColor, they will also change automatically */
+  #shopify-section-{{ section.id }} a svg,
+  #shopify-section-{{ section.id }} button svg {
+    color: var(--nav-text-color);
+  }
+  #shopify-section-{{ section.id }} a:hover svg,
+  #shopify-section-{{ section.id }} button:hover svg {
+    color: var(--nav-accent-color);
+  }
+
+  .header-cashback-icon::before{
+      content:'';
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:112%;
+      height:112%;
+      transform: translate(-50%,-50%);
+      background-image:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="63" height="25" viewBox="0 0 63 25" fill="none"><path d="M55.5 0.53125C59.3737 2.65474 62 6.77056 62 11.4998C62 18.4033 56.4036 23.9998 49.5 23.9998H13.5C6.59644 23.9998 1 18.4033 1 11.4998C1 6.77056 3.62631 2.65474 7.5 0.53125" stroke="%23FF90BB" stroke-linecap="round"/></svg>');
+      background-position:center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      pointer-events:none;
+  }
+
+  @media(max-width:768px){
+      [data-role="header-top-bar"],
+      #shopify-section-announcement-bar-v2 {
+          position: sticky;
+          top: 0;
+          z-index: 30;
+          transition: transform 0.3s ease, opacity 0.3s ease;
+          transform: translateY(0);
+          opacity: 1;
+      }
+
+      [data-role="header-top-bar"].is-hidden,
+      #shopify-section-announcement-bar-v2.shopify-section.is-hidden {
+          transform: translateY(-100%);
+          opacity: 0;
+          position: absolute;
+      }
+
+      [data-role="header-top-bar"].is-visible,
+      #shopify-section-announcement-bar-v2.shopify-section.is-visible {
+          transform: translateY(0);
+          opacity: 1;
+      }
+      #shopify-section-header-v2 {
+          position: sticky;
+          top: 0;
+          transition: top 0.3s ease;
+      }
+      .sticky-header {
+          top: 52px !important;
+      }
+      .sticky-announcementbar {
+          position: sticky;
+          top: 0;
+          z-index: 9;
+      }
+      [data-role="header-top-bar"].is-hidden + div {
+          padding-top: 10px;
+      }
+      [data-role="mobile-search-wrapper"]>[data-role="header-actions"] {
+          display: none;
+      }
+      [data-role="mobile-search-wrapper"].is-hidden {
+          display: grid;
+          grid-template-columns: 1fr 30px;
+          gap: 20px;
+      }
+
+      [data-role="mobile-search-wrapper"].is-hidden > [data-role="header-actions"]{
+          display: flex;
+      }
+      [data-role="mobile-search-wrapper"].is-hidden.expand-search{
+          grid-template-columns: 1fr;
+      }
+       [data-role="mobile-search-wrapper"].is-hidden.expand-search > [data-role="header-actions"] {
+          display: none;
+      }
+      body.menu-open{
+          overflow:hidden;
+      }
+      body.menu-open [data-role="header-top-bar"] {
+          transform: none !important;
+          opacity: 1 !important;
+          position: sticky !important;
+      }
+
+      body.menu-open #shopify-section-announcement-bar-v2 {
+          transform: none !important;
+          opacity: 1 !important;
+          position: sticky !important;
+      }
+
+      body.menu-open cart-popup
+      {
+          z-index: 999;
+      }
+  }
+{% endstyle %}
+
+{% liquid
+  assign type_inputs = ''
+  if section.settings.featured_search != blank
+    assign type_inputs = type_inputs | append: section.settings.featured_search | append: ','
+  endif
+  if section.settings.featured_search_2 != blank
+    assign type_inputs = type_inputs | append: section.settings.featured_search_2 | append: ','
+  endif
+  if section.settings.featured_search_3 != blank
+    assign type_inputs = type_inputs | append: section.settings.featured_search_3 | append: ','
+  endif
+  if section.settings.featured_search_4 != blank
+    assign type_inputs = type_inputs | append: section.settings.featured_search_4 | append: ','
+  endif
+  if section.settings.featured_search_5 != blank
+    assign type_inputs = type_inputs | append: section.settings.featured_search_5 | append: ','
+  endif
+  if section.settings.featured_search_6 != blank
+    assign type_inputs = type_inputs | append: section.settings.featured_search_6 | append: ','
+  endif
+%}
+
+<sticky-header  data-sticky="{{ section.settings.sticky_header }}"
+  data-landing-scroll="{{ section.settings.enable_landing_scroll }}"
+  data-landing-offset="{{ section.settings.landing_scroll_offset }}">
+
+  <script type="applicationId/json" data-id="header-settings">
+    {
+      "data": {
+        "featured_text_1": "{{ section.settings.featured_search }}",
+        "featured_text_2": "{{ section.settings.featured_search_2 }}",
+        "featured_text_3": "{{ section.settings.featured_search_3 }}"
+      }
+    }
+  </script>
+
+  <div class="lg:sw-relative" style="background-color:{{ section.settings.header_bg }};" data-role="header-wrapper">
+    <div
+      data-role="header-top-bar"
+      class="sw-flex sw-gap-4 sw-py-3 lg:sw-py-0 sw-px-[18px] lg:sw-px-10 sw-items-center"
+    >
+      <button data-role="nav-display" class="lg:sw-hidden">{% render 'icons-v2', icon: 'icon-hamburger' %}</button>
+
+      <div class="" data-role="header-icon">
+        <h1 class="sw-mb-0">
+          <a href="{{ shop.url }}" class="sw-text-[24px]">
+            {% liquid
+              assign logo_type = section.settings.logo_type
+              if logo_type == 'svg'
+                assign logo = section.settings.logo_svg
+              else
+                assign logo = section.settings.logo_image
+              endif
+            %}
+            {% if logo != blank %}
+              {% if logo_type == 'svg' %}
+                <span class="sw-flex sw-items-center sw-w-[110px] lg:sw-w-[147px]">{{ logo }}</span>
+              {% else %}
+                <span class="sw-inline-block">{{ logo | image_url: width: 200, height: 200 | image_tag }}</span>
+              {% endif %}
+            {% else %}
+              {{ shop.name }}
+            {% endif %}
+          </a>
+        </h1>
+      </div>
+
+      {% render 'mega-menu-v2', section: section %}
+      {% render 'mobile-nav-v2', section: section %}
+
+      <div class="sw-ml-auto sw-flex sw-gap-3 sw-items-center" data-role="header-actions">
+        {% if section.settings.enable_search %}
+        <div class="sw-hidden lg:sw-flex">
+          <predective-search class="lg:sw-min-w-[250px] sw-block" data-inputs="{{ type_inputs }}">
+            <label
+              for="search-input"
+              class="sw-bg-[#fff] sw-border-none sw-rounded-full sw-mb-0 sw-flex sw-gap-3 lg:sw-gap-1 sw-items-center sw-px-[10px] sw-py-[6px]"
+            >
+              <button data-role="search-icon">{% render 'icons-v2', icon: 'icon-search' %}</button>
+              <input
+                data-role="search-input"
+                class="sw-text-[14px] sw-font-primary sw-peer sw-w-full sw-p-0 sw-bg-transparent !sw-outline-none !sw-border-none sw-font-normal placeholder:sw-text-[#303030] placeholder:sw-font-bold [&.active]:placeholder:sw-text-[#A6A6A6] [&.active]:placeholder:sw-font-normal sw-tracking-normal"
+                type="text"
+                id="search-input"
+                placeholder=""
+                autocomplete="off"
+              >
+              <button data-role="search-close" class="peer-[&.active]:sw-block sw-hidden">
+                {% render 'icons-v2', icon: 'icon-search-close', class: 'sw-w-[20px] sw-h-[20px]' %}
+              </button>
+            </label>
+          </predective-search>
+        </div>
+        {% endif %}
+
+        {% if section.settings.cashback_icon %}
+          <div data-role="header-cashback-wrapper" class="sw-group/wrapper {% if customer %}customer{% endif %}">
+            <button
+              data-role="header-cashback-icon"
+              class="header-cashback-icon sw-hidden group-[.customer]/wrapper:sw-flex sw-peer sw-items-center sw-justify-center sw-leading-none sw-px-4 sw-py-0 sw-relative sw-w-max sw-group/cashback sw-bg-[#000] sw-rounded-3xl sw-h-[23px] sw-min-w-[60px] sw-max-w-[60px]"
+            >
+              <div class="sw-absolute sw-top-0 sw-left-[50%] sw-flex sw-items-center sw-gap-[2px] sw-z-[100] sw-translate-x-[-50%] sw-translate-y-[-50%] sw-whitespace-nowrap">
+                <span class="sw-font-secondary sw-text-[8px] sw-text-[#fff] sw-font-medium sw-leading-none sw-text-center">Swiss Cash</span>
+              </div>
+
+              {% if customer %}
+                <span
+                  data-role="header-cashback-amount"
+                  class="group-[.activating]/cashback:sw-hidden sw-font-primary sw-text-[12px] sw-leading-none sw-font-medium sw-text-[#FF90BB] sw-text-center"
+                ></span>
+                <a href="/pages/wallet" class="sw-absolute sw-top-0 sw-left-0 sw-w-full sw-h-full sw-block"></a>
+              {% else %}
+                <span
+                  data-role="header-cashback-login"
+                  class="sw-font-primary sw-text-[12px] sw-leading-none sw-font-medium sw-text-[#FF90BB] sw-text-center group-[.activating]/cashback:sw-hidden"
+                >Login</span>
+              {% endif %}
+
+              {% render 'loader-v2',
+                class: 'sw-hidden group-[.activating]/cashback:sw-block sw-text-[#FF90BB] !sw-w-[16px] !sw-h-[16px] sw-m-[7px]'
+              %}
+            </button>
+
+            <a
+              class="peer-[.activating]:sw-hidden sw-block group-[.customer]/wrapper:sw-hidden"
+              data-role="header-login"
+              href="{{ routes.account_url }}"
+            >
+              {%- render 'icons-v2', icon: 'icon-quickpass' -%}
+            </a>
+          </div>
+        {% else %}
+          <a href="{{ routes.account_url }}" data-role="header-login">
+            {%- render 'icons-v2', icon: 'icon-quickpass' -%}
+          </a>
+        {% endif %}
+
+        <button class="sw-hidden lg:sw-block">
+          <a href="{{ section.settings.tracking_url }}">{% render 'icons-v2', icon: 'icon-shipping' %}</a>
+        </button>
+
+        <button data-role="cart-open" class="sw-relative">
+          {% render 'icons-v2', icon: 'icon-cart' -%}
+          <span
+            data-role="cart-count"
+            class="sw-bg-[#fc2679] sw-text-[#fff] sw-text-[10px] sw-absolute sw-top-0 sw-left-[50%] sw-rounded-full sw-w-[16px] sw-h-[16px] sw-flex sw-justify-center sw-items-center sw-border-none cart-link__bubble-num {% if cart.item_count == 0 %}sw-opacity-0{% endif %}"
+          >
+            {{- cart.item_count -}}
+          </span>
+        </button>
+      </div>
+    </div>
+
+    {% if section.settings.enable_search %}
+    <div
+      class="sw-px-[18px] sw-pb-2 md:sw-max-w-[400px] md:sw-mx-auto sw-relative sw-z-[9] lg:sw-hidden"
+      data-role="mobile-search-wrapper"
+    >
+      <predective-search data-inputs="{{ type_inputs }}">
+        <label
+          for="search-input"
+          class="sw-bg-[#fff] sw-border-none sw-rounded-full sw-flex sw-gap-3 sw-items-center sw-px-[10px] sw-py-[6px] sw-mb-0"
+        >
+          <button data-role="search-icon">{% render 'icons-v2', icon: 'icon-search' %}</button>
+          <input
+            data-role="search-input"
+            class="sw-text-[14px] sw-font-primary sw-peer sw-w-full sw-p-0 sw-bg-transparent !sw-outline-none !sw-border-none sw-font-normal placeholder:sw-text-[#303030] placeholder:sw-font-medium placeholder:sw-font-primary [&.active]:placeholder:sw-text-[#A6A6A6] [&.active]:placeholder:sw-font-normal sw-tracking-normal"
+            type="text"
+            id="search-input"
+            autocomplete="off"
+            placeholder=""
+          >
+          <button data-role="search-close" class="sw-hidden peer-[&.active]:sw-block">
+            {% render 'icons-v2', icon: 'icon-search-close', class: 'sw-w-[20px] sw-h-[20px]' %}
+          </button>
+        </label>
+      </predective-search>
+
+      <div class="sw-ml-auto sw-flex sw-gap-3 sw-items-center" data-role="header-actions">
+        <button class="sw-hidden lg:sw-block">
+          <a href="{{ section.settings.tracking_url }}">{% render 'icons-v2', icon: 'icon-shipping' %}</a>
+        </button>
+        <button data-role="cart-open" class="sw-relative">
+          {% render 'icons-v2', icon: 'icon-cart' -%}
+          <span
+            data-role="cart-count"
+            class="sw-bg-[#fc2679] sw-text-[#fff] sw-text-[10px] sw-absolute sw-top-0 sw-left-[50%] sw-rounded-full sw-w-[16px] sw-h-[16px] sw-flex sw-justify-center sw-items-center sw-border-none cart-link__bubble-num {% if cart.item_count == 0 %}sw-opacity-0{% endif %}"
+          >
+            {{- cart.item_count -}}
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div
+      data-id="search-container"
+      class="sw-absolute lg:sw-max-w-[600px] lg:sw-overflow-hidden lg:sw-rounded-md lg:sw-right-[165px] lg:sw-left-[unset] sw-bg-[#fff] sw-w-full sw-group sw-h-full sw-bottom-0 sw-left-0 sw-translate-y-full sw-min-h-[480px] sw-hidden"
+    ></div>
+    {% endif %}
+  </div>
+</sticky-header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "color",
+      "label": "Header background color",
+      "id": "header_bg",
+      "default": "#FFFFFF"
+    },
+
+    {
+      "type": "color",
+      "id": "nav_text_color",
+      "label": "Navigation text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "nav_accent_color",
+      "label": "Navigation accent color",
+      "default": "#724430"
+    },
+
+    {
+      "type": "checkbox",
+      "label": "Enable sticky header",
+      "id": "sticky_header",
+      "default": true
+    },
+    {
+      "type": "select",
+      "label": "Logo type",
+      "id": "logo_type",
+      "options": [
+        { "value": "svg", "label": "SVG" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "svg"
+    },
+    {
+      "type": "html",
+      "label": "Logo Svg",
+      "id": "logo_svg"
+    },
+    {
+      "type": "image_picker",
+      "label": "Choose logo image",
+      "id": "logo_image"
+    },
+    {
+      "type": "link_list",
+      "label": "Choose mobile navigation",
+      "id": "mobile_navigation"
+    },
+    {
+      "type": "link_list",
+      "label": "Choose desktop navigation",
+      "id": "desktop_navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_search",
+      "label": "Enable Search",
+      "default": false
+    },
+    {
+      "type": "text",
+      "label": "Feratured search text",
+      "id": "featured_search",
+      "default": "Search for Holographic Eyeliner"
+    },
+    {
+      "type": "text",
+      "label": "Feratured search text",
+      "id": "featured_search_2",
+      "default": "Search for Holographic Lipstick"
+    },
+    {
+      "type": "text",
+      "label": "Feratured search text",
+      "id": "featured_search_3",
+      "default": "Search for Holographic Brush"
+    },
+    {
+      "type": "text",
+      "label": "Feratured search text",
+      "id": "featured_search_4",
+      "default": "Search for Holographic Brush"
+    },
+    {
+      "type": "text",
+      "label": "Feratured search text",
+      "id": "featured_search_5",
+      "default": "Search for Holographic Brush"
+    },
+    {
+      "type": "text",
+      "label": "Feratured search text",
+      "id": "featured_search_6",
+      "default": "Search for Holographic Brush"
+    },
+    {
+      "type": "url",
+      "label": "Tracking page url",
+      "id": "tracking_url"
+    },
+    {
+      "type": "checkbox",
+      "label": "Display cashback icon",
+      "id": "cashback_icon"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_landing_scroll",
+      "label": "Landing page: smooth scroll for menu (#section-id)",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "landing_scroll_offset",
+      "label": "Landing scroll offset (sticky header height)",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "style",
+      "name": "Navigation Style",
+      "settings": [
+        { "type": "text", "label": "Enter navigation title", "id": "navigation_title" },
+        { "type": "color", "label": "Choose text color", "id": "text_color" }
+      ]
+    },
+    {
+      "type": "image_block",
+      "name": "Image Block",
+      "settings": [
+        { "type": "text", "label": "Parent Navigation Title", "id": "parent_nav_title" },
+        { "type": "image_picker", "label": "Choose Image", "id": "image" },
+        { "type": "url", "label": "Redirection Link", "id": "redirection_link" },
+        { "type": "text", "label": "Image Title", "id": "image_title" }
+      ]
+    }
+  ]
+}
+{% endschema %}

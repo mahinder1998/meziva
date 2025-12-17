@@ -167,14 +167,17 @@
 
   <div class="lg:sw-relative" style="background-color:{{ section.settings.header_bg }};" data-role="header-wrapper">
     <div
-      data-role="header-top-bar"
-      class="sw-flex sw-gap-4 sw-py-3 lg:sw-py-0 sw-px-[18px] lg:sw-px-10 sw-items-center"
+      data-role="header-top-bar "
+      class="  sw-py-3 sw-px-[18px] sw-items-center
+
+     sw-grid sw-grid-cols-[100px,1fr,0,100px] sw-gap-0 lg:sw-flex
+      sw-max-w-[1240px] sw-mx-auto lg:sw-py-6
+      "
     >
       <button data-role="nav-display" class="lg:sw-hidden">{% render 'icons-v2', icon: 'icon-hamburger' %}</button>
-
       <div class="" data-role="header-icon">
         <h1 class="sw-mb-0">
-          <a href="{{ shop.url }}" class="sw-text-[24px]">
+          <a href="{{ shop.url }}" class="sw-text-[24px] sw-flex sw-items-center sw-justify-center">
             {% liquid
               assign logo_type = section.settings.logo_type
               if logo_type == 'svg'
@@ -185,7 +188,7 @@
             %}
             {% if logo != blank %}
               {% if logo_type == 'svg' %}
-                <span class="sw-flex sw-items-center sw-w-[110px] lg:sw-w-[147px]">{{ logo }}</span>
+                <span class="sw-flex sw-items-center sw-w-[200px] lg:sw-w-[220px]">{{ logo }}</span>
               {% else %}
                 <span class="sw-inline-block">{{ logo | image_url: width: 200, height: 200 | image_tag }}</span>
               {% endif %}
@@ -196,10 +199,12 @@
         </h1>
       </div>
 
+    
+
+
       {% render 'mega-menu-v2', section: section %}
       {% render 'mobile-nav-v2', section: section %}
-
-      <div class="sw-ml-auto sw-flex sw-gap-3 sw-items-center" data-role="header-actions">
+  <div class="sw-ml-auto sw-flex sw-gap-3 sw-items-center" data-role="header-actions">
         {% if section.settings.enable_search %}
         <div class="sw-hidden lg:sw-flex">
           <predective-search class="lg:sw-min-w-[250px] sw-block" data-inputs="{{ type_inputs }}">
@@ -266,11 +271,11 @@
           </a>
         {% endif %}
 
-        <button class="sw-hidden lg:sw-block">
+        {% comment %} <button class="sw-hidden lg:sw-block">
           <a href="{{ section.settings.tracking_url }}">{% render 'icons-v2', icon: 'icon-shipping' %}</a>
-        </button>
+        </button> {% endcomment %}
 
-        <button data-role="cart-open" class="sw-relative">
+        {% comment %} <button data-role="cart-open" class="sw-relative">
           {% render 'icons-v2', icon: 'icon-cart' -%}
           <span
             data-role="cart-count"
@@ -278,8 +283,9 @@
           >
             {{- cart.item_count -}}
           </span>
-        </button>
+        </button> {% endcomment %}
       </div>
+    
     </div>
 
     {% if section.settings.enable_search %}

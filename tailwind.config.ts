@@ -17,8 +17,8 @@ module.exports = {
   theme: {
    fontFamily: {
         // use like: sw-font-heading / sw-font-body if you mapped classes
-        heading: ["Poppins", "ui-sans-serif", "system-ui", "sans-serif"],
-        body: ["Open Sans", "ui-sans-serif", "system-ui", "sans-serif"]
+        heading: ["Bebas Neue", "ui-sans-serif", "system-ui", "sans-serif"],
+        body: ['Proxima Nova Rg', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
     extend: {
       boxShadow: {
@@ -27,11 +27,11 @@ module.exports = {
       },
       colors: {
         sw: {
-          primary: "#FF60A6",
+          primary: "#f79ac3",
           accent: "#724430",
           text: "#111111",
           // optional neutrals for backgrounds
-          bg: "#FFF6FA",
+          bg: "#fff5f9",
           surface: "#FFFFFF"
         }
       },

@@ -35,7 +35,7 @@
                         %}
                         <div class="sw-flex-[0_0_100%] sw-max-w-[100%] sw-flex sw-justify-center sw-items-center sw-px-3 sw-py-3 sw-group {% if blocks_to_render > 1 %}keen-slider__slide{% endif %}" data-beahavior="{{ behavior }}" data-role="announcement-strip" data-content="{{ copy_text }}" data-text="{{ text }}">
                             {% if behavior == 'redirect' %}
-                                <a href="{{ link }}" style="color:{{ text_color }};" class="sw-no-underline sw-text-[13px] lg:sw-text-[14px] sw-font-medium sw-text-center sw-leading-[18px] *:sw-mb-0 sw-font-body">{{ text }}</a>
+                                <a href="{{ link }}" style="color:{{ text_color }};" class="sw-no-underline sw-text-[14px] lg:sw-text-[16px] sw-font-medium sw-text-center sw-leading-[18px] *:sw-mb-0 sw-font-body">{{ text }}</a>
                             {% else %}
                                 <div data-role="copy" style="color:{{ text_color }};" class="sw-flex sw-items-center sw-gap-[4px] sw-cursor-pointer *:sw-mb-0"><span class="sw-opacity sw-no-underline sw-font-body sw-text-[13px] lg:sw-text-[14px] sw-font-medium *:sw-mb-0 sw-text-center sw-leading-[18px]">
                                     {{ text }}

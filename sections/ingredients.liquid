@@ -1,0 +1,262 @@
+
+<section id="meziva-ingredients-{{ section.id }}" class="sw-relative sw-overflow-hidden sw-bg-[#FFF6FA] sw-py-14 md:sw-py-20">
+
+  <!-- Soft blobs -->
+  <div class="sw-pointer-events-none sw-absolute sw--top-20 sw--left-20 sw-h-[280px] sw-w-[280px] sw-rounded-full sw-blur-3xl sw-opacity-40"
+    style="background: {{ section.settings.blob_1 }};"></div>
+  <div class="sw-pointer-events-none sw-absolute sw-bottom-0 sw--right-24 sw-h-[360px] sw-w-[360px] sw-rounded-full sw-blur-3xl sw-opacity-35"
+    style="background: {{ section.settings.blob_2 }};"></div>
+
+  <div class="sw-max-w-7xl sw-mx-auto sw-px-4 md:sw-px-8">
+
+    <!-- Heading -->
+    <div class="sw-text-center sw-max-w-3xl sw-mx-auto">
+      {% if section.settings.kicker != blank %}
+        <div class="sw-inline-flex sw-items-center sw-gap-2 sw-rounded-full sw-bg-white/80 sw-backdrop-blur sw-border sw-border-black/5 sw-px-4 sw-py-2 sw-text-xs md:sw-text-sm sw-text-[#111111]">
+          <span class="sw-h-2 sw-w-2 sw-rounded-full" style="background: {{ section.settings.accent }};"></span>
+          {{ section.settings.kicker }}
+        </div>
+      {% endif %}
+
+      <h2 class="sw-mt-4 sw-text-2xl md:sw-text-4xl sw-font-semibold sw-tracking-tight sw-text-[#111111]">
+        {{ section.settings.heading }}
+      </h2>
+
+      {% if section.settings.subheading != blank %}
+        <p class="sw-mt-3 sw-text-sm md:sw-text-base sw-leading-relaxed sw-text-black/60">
+          {{ section.settings.subheading }}
+        </p>
+      {% endif %}
+    </div>
+
+    <!-- Layout -->
+    <div class="sw-mt-10 md:sw-mt-14 sw-grid sw-grid-cols-1 lg:sw-grid-cols-12 sw-gap-6 lg:sw-gap-10">
+
+      <!-- LEFT CARD -->
+      <div class="lg:sw-col-span-5">
+        <div class="sw-rounded-[26px] sw-bg-white/80 sw-backdrop-blur sw-border sw-border-black/5 sw-shadow-sm sw-p-6 md:sw-p-8">
+
+          <!-- chips -->
+          <div class="sw-flex sw-flex-wrap sw-gap-2">
+            {% if section.settings.chip_1 != blank %}
+              <span class="sw-text-xs sw-rounded-full sw-bg-black/5 sw-px-3 sw-py-1">{{ section.settings.chip_1 }}</span>
+            {% endif %}
+            {% if section.settings.chip_2 != blank %}
+              <span class="sw-text-xs sw-rounded-full sw-bg-black/5 sw-px-3 sw-py-1">{{ section.settings.chip_2 }}</span>
+            {% endif %}
+            {% if section.settings.chip_3 != blank %}
+              <span class="sw-text-xs sw-rounded-full sw-bg-black/5 sw-px-3 sw-py-1">{{ section.settings.chip_3 }}</span>
+            {% endif %}
+          </div>
+
+          <h3 class="sw-mt-4 sw-text-xl md:sw-text-2xl sw-font-semibold sw-text-[#111111]">
+            {{ section.settings.left_title }}
+          </h3>
+          <p class="sw-mt-2 sw-text-sm md:sw-text-base sw-leading-relaxed sw-text-black/60">
+            {{ section.settings.left_desc }}
+          </p>
+
+          <!-- mini facts -->
+          <div class="sw-mt-6 sw-grid sw-grid-cols-2 sw-gap-3">
+            <div class="sw-rounded-2xl sw-bg-white sw-border sw-border-black/5 sw-p-4">
+              <p class="sw-text-[11px] sw-text-black/50">Feel</p>
+              <p class="sw-mt-1 sw-text-sm sw-font-medium sw-text-[#111111]">{{ section.settings.fact_1 }}</p>
+            </div>
+            <div class="sw-rounded-2xl sw-bg-white sw-border sw-border-black/5 sw-p-4">
+              <p class="sw-text-[11px] sw-text-black/50">Finish</p>
+              <p class="sw-mt-1 sw-text-sm sw-font-medium sw-text-[#111111]">{{ section.settings.fact_2 }}</p>
+            </div>
+          </div>
+
+          {% if section.settings.left_image != blank %}
+            <div class="sw-mt-6 sw-rounded-[24px] sw-overflow-hidden sw-border sw-border-black/5 sw-bg-white">
+              <img
+                src="{{ section.settings.left_image | image_url: width: 1600 }}"
+                alt="{{ section.settings.left_image.alt | escape }}"
+                class="sw-w-full sw-h-[320px] md:sw-h-[420px] sw-object-cover"
+                loading="lazy"
+              >
+            </div>
+          {% endif %}
+
+          <!-- claims -->
+          <div class="sw-mt-6 sw-flex sw-flex-wrap sw-gap-2">
+            {% if section.settings.claim_1 != blank %}<span class="sw-text-xs sw-rounded-full sw-bg-black/5 sw-px-3 sw-py-2">{{ section.settings.claim_1 }}</span>{% endif %}
+            {% if section.settings.claim_2 != blank %}<span class="sw-text-xs sw-rounded-full sw-bg-black/5 sw-px-3 sw-py-2">{{ section.settings.claim_2 }}</span>{% endif %}
+            {% if section.settings.claim_3 != blank %}<span class="sw-text-xs sw-rounded-full sw-bg-black/5 sw-px-3 sw-py-2">{{ section.settings.claim_3 }}</span>{% endif %}
+            {% if section.settings.claim_4 != blank %}<span class="sw-text-xs sw-rounded-full sw-bg-black/5 sw-px-3 sw-py-2">{{ section.settings.claim_4 }}</span>{% endif %}
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT INGREDIENTS -->
+      <div class="lg:sw-col-span-7">
+
+        <!-- Desktop grid -->
+        <div class="sw-hidden md:sw-grid sw-grid-cols-2 sw-gap-6 sw-items-stretch">
+          {% for block in section.blocks %}
+            {% if block.type == 'ingredient' %}
+              <div class="sw-h-full sw-rounded-[24px] sw-bg-white/80 sw-backdrop-blur sw-border sw-border-black/5 sw-shadow-sm sw-p-6" {{ block.shopify_attributes }}>
+
+                <div class="sw-flex sw-items-start sw-gap-4">
+                  <div class="sw-h-12 sw-w-12 sw-rounded-full sw-bg-white sw-border sw-border-black/10 sw-overflow-hidden sw-flex sw-items-center sw-justify-center sw-shrink-0 sw-shadow-tiny">
+                    {% if block.settings.image != blank %}
+                      <img
+                        src="{{ block.settings.image | image_url: width: 200 }}"
+                        alt="{{ block.settings.title | escape }}"
+                        class="sw-h-full sw-w-full sw-object-cover"
+                        loading="lazy"
+                      >
+                    {% else %}
+                      <span class="sw-text-xl">{{ block.settings.emoji }}</span>
+                    {% endif %}
+                  </div>
+
+                  <div class="sw-flex-1">
+                    {% if block.settings.tag != blank %}
+                      <span class="sw-inline-flex sw-rounded-full sw-bg-black/5 sw-px-3 sw-py-1 sw-text-[11px] sw-font-medium sw-uppercase sw-tracking-wider sw-text-black/60">
+                        {{ block.settings.tag }}
+                      </span>
+                    {% endif %}
+
+                    <h4 class="sw-mt-2 sw-text-base md:sw-text-lg sw-font-semibold sw-text-[#111111]">
+                      {{ block.settings.title }}
+                    </h4>
+
+                    <p class="sw-mt-2 sw-text-sm sw-leading-relaxed sw-text-black/60">
+                      {{ block.settings.desc }}
+                    </p>
+
+                    {% if block.settings.benefit != blank %}
+                      <div class="sw-mt-4 sw-inline-flex sw-items-center sw-gap-2 sw-rounded-full sw-bg-black/5 sw-px-3 sw-py-2 sw-text-xs sw-text-black/70">
+                        <span class="sw-h-2 sw-w-2 sw-rounded-full" style="background: {{ section.settings.accent }};"></span>
+                        <span>{{ block.settings.benefit }}</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <!-- Mobile slider -->
+        <div class="md:sw-hidden">
+          <meziva-ingredients class="sw-block">
+            <div class="sw-flex sw-items-center sw-justify-between sw-mb-3">
+              <p class="sw-text-sm sw-font-medium sw-text-[#111111]">{{ section.settings.mobile_label }}</p>
+              {% if section.settings.show_arrows %}
+                <div class="sw-flex sw-gap-2">
+                  <button type="button" data-role="prev" class="sw-h-9 sw-w-9 sw-rounded-full sw-bg-white/80 sw-border sw-border-black/10 sw-shadow-sm">‹</button>
+                  <button type="button" data-role="next" class="sw-h-9 sw-w-9 sw-rounded-full sw-bg-white/80 sw-border sw-border-black/10 sw-shadow-sm">›</button>
+                </div>
+              {% endif %}
+            </div>
+
+            <div data-role="track"
+              class="sw-flex sw-gap-4 sw-overflow-x-auto sw-scroll-smooth sw-snap-x sw-snap-mandatory sw-pb-2 scrollbar-hide"
+              style="-webkit-overflow-scrolling: touch;">
+              {% for block in section.blocks %}
+                {% if block.type == 'ingredient' %}
+                  <div data-role="card" class="sw-min-w-[78%] sw-snap-start sw-rounded-[24px] sw-bg-white/90 sw-backdrop-blur sw-border sw-border-black/5 sw-shadow-sm sw-p-5" {{ block.shopify_attributes }}>
+                    <div class="sw-flex sw-items-start sw-gap-4">
+                      <div class="sw-h-12 sw-w-12 sw-rounded-full sw-bg-white sw-border sw-border-black/10 sw-overflow-hidden sw-flex sw-items-center sw-justify-center sw-shrink-0 sw-shadow-tiny">
+                        {% if block.settings.image != blank %}
+                          <img src="{{ block.settings.image | image_url: width: 200 }}" alt="{{ block.settings.title | escape }}" class="sw-h-full sw-w-full sw-object-cover" loading="lazy">
+                        {% else %}
+                          <span class="sw-text-xl">{{ block.settings.emoji }}</span>
+                        {% endif %}
+                      </div>
+
+                      <div class="sw-flex-1">
+                        {% if block.settings.tag != blank %}
+                          <span class="sw-inline-flex sw-rounded-full sw-bg-black/5 sw-px-3 sw-py-1 sw-text-[11px] sw-font-medium sw-uppercase sw-tracking-wider sw-text-black/60">
+                            {{ block.settings.tag }}
+                          </span>
+                        {% endif %}
+                        <h4 class="sw-mt-2 sw-text-base sw-font-semibold sw-text-[#111111]">{{ block.settings.title }}</h4>
+                        <p class="sw-mt-2 sw-text-sm sw-leading-relaxed sw-text-black/60">{{ block.settings.desc }}</p>
+
+                        {% if block.settings.benefit != blank %}
+                          <div class="sw-mt-4 sw-inline-flex sw-items-center sw-gap-2 sw-rounded-full sw-bg-black/5 sw-px-3 sw-py-2 sw-text-xs sw-text-black/70">
+                            <span class="sw-h-2 sw-w-2 sw-rounded-full" style="background: {{ section.settings.accent }};"></span>
+                            <span>{{ block.settings.benefit }}</span>
+                          </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+          </meziva-ingredients>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+{% render 'vite-tag' with 'ingredients.js' %}
+
+{% schema %}
+{
+  "name": "Ingredients",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "CLEAN • HYDRATING • TINTED" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Powered by Skin-Loving Ingredients" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "A skincare-first tinted lip balm formula designed for daily comfort, softness & a natural pink tint." },
+
+    { "type": "text", "id": "left_title", "label": "Left card title", "default": "Hydrating Tinted Lip Balm" },
+    { "type": "textarea", "id": "left_desc", "label": "Left card description", "default": "Nourishing butters + oils + Vitamin E to hydrate, protect and give a soft, healthy-looking tint." },
+    { "type": "image_picker", "id": "left_image", "label": "Left card image" },
+
+    { "type": "text", "id": "chip_1", "label": "Chip 1", "default": "Non-sticky" },
+    { "type": "text", "id": "chip_2", "label": "Chip 2", "default": "Daily wear" },
+    { "type": "text", "id": "chip_3", "label": "Chip 3", "default": "Comfort hydration" },
+
+    { "type": "text", "id": "fact_1", "label": "Fact 1 (Feel)", "default": "Non-sticky" },
+    { "type": "text", "id": "fact_2", "label": "Fact 2 (Finish)", "default": "Soft tint" },
+
+    { "type": "text", "id": "claim_1", "label": "Claim 1", "default": "✕ No Parabens" },
+    { "type": "text", "id": "claim_2", "label": "Claim 2", "default": "✕ No Mineral Oil" },
+    { "type": "text", "id": "claim_3", "label": "Claim 3", "default": "🐰 Cruelty-Free" },
+    { "type": "text", "id": "claim_4", "label": "Claim 4", "default": "🌿 Clean Beauty" },
+
+    { "type": "text", "id": "mobile_label", "label": "Mobile label", "default": "Hero ingredients" },
+    { "type": "checkbox", "id": "show_arrows", "label": "Show mobile arrows", "default": true },
+
+    { "type": "color", "id": "accent", "label": "Accent color", "default": "#FF60A6" },
+    { "type": "color", "id": "blob_1", "label": "Blob 1", "default": "#FF60A6" },
+    { "type": "color", "id": "blob_2", "label": "Blob 2", "default": "#724430" }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "Ingredient",
+      "settings": [
+        { "type": "text", "id": "tag", "label": "Tag", "default": "HYDRATE" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Shea Butter" },
+        { "type": "textarea", "id": "desc", "label": "Description", "default": "Deeply nourishes & repairs dry, flaky lips." },
+        { "type": "text", "id": "benefit", "label": "Benefit (optional)", "default": "Deep hydration" },
+        { "type": "text", "id": "emoji", "label": "Emoji (fallback)", "default": "🧈" },
+        { "type": "image_picker", "id": "image", "label": "Image (optional)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ingredients",
+      "blocks": [
+        { "type": "ingredient", "settings": { "tag": "HYDRATE", "title": "Shea Butter", "desc": "Deeply nourishes & repairs dry, flaky lips.", "benefit": "Deep hydration", "emoji": "🧈" } },
+        { "type": "ingredient", "settings": { "tag": "SOFTEN", "title": "Jojoba Oil", "desc": "Lightweight moisture that feels smooth, never greasy.", "benefit": "Non-sticky feel", "emoji": "🌰" } },
+        { "type": "ingredient", "settings": { "tag": "REPAIR", "title": "Vitamin E", "desc": "Helps protect & restore lip health with antioxidant care.", "benefit": "Lip repair", "emoji": "💊" } },
+        { "type": "ingredient", "settings": { "tag": "TINT", "title": "Cosmetic Pigments", "desc": "Gives a soft, natural pink tint for everyday glow.", "benefit": "Natural tint", "emoji": "💗" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

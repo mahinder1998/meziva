@@ -1,0 +1,149 @@
+{% liquid
+  assign sale_layout = settings.sale_layout
+  if sale_layout
+    assign block_to_render = 'sale-image'
+  else
+    assign block_to_render = 'image'
+  endif
+  assign rendered_block_count = 0
+  for block in section.blocks
+    if block.type == block_to_render
+        assign rendered_block_count = rendered_block_count | plus : 1
+    endif
+  endfor
+%}
+<banner-slideshow id="{{ section.id }}" data-autoplay="{{ section.settings.autoplay }}" data-autoplay-interval="{{ section.settings.autoplay_interval }}">
+    <div class="slide-show-wrapper sw-relative"  >
+        <div data-role="slides-wrapper" class="sw-flex sw-max-w-full sw-overflow-hidden sw-flex-row sw-flex-nowrap keen-slider">
+            {% assign block_count = 0 %}
+            {% for block in section.blocks %}
+                {% if block.type == block_to_render %}
+                    <div data-role="slide" class="sw-flex-[0_0_100%] keen-slider__slide" style="transition: opacity 0.8s ease-in-out;">
+                        {% liquid
+                            assign mobile_image = block.settings.mobile_image
+                            assign desktop_image = block.settings.desktop_image
+                            assign block_count = block_count | plus : 1
+                            if block_count > 1 or section.index > 2
+                                assign load_lazy = 'lazy'
+                            else
+                                assign load_lazy = 'eager'
+                            endif
+                        %}
+                        {% if mobile_image != blank and desktop_image != blank %}
+                            {% style %}
+                                @media(min-width:768px){
+                                    #{{ section.id }}-{{ forloop.index }}-image{
+                                        padding-bottom:{{ 1 | divided_by : desktop_image.aspect_ratio | times : 100 }}%!important;
+                                    }
+                                }
+                            {% endstyle %}
+                            <div id="{{ section.id }}-{{ forloop.index }}-image" class="sw-relative sw-overflow-hidden sw-bg-[#000]"
+                                style="padding-bottom:{{ 1 | divided_by : mobile_image.aspect_ratio | times : 100 }}%"
+                            >
+                                <picture>
+                                    <source
+                                        media="(min-width: 768px)"
+                                        srcset="
+                                        {{ desktop_image | image_url: width: 1800 }},
+                                        {{ desktop_image | image_url: width: 2200 }},
+                                        ">
+                                    {{ mobile_image |
+                                        image_url: width: 600 |
+                                        image_tag:
+                                        widths: '400, 600',
+                                        sizes: '(min-width: 768px) 760px, (min-width: 1024px) calc(100vw - 380px), 78.75vw',
+                                        style:'position:absolute;top:0px;left:0px;width:100%;height:auto' ,
+                                        loading: load_lazy
+                                    }}
+                                </picture>
+                                {% if block.settings.banner_redirection != blank %}<a class="sw-block sw-absolute sw-top-0 sw-left-0 sw-w-full sw-h-full sw-cursor-pointer" href="{{  block.settings.banner_redirection}}"></a>{% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% if rendered_block_count > 1 and section.settings.arrows %}
+            <div class="sw-absolute sw-z-10 sw-bottom-0 sw-left-[80%] lg:sw-left-[90%] sw-translate-y-[50%] sw-flex sw-gap-[6px] lg:sw-gap-[10px] sw-items-center">
+                <button data-role="prev-btn" class="sw-bg-[#fff] sw-rounded-full sw-p-[6px] lg:sw-p-[10px] sw-shadow-lg sw-transition-all hover:sw-scale-110">{% render 'icons-v2', icon: 'icon-caret-left', class:'sw-w-[16px] lg:sw-w-[20px] lg:sw-h-[20px] sw-h-[16px]' %}</button>
+                <button data-role="next-btn" class="sw-bg-[#fff] sw-rounded-full sw-p-[6px] lg:sw-p-[10px] sw-shadow-lg sw-transition-all hover:sw-scale-110">{% render 'icons-v2', icon: 'icon-caret-right', class:'sw-w-[16px] lg:sw-w-[20px] lg:sw-h-[20px] sw-h-[16px]' %}</button>
+            </div>
+        {% endif %} 
+    </div>
+</banner-slideshow>
+{% if rendered_block_count > 1 %}
+    {% render 'vite-tag' with 'meziva-home-hero.js' %}
+{% endif %}
+{% schema %}
+    {
+        "name":"Slideshow v2",
+        "settings":[
+            {
+                "type":"checkbox",
+                "label":"Show arrows",
+                "default":true,
+                "id":"arrows"
+            },
+            {
+                "type":"checkbox",
+                "label":"Enable Autoplay",
+                "id":"autoplay"
+            },
+            {
+                "type":"number",
+                "label":"Autoplay interval in seconds",
+                "id":"autoplay_interval",
+                "default":3
+            }
+        ],
+        "blocks":[
+            {
+                "type":"image",
+                "name":"image",
+                "settings":[
+                    {
+                        "type":"image_picker",
+                        "label":"Choose mobile image",
+                        "id":"mobile_image"
+                    },
+                    {
+                        "type":"image_picker",
+                        "label":"Choose desktop image",
+                        "id":"desktop_image"
+                    },
+                    {
+                        "type":"url",
+                        "label":"Banner redirection link",
+                        "id":"banner_redirection"
+                    }
+                ]
+            },
+            {
+                "type":"sale-image",
+                "name":"Sale image",
+                "settings": [
+                    {
+                        "type":"image_picker",
+                        "label":"Choose mobile image",
+                        "id":"mobile_image"
+                    },
+                    {
+                        "type":"image_picker",
+                        "label":"Choose desktop image",
+                        "id":"desktop_image"
+                    },
+                    {
+                        "type":"url",
+                        "label":"Banner redirection link",
+                        "id":"banner_redirection"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name":"Slideshow v2"
+            }
+        ]
+    }
+{% endschema %}

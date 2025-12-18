@@ -1,0 +1,214 @@
+
+{% assign p = section.settings.product %}
+
+<section id="meziva-single-hero-{{ section.id }}" class="sw-relative sw-overflow-hidden sw-bg-[#FFF6FA] sw-py-10 md:sw-py-16">
+  <div class="sw-max-w-7xl sw-mx-auto sw-px-4 md:sw-px-8">
+
+    {% if p == blank %}
+      <div class="sw-rounded-2xl sw-bg-white sw-border sw-border-black/10 sw-p-6">
+        <p class="sw-font-semibold sw-text-[#111111]">Select a product</p>
+        <p class="sw-mt-1 sw-text-sm sw-text-black/60">Theme editor → this section → Product select karo.</p>
+      </div>
+    {% else %}
+      {% assign v = p.selected_or_first_available_variant %}
+
+      <meziva-single-product-hero
+        class="sw-block"
+        data-cart-add-url="{{ routes.cart_add_url }}.js"
+        data-checkout-url="{{ routes.checkout_url }}"
+      >
+        <div class="sw-grid sw-grid-cols-1 lg:sw-grid-cols-12 sw-gap-6 lg:sw-gap-10 sw-items-center">
+
+          <!-- LEFT: Image -->
+          <div class="lg:sw-col-span-7">
+  <div class="sw-rounded-[28px] sw-overflow-hidden sw-bg-white/70 sw-border sw-border-black/5 sw-shadow-sm">
+
+    {% if section.settings.enable_image_slider and p.images.size > 1 %}
+      <meziva-simple-slider class="sw-relative sw-block"
+      data-autoplay="{{ section.settings.slider_autoplay }}"
+      data-interval="{{ section.settings.slider_interval }}"
+      data-show-arrows="{{ section.settings.slider_show_arrows }}"
+      data-show-dots="{{ section.settings.slider_show_dots }}"
+
+      >
+        <div
+          data-slider-track
+          class="sw-flex sw-overflow-x-auto sw-overflow-y-hidden sw-scroll-smooth sw-snap-x sw-snap-mandatory sw-overscroll-x-contain scrollbar-hide"
+        >
+          {% for img in p.images limit: section.settings.slider_image_limit %}
+            <div data-slider-slide class="sw-min-w-full sw-snap-start">
+              <img
+                src="{{ img | image_url: width: 1800 }}"
+                alt="{{ p.title | escape }}"
+                class="sw-w-full sw-h-[340px] md:sw-h-[520px] sw-object-cover"
+                loading="lazy"
+              >
+            </div>
+          {% endfor %}
+        </div>
+
+       {% if section.settings.slider_show_arrows %}
+        <button type="button" data-slider-prev class="sw-hidden md:sw-grid sw-place-items-center sw-absolute sw-left-4 sw-top-1/2 sw--translate-y-1/2 sw-h-11 sw-w-11 sw-rounded-full sw-bg-white/90 sw-border sw-border-black/10 sw-shadow-sm">‹</button>
+        <button type="button" data-slider-next class="sw-hidden md:sw-grid sw-place-items-center sw-absolute sw-right-4 sw-top-1/2 sw--translate-y-1/2 sw-h-11 sw-w-11 sw-rounded-full sw-bg-white/90 sw-border sw-border-black/10 sw-shadow-sm">›</button>
+      {% endif %}
+
+      {% if section.settings.slider_show_dots %}
+        <div data-slider-dots class="sw-absolute sw-bottom-4 sw-left-1/2 sw--translate-x-1/2 sw-flex sw-gap-2"></div>
+      {% endif %}
+
+      </meziva-simple-slider>
+
+    {% else %}
+      {% if p.featured_image %}
+        <img
+          src="{{ p.featured_image | image_url: width: 1800 }}"
+          alt="{{ p.title | escape }}"
+          class="sw-w-full sw-h-[340px] md:sw-h-[520px] sw-object-cover"
+          loading="lazy"
+        >
+      {% else %}
+        <div class="sw-h-[340px] md:sw-h-[520px] sw-grid sw-place-items-center sw-text-black/50">
+          No image
+        </div>
+      {% endif %}
+    {% endif %}
+
+  </div>
+
+  <!-- Badges -->
+  <div class="sw-mt-4 sw-flex sw-flex-wrap sw-gap-2">
+    {% for tag in section.blocks %}
+      {% if tag.type == 'badge' %}
+        <span class="sw-inline-flex sw-items-center sw-gap-2 sw-rounded-full sw-bg-white/80 sw-border sw-border-black/10 sw-px-3 sw-py-2 sw-text-xs sw-text-black/70">
+          {{ tag.settings.text }}
+        </span>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+
+          <!-- RIGHT: Product Card -->
+          <div class="lg:sw-col-span-5">
+            <div class="sw-rounded-[28px] sw-bg-white/85 sw-backdrop-blur sw-border sw-border-black/5 sw-shadow-sm sw-p-5 md:sw-p-7">
+
+              <div class="sw-inline-flex sw-items-center sw-gap-2 sw-rounded-full sw-bg-white sw-border sw-border-black/10 sw-px-4 sw-py-2 sw-text-xs sw-text-black/70">
+                <span class="sw-h-2 sw-w-2 sw-rounded-full" style="background: {{ section.settings.accent }};"></span>
+                {{ section.settings.kicker }}
+              </div>
+
+              <h2 class="sw-mt-3 sw-text-2xl md:sw-text-3xl sw-font-semibold sw-text-[#111111]">
+                {{ section.settings.heading | default: p.title }}
+              </h2>
+
+              {% if section.settings.subheading != blank %}
+                <p class="sw-mt-2 sw-text-sm md:sw-text-base sw-text-black/60">
+                  {{ section.settings.subheading }}
+                </p>
+              {% endif %}
+
+              <div class="sw-mt-5 sw-flex sw-items-end sw-justify-between sw-gap-4">
+                <div>
+                  <p class="sw-text-xs sw-text-black/50">Price</p>
+                  <p class="sw-text-2xl md:sw-text-3xl sw-font-semibold sw-text-[#111111]">{{ v.price | money }}</p>
+                  <p class="sw-text-xs sw-text-black/45">Inclusive of all taxes</p>
+                </div>
+                <div class="sw-text-right">
+                  <p class="sw-text-xs sw-text-black/50">MRP</p>
+                  <p class="sw-text-sm sw-text-black/45 sw-line-through {% unless v.compare_at_price > v.price %}sw-hidden{% endunless %}">
+                    {{ v.compare_at_price | money }}
+                  </p>
+                  <p class="sw-text-xs sw-text-black/55">
+                    {% if v.available %}In stock{% else %}Sold out{% endif %}
+                  </p>
+                </div>
+              </div>
+
+              <!-- ATC -->
+              <form data-role="atc-form" class="sw-mt-6">
+                <input type="hidden" data-role="variant-id" value="{{ v.id }}">
+
+                <div class="sw-flex sw-items-center sw-gap-3">
+                  <div class="sw-flex sw-items-center sw-justify-between sw-rounded-2xl sw-bg-white sw-border sw-border-black/10 sw-w-[160px] sw-h-12 sw-px-3">
+                    <button type="button" data-role="qty-minus" class="sw-text-xl sw-text-black/60">–</button>
+                    <input data-role="qty" value="1" inputmode="numeric"
+                      class="sw-w-10 sw-text-center sw-bg-transparent sw-outline-none sw-text-sm sw-font-medium sw-text-[#111111]" />
+                    <button type="button" data-role="qty-plus" class="sw-text-xl sw-text-black/60">+</button>
+                  </div>
+
+                  <button
+                    type="submit"
+                    data-role="atc-btn"
+                    data-label="Buy Now"
+                    class="sw-flex-1 sw-h-12 sw-rounded-2xl sw-text-white sw-font-semibold sw-text-sm sw-shadow-sm"
+                    style="background: {{ section.settings.accent }};"
+                    {% unless v.available %}disabled{% endunless %}
+                  >
+                    Buy Now
+                  </button>
+                </div>
+
+                <p data-role="status" class="sw-mt-3 sw-text-xs sw-text-red-600"></p>
+              </form>
+
+              <!-- Payment icons -->
+              <div class="sw-mt-5 sw-rounded-2xl sw-border sw-border-black/10 sw-bg-white sw-p-4">
+                <p class="sw-text-xs sw-font-semibold sw-text-black/70">Secure Checkout</p>
+                <div class="sw-mt-3 sw-flex sw-flex-wrap sw-gap-2 sw-items-center">
+                  {% for type in shop.enabled_payment_types %}
+                    {{ type | payment_type_svg_tag: class: 'sw-h-7 sw-w-auto' }}
+                  {% endfor %}
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </meziva-single-product-hero>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Single Product Hero",
+  "settings": [
+    { "type": "product", "id": "product", "label": "Product (Home page)", "info": "Home page pe single product select karo" },
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "CLEAN • HYDRATING • TINTED" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Hydrating Tinted Lip Balm" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Skincare-first lip balm with hydration + tint in 1 swipe. Lightweight, non-sticky feel." },
+    { "type": "color", "id": "accent", "label": "Accent", "default": "#FF60A6" },
+    { "type": "checkbox", "id": "enable_image_slider", "label": "Enable image slider", "default": true },
+{ "type": "range", "id": "slider_image_limit", "label": "Max images in slider", "min": 1, "max": 10, "step": 1, "default": 6 },
+{ "type": "checkbox", "id": "slider_show_arrows", "label": "Show arrows", "default": true },
+{ "type": "checkbox", "id": "slider_show_dots", "label": "Show dots", "default": true }
+
+
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Badge text", "default": "Non-sticky" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Single Product Hero",
+      "blocks": [
+        { "type": "badge", "settings": { "text": "Non-sticky" } },
+        { "type": "badge", "settings": { "text": "Daily wear" } },
+        { "type": "badge", "settings": { "text": "Comfort hydration" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+
+
+    {% render 'vite-tag' with 'meziva-home-hero.js' %}

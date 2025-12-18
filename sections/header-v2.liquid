@@ -151,10 +151,11 @@
   endif
 %}
 
-<sticky-header  data-sticky="{{ section.settings.sticky_header }}"
+<sticky-header
+  data-sticky="{{ section.settings.sticky_header }}"
   data-landing-scroll="{{ section.settings.enable_landing_scroll }}"
-  data-landing-offset="{{ section.settings.landing_scroll_offset }}">
-
+  data-landing-offset="{{ section.settings.landing_scroll_offset }}"
+>
   <script type="applicationId/json" data-id="header-settings">
     {
       "data": {
@@ -168,10 +169,11 @@
   <div class="lg:sw-relative" style="background-color:{{ section.settings.header_bg }};" data-role="header-wrapper">
     <div
       data-role="header-top-bar "
-      class="  sw-py-3 sw-px-[18px] sw-items-center
+      class="
+        sw-py-3 sw-px-[18px] sw-items-center
 
-     sw-grid sw-grid-cols-[100px,1fr,0,100px] sw-gap-0 lg:sw-flex
-      sw-max-w-[1240px] sw-mx-auto lg:sw-py-6
+        sw-grid sw-grid-cols-[100px,1fr,0,100px] sw-gap-0 lg:sw-flex
+         sw-max-w-[1240px] sw-mx-auto lg:sw-py-6
       "
     >
       <button data-role="nav-display" class="lg:sw-hidden">{% render 'icons-v2', icon: 'icon-hamburger' %}</button>
@@ -199,140 +201,128 @@
         </h1>
       </div>
 
-    
-
-
       {% render 'mega-menu-v2', section: section %}
       {% render 'mobile-nav-v2', section: section %}
-  <div class="sw-ml-auto sw-flex sw-gap-3 sw-items-center" data-role="header-actions">
+      <div class="sw-ml-auto sw-flex sw-gap-3 sw-items-center" data-role="header-actions">
         {% if section.settings.enable_search %}
-        <div class="sw-hidden lg:sw-flex">
-          <predective-search class="lg:sw-min-w-[250px] sw-block" data-inputs="{{ type_inputs }}">
-            <label
-              for="search-input"
-              class="sw-bg-[#fff] sw-border-none sw-rounded-full sw-mb-0 sw-flex sw-gap-3 lg:sw-gap-1 sw-items-center sw-px-[10px] sw-py-[6px]"
-            >
-              <button data-role="search-icon">{% render 'icons-v2', icon: 'icon-search' %}</button>
-              <input
-                data-role="search-input"
-                class="sw-text-[14px] sw-font-primary sw-peer sw-w-full sw-p-0 sw-bg-transparent !sw-outline-none !sw-border-none sw-font-normal placeholder:sw-text-[#303030] placeholder:sw-font-bold [&.active]:placeholder:sw-text-[#A6A6A6] [&.active]:placeholder:sw-font-normal sw-tracking-normal"
-                type="text"
-                id="search-input"
-                placeholder=""
-                autocomplete="off"
+          <div class="sw-hidden lg:sw-flex">
+            <predective-search class="lg:sw-min-w-[250px] sw-block" data-inputs="{{ type_inputs }}">
+              <label
+                for="search-input"
+                class="sw-bg-[#fff] sw-border-none sw-rounded-full sw-mb-0 sw-flex sw-gap-3 lg:sw-gap-1 sw-items-center sw-px-[10px] sw-py-[6px]"
               >
-              <button data-role="search-close" class="peer-[&.active]:sw-block sw-hidden">
-                {% render 'icons-v2', icon: 'icon-search-close', class: 'sw-w-[20px] sw-h-[20px]' %}
-              </button>
-            </label>
-          </predective-search>
-        </div>
+                <button data-role="search-icon">{% render 'icons-v2', icon: 'icon-search' %}</button>
+                <input
+                  data-role="search-input"
+                  class="sw-text-[14px] sw-font-primary sw-peer sw-w-full sw-p-0 sw-bg-transparent !sw-outline-none !sw-border-none sw-font-normal placeholder:sw-text-[#303030] placeholder:sw-font-bold [&.active]:placeholder:sw-text-[#A6A6A6] [&.active]:placeholder:sw-font-normal sw-tracking-normal"
+                  type="text"
+                  id="search-input"
+                  placeholder=""
+                  autocomplete="off"
+                >
+                <button data-role="search-close" class="peer-[&.active]:sw-block sw-hidden">
+                  {% render 'icons-v2', icon: 'icon-search-close', class: 'sw-w-[20px] sw-h-[20px]' %}
+                </button>
+              </label>
+            </predective-search>
+          </div>
         {% endif %}
 
-        {% if section.settings.cashback_icon %}
-          <div data-role="header-cashback-wrapper" class="sw-group/wrapper {% if customer %}customer{% endif %}">
-            <button
-              data-role="header-cashback-icon"
-              class="header-cashback-icon sw-hidden group-[.customer]/wrapper:sw-flex sw-peer sw-items-center sw-justify-center sw-leading-none sw-px-4 sw-py-0 sw-relative sw-w-max sw-group/cashback sw-bg-[#000] sw-rounded-3xl sw-h-[23px] sw-min-w-[60px] sw-max-w-[60px]"
-            >
-              <div class="sw-absolute sw-top-0 sw-left-[50%] sw-flex sw-items-center sw-gap-[2px] sw-z-[100] sw-translate-x-[-50%] sw-translate-y-[-50%] sw-whitespace-nowrap">
-                <span class="sw-font-secondary sw-text-[8px] sw-text-[#fff] sw-font-medium sw-leading-none sw-text-center">Swiss Cash</span>
-              </div>
-
-              {% if customer %}
-                <span
-                  data-role="header-cashback-amount"
-                  class="group-[.activating]/cashback:sw-hidden sw-font-primary sw-text-[12px] sw-leading-none sw-font-medium sw-text-[#FF90BB] sw-text-center"
-                ></span>
-                <a href="/pages/wallet" class="sw-absolute sw-top-0 sw-left-0 sw-w-full sw-h-full sw-block"></a>
-              {% else %}
-                <span
-                  data-role="header-cashback-login"
-                  class="sw-font-primary sw-text-[12px] sw-leading-none sw-font-medium sw-text-[#FF90BB] sw-text-center group-[.activating]/cashback:sw-hidden"
-                >Login</span>
-              {% endif %}
-
-              {% render 'loader-v2',
-                class: 'sw-hidden group-[.activating]/cashback:sw-block sw-text-[#FF90BB] !sw-w-[16px] !sw-h-[16px] sw-m-[7px]'
-              %}
-            </button>
-
-            <a
-              class="peer-[.activating]:sw-hidden sw-block group-[.customer]/wrapper:sw-hidden"
-              data-role="header-login"
-              href="{{ routes.account_url }}"
-            >
+        {% if customer %}
+          <a
+            href="{{ routes.account_url }}"
+            class="sw-group sw-inline-flex sw-items-center sw-gap-2 sw-rounded-full sw-border xl:sw-border-[#FF60A6]/25 sw-bg-white/70 sw-backdrop-blur xl:sw-px-3.5 xl:sw-py-2 sw-shadow-[0_6px_18px_rgba(0,0,0,0.06)] sw-transition hover:sw-bg-white hover:sw-border-[#FF60A6]/40 hover:sw-shadow-[0_10px_26px_rgba(0,0,0,0.10)]"
+            aria-label="My account"
+          >
+            <span class="sw-grid sw-place-items-center sw-h-7 sw-w-7 sw-rounded-full sw-bg-[#FFF6FA] sw-border sw-border-black/5 sw-transition group-hover:sw-bg-white">
               {%- render 'icons-v2', icon: 'icon-quickpass' -%}
-            </a>
-          </div>
+            </span>
+
+            <span class="sw-hidden md:sw-inline sw-font-primary sw-text-[13px] sw-leading-none sw-font-semibold  sw-max-w-[120px] sw-truncate">
+              {{ customer.first_name | default: 'Account' }}
+            </span>
+          </a>
         {% else %}
-          <a href="{{ routes.account_url }}" data-role="header-login">
-            {%- render 'icons-v2', icon: 'icon-quickpass' -%}
+          <a
+            href="{{ routes.account_login_url }}"
+            class="sw-group sw-inline-flex sw-items-center sw-gap-3 sw-rounded-full xl:sw-border sw-border-[#FF60A6]/25 sw-bg-white/70 sw-backdrop-blur xl:sw-px-6 xl:sw-py-2 sw-shadow-[0_6px_18px_rgba(0,0,0,0.06)] sw-transition hover:sw-bg-white hover:sw-border-[#FF60A6]/40 hover:sw-shadow-[0_10px_26px_rgba(0,0,0,0.10)]"
+            aria-label="Login or register"
+          >
+            <span class="sw-grid sw-place-items-center sw-h-7 sw-w-7 sw-rounded-full sw-bg-[#FFF6FA] sw-border sw-border-black/5 sw-transition group-hover:sw-bg-white">
+              {%- render 'icons-v2', icon: 'icon-quickpass' -%}
+            </span>
+
+            <span class="sw-hidden md:sw-inline sw-font-primary sw-text-[13px] sw-leading-none sw-font-semibold ">
+              Login
+            </span>
           </a>
         {% endif %}
 
-        {% comment %} <button class="sw-hidden lg:sw-block">
-          <a href="{{ section.settings.tracking_url }}">{% render 'icons-v2', icon: 'icon-shipping' %}</a>
-        </button> {% endcomment %}
+        {% comment %}
+          <button class="sw-hidden lg:sw-block">
+            <a href="{{ section.settings.tracking_url }}">{% render 'icons-v2', icon: 'icon-shipping' %}</a>
+          </button>
+        {% endcomment %}
 
-        {% comment %} <button data-role="cart-open" class="sw-relative">
-          {% render 'icons-v2', icon: 'icon-cart' -%}
-          <span
-            data-role="cart-count"
-            class="sw-bg-[#fc2679] sw-text-[#fff] sw-text-[10px] sw-absolute sw-top-0 sw-left-[50%] sw-rounded-full sw-w-[16px] sw-h-[16px] sw-flex sw-justify-center sw-items-center sw-border-none cart-link__bubble-num {% if cart.item_count == 0 %}sw-opacity-0{% endif %}"
-          >
-            {{- cart.item_count -}}
-          </span>
-        </button> {% endcomment %}
+        {% comment %}
+          <button data-role="cart-open" class="sw-relative">
+            {% render 'icons-v2', icon: 'icon-cart' -%}
+            <span
+              data-role="cart-count"
+              class="sw-bg-[#fc2679] sw-text-[#fff] sw-text-[10px] sw-absolute sw-top-0 sw-left-[50%] sw-rounded-full sw-w-[16px] sw-h-[16px] sw-flex sw-justify-center sw-items-center sw-border-none cart-link__bubble-num {% if cart.item_count == 0 %}sw-opacity-0{% endif %}"
+            >
+              {{- cart.item_count -}}
+            </span>
+          </button>
+        {% endcomment %}
       </div>
-    
     </div>
 
     {% if section.settings.enable_search %}
-    <div
-      class="sw-px-[18px] sw-pb-2 md:sw-max-w-[400px] md:sw-mx-auto sw-relative sw-z-[9] lg:sw-hidden"
-      data-role="mobile-search-wrapper"
-    >
-      <predective-search data-inputs="{{ type_inputs }}">
-        <label
-          for="search-input"
-          class="sw-bg-[#fff] sw-border-none sw-rounded-full sw-flex sw-gap-3 sw-items-center sw-px-[10px] sw-py-[6px] sw-mb-0"
-        >
-          <button data-role="search-icon">{% render 'icons-v2', icon: 'icon-search' %}</button>
-          <input
-            data-role="search-input"
-            class="sw-text-[14px] sw-font-primary sw-peer sw-w-full sw-p-0 sw-bg-transparent !sw-outline-none !sw-border-none sw-font-normal placeholder:sw-text-[#303030] placeholder:sw-font-medium placeholder:sw-font-primary [&.active]:placeholder:sw-text-[#A6A6A6] [&.active]:placeholder:sw-font-normal sw-tracking-normal"
-            type="text"
-            id="search-input"
-            autocomplete="off"
-            placeholder=""
+      <div
+        class="sw-px-[18px] sw-pb-2 md:sw-max-w-[400px] md:sw-mx-auto sw-relative sw-z-[9] lg:sw-hidden"
+        data-role="mobile-search-wrapper"
+      >
+        <predective-search data-inputs="{{ type_inputs }}">
+          <label
+            for="search-input"
+            class="sw-bg-[#fff] sw-border-none sw-rounded-full sw-flex sw-gap-3 sw-items-center sw-px-[10px] sw-py-[6px] sw-mb-0"
           >
-          <button data-role="search-close" class="sw-hidden peer-[&.active]:sw-block">
-            {% render 'icons-v2', icon: 'icon-search-close', class: 'sw-w-[20px] sw-h-[20px]' %}
+            <button data-role="search-icon">{% render 'icons-v2', icon: 'icon-search' %}</button>
+            <input
+              data-role="search-input"
+              class="sw-text-[14px] sw-font-primary sw-peer sw-w-full sw-p-0 sw-bg-transparent !sw-outline-none !sw-border-none sw-font-normal placeholder:sw-text-[#303030] placeholder:sw-font-medium placeholder:sw-font-primary [&.active]:placeholder:sw-text-[#A6A6A6] [&.active]:placeholder:sw-font-normal sw-tracking-normal"
+              type="text"
+              id="search-input"
+              autocomplete="off"
+              placeholder=""
+            >
+            <button data-role="search-close" class="sw-hidden peer-[&.active]:sw-block">
+              {% render 'icons-v2', icon: 'icon-search-close', class: 'sw-w-[20px] sw-h-[20px]' %}
+            </button>
+          </label>
+        </predective-search>
+
+        <div class="sw-ml-auto sw-flex sw-gap-3 sw-items-center" data-role="header-actions">
+          <button class="sw-hidden lg:sw-block">
+            <a href="{{ section.settings.tracking_url }}">{% render 'icons-v2', icon: 'icon-shipping' %}</a>
           </button>
-        </label>
-      </predective-search>
-
-      <div class="sw-ml-auto sw-flex sw-gap-3 sw-items-center" data-role="header-actions">
-        <button class="sw-hidden lg:sw-block">
-          <a href="{{ section.settings.tracking_url }}">{% render 'icons-v2', icon: 'icon-shipping' %}</a>
-        </button>
-        <button data-role="cart-open" class="sw-relative">
-          {% render 'icons-v2', icon: 'icon-cart' -%}
-          <span
-            data-role="cart-count"
-            class="sw-bg-[#fc2679] sw-text-[#fff] sw-text-[10px] sw-absolute sw-top-0 sw-left-[50%] sw-rounded-full sw-w-[16px] sw-h-[16px] sw-flex sw-justify-center sw-items-center sw-border-none cart-link__bubble-num {% if cart.item_count == 0 %}sw-opacity-0{% endif %}"
-          >
-            {{- cart.item_count -}}
-          </span>
-        </button>
+          <button data-role="cart-open" class="sw-relative">
+            {% render 'icons-v2', icon: 'icon-cart' -%}
+            <span
+              data-role="cart-count"
+              class="sw-bg-[#fc2679] sw-text-[#fff] sw-text-[10px] sw-absolute sw-top-0 sw-left-[50%] sw-rounded-full sw-w-[16px] sw-h-[16px] sw-flex sw-justify-center sw-items-center sw-border-none cart-link__bubble-num {% if cart.item_count == 0 %}sw-opacity-0{% endif %}"
+            >
+              {{- cart.item_count -}}
+            </span>
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div
-      data-id="search-container"
-      class="sw-absolute lg:sw-max-w-[600px] lg:sw-overflow-hidden lg:sw-rounded-md lg:sw-right-[165px] lg:sw-left-[unset] sw-bg-[#fff] sw-w-full sw-group sw-h-full sw-bottom-0 sw-left-0 sw-translate-y-full sw-min-h-[480px] sw-hidden"
-    ></div>
+      <div
+        data-id="search-container"
+        class="sw-absolute lg:sw-max-w-[600px] lg:sw-overflow-hidden lg:sw-rounded-md lg:sw-right-[165px] lg:sw-left-[unset] sw-bg-[#fff] sw-w-full sw-group sw-h-full sw-bottom-0 sw-left-0 sw-translate-y-full sw-min-h-[480px] sw-hidden"
+      ></div>
     {% endif %}
   </div>
 </sticky-header>

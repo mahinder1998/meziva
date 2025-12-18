@@ -1,101 +1,105 @@
-
 {% assign p = section.settings.product %}
 
-<section id="meziva-single-hero-{{ section.id }}" class="sw-relative sw-overflow-hidden sw-bg-[#FFF6FA] sw-py-10 md:sw-py-16">
-  <div class="sw-max-w-7xl sw-mx-auto sw-px-4 md:sw-px-8">
-
+<section
+  id="meziva-single-hero-{{ section.id }}"
+  class="sw-relative sw-overflow-hidden sw-bg-[#FFF6FA] sw-py-10 md:sw-py-16"
+>
+  <div class="sw-relative sw-max-w-7xl sw-mx-auto sw-px-4 md:sw-px-8" id="{{section.settings.section-id}}">
     {% if p == blank %}
       <div class="sw-rounded-2xl sw-bg-white sw-border sw-border-black/10 sw-p-6">
         <p class="sw-font-semibold sw-text-[#111111]">Select a product</p>
-        <p class="sw-mt-1 sw-text-sm sw-text-black/60">Theme editor → this section → Product select karo.</p>
+        <p class="sw-mt-1 sw-text-sm sw-text-black/60">Theme editor → this section → Product select</p>
       </div>
     {% else %}
-      {% assign v = p.selected_or_first_available_variant %}
+      {% assign v = p.selected_or_first_available_variant %} 
+      {% assign available = v.available %}
 
       <meziva-single-product-hero
         class="sw-block"
         data-cart-add-url="{{ routes.cart_add_url }}.js"
         data-checkout-url="{{ routes.checkout_url }}"
+        data-sticky-enabled="{{ section.settings.enable_sticky_atc }}"
+        data-redirect="{{ section.settings.redirect_after_atc }}"
       >
         <div class="sw-grid sw-grid-cols-1 lg:sw-grid-cols-12 sw-gap-6 lg:sw-gap-10 sw-items-center">
+          <!-- LEFT: IMAGE / SLIDER -->
+          <div class="lg:sw-col-span-6">
+            <div class="sw-rounded-[28px] sw-overflow-hidde">
+              {% if section.settings.enable_image_slider and p.images.size > 1 %}
+                <meziva-simple-slider
+                  class="sw-relative sw-block"
+                  data-autoplay="{{ section.settings.slider_autoplay }}"
+                  data-interval="{{ section.settings.slider_interval }}"
+                  data-show-arrows="{{ section.settings.slider_show_arrows }}"
+                  data-show-dots="{{ section.settings.slider_show_dots }}"
+                >
+                  <div
+                    data-slider-track
+                    class="sw-flex sw-overflow-x-auto sw-overflow-y-hidden sw-scroll-smooth sw-snap-x sw-snap-mandatory sw-overscroll-x-contain sw-no-scrollbar"
+                    aria-label="Product images"
+                  >
+                    {% for img in p.images limit: section.settings.slider_image_limit %}
+                      <div data-slider-slide class="sw-min-w-full sw-snap-start">
+                        <img
+                          src="{{ img | image_url: width: 1800 }}"
+                          alt="{{ p.title | escape }}"
+                          class="sw-w-full sw-h-[340px] md:sw-h-[520px] sw-object-cover"
+                          loading="lazy"
+                        >
+                      </div>
+                    {% endfor %}
+                  </div>
 
-          <!-- LEFT: Image -->
-          <div class="lg:sw-col-span-7">
-  <div class="sw-rounded-[28px] sw-overflow-hidden sw-bg-white/70 sw-border sw-border-black/5 sw-shadow-sm">
+                  {% if section.settings.slider_show_arrows %}
+                    <button
+                      type="button"
+                      data-slider-prev
+                      aria-label="Previous"
+                      class="sw-hidden md:sw-grid sw-place-items-center sw-absolute sw-left-4 sw-top-1/2 sw--translate-y-1/2 sw-h-11 sw-w-11 sw-rounded-full sw-bg-white/90 sw-border sw-border-black/10 sw-shadow-sm"
+                    >
+                      ‹
+                    </button>
+                    <button
+                      type="button"
+                      data-slider-next
+                      aria-label="Next"
+                      class="sw-hidden md:sw-grid sw-place-items-center sw-absolute sw-right-4 sw-top-1/2 sw--translate-y-1/2 sw-h-11 sw-w-11 sw-rounded-full sw-bg-white/90 sw-border sw-border-black/10 sw-shadow-sm"
+                    >
+                      ›
+                    </button>
+                  {% endif %}
 
-    {% if section.settings.enable_image_slider and p.images.size > 1 %}
-      <meziva-simple-slider class="sw-relative sw-block"
-      data-autoplay="{{ section.settings.slider_autoplay }}"
-      data-interval="{{ section.settings.slider_interval }}"
-      data-show-arrows="{{ section.settings.slider_show_arrows }}"
-      data-show-dots="{{ section.settings.slider_show_dots }}"
-
-      >
-        <div
-          data-slider-track
-          class="sw-flex sw-overflow-x-auto sw-overflow-y-hidden sw-scroll-smooth sw-snap-x sw-snap-mandatory sw-overscroll-x-contain scrollbar-hide"
-        >
-          {% for img in p.images limit: section.settings.slider_image_limit %}
-            <div data-slider-slide class="sw-min-w-full sw-snap-start">
-              <img
-                src="{{ img | image_url: width: 1800 }}"
-                alt="{{ p.title | escape }}"
-                class="sw-w-full sw-h-[340px] md:sw-h-[520px] sw-object-cover"
-                loading="lazy"
-              >
+                  {% if section.settings.slider_show_dots %}
+                    <div
+                      data-slider-dots
+                      class="sw-absolute sw-bottom-4 sw-left-1/2 sw--translate-x-1/2 sw-flex sw-gap-2"
+                    ></div>
+                  {% endif %}
+                </meziva-simple-slider>
+              {% else %}
+                {% if p.featured_image %}
+                  <img
+                    src="{{ p.featured_image | image_url: width: 1800 }}"
+                    alt="{{ p.title | escape }}"
+                    class="sw-w-full sw-h-[340px] md:sw-h-[520px] sw-object-cover"
+                    loading="lazy"
+                  >
+                {% endif %}
+              {% endif %}
             </div>
-          {% endfor %}
-        </div>
+          </div>
 
-       {% if section.settings.slider_show_arrows %}
-        <button type="button" data-slider-prev class="sw-hidden md:sw-grid sw-place-items-center sw-absolute sw-left-4 sw-top-1/2 sw--translate-y-1/2 sw-h-11 sw-w-11 sw-rounded-full sw-bg-white/90 sw-border sw-border-black/10 sw-shadow-sm">‹</button>
-        <button type="button" data-slider-next class="sw-hidden md:sw-grid sw-place-items-center sw-absolute sw-right-4 sw-top-1/2 sw--translate-y-1/2 sw-h-11 sw-w-11 sw-rounded-full sw-bg-white/90 sw-border sw-border-black/10 sw-shadow-sm">›</button>
-      {% endif %}
-
-      {% if section.settings.slider_show_dots %}
-        <div data-slider-dots class="sw-absolute sw-bottom-4 sw-left-1/2 sw--translate-x-1/2 sw-flex sw-gap-2"></div>
-      {% endif %}
-
-      </meziva-simple-slider>
-
-    {% else %}
-      {% if p.featured_image %}
-        <img
-          src="{{ p.featured_image | image_url: width: 1800 }}"
-          alt="{{ p.title | escape }}"
-          class="sw-w-full sw-h-[340px] md:sw-h-[520px] sw-object-cover"
-          loading="lazy"
-        >
-      {% else %}
-        <div class="sw-h-[340px] md:sw-h-[520px] sw-grid sw-place-items-center sw-text-black/50">
-          No image
-        </div>
-      {% endif %}
-    {% endif %}
-
-  </div>
-
-  <!-- Badges -->
-  <div class="sw-mt-4 sw-flex sw-flex-wrap sw-gap-2">
-    {% for tag in section.blocks %}
-      {% if tag.type == 'badge' %}
-        <span class="sw-inline-flex sw-items-center sw-gap-2 sw-rounded-full sw-bg-white/80 sw-border sw-border-black/10 sw-px-3 sw-py-2 sw-text-xs sw-text-black/70">
-          {{ tag.settings.text }}
-        </span>
-      {% endif %}
-    {% endfor %}
-  </div>
-</div>
-
-
-          <!-- RIGHT: Product Card -->
-          <div class="lg:sw-col-span-5">
-            <div class="sw-rounded-[28px] sw-bg-white/85 sw-backdrop-blur sw-border sw-border-black/5 sw-shadow-sm sw-p-5 md:sw-p-7">
-
-              <div class="sw-inline-flex sw-items-center sw-gap-2 sw-rounded-full sw-bg-white sw-border sw-border-black/10 sw-px-4 sw-py-2 sw-text-xs sw-text-black/70">
-                <span class="sw-h-2 sw-w-2 sw-rounded-full" style="background: {{ section.settings.accent }};"></span>
-                {{ section.settings.kicker }}
-              </div>
+          <!-- RIGHT: PRODUCT CARD -->
+          <div class="lg:sw-col-span-6">
+            <div class="sw-rounded-[28px]  sw-p-5 md:sw-p-7">
+              {% if section.settings.kicker != blank %}
+                <div
+                  class="sw-inline-flex sw-items-center sw-gap-2 sw-rounded-full sw-border sw-border-black/10 sw-px-4 sw-py-2 sw-text-xs sw-text-black/70"
+                >
+                  <span class="sw-h-2 sw-w-2 sw-rounded-full" style="background: {{ section.settings.accent }};"></span>
+                  {{ section.settings.kicker }}
+                </div>
+              {% endif %}
 
               <h2 class="sw-mt-3 sw-text-2xl md:sw-text-3xl sw-font-semibold sw-text-[#111111]">
                 {{ section.settings.heading | default: p.title }}
@@ -107,92 +111,353 @@
                 </p>
               {% endif %}
 
-              <div class="sw-mt-5 sw-flex sw-items-end sw-justify-between sw-gap-4">
-                <div>
-                  <p class="sw-text-xs sw-text-black/50">Price</p>
-                  <p class="sw-text-2xl md:sw-text-3xl sw-font-semibold sw-text-[#111111]">{{ v.price | money }}</p>
-                  <p class="sw-text-xs sw-text-black/45">Inclusive of all taxes</p>
+              <!-- Price -->
+              {%- assign show_reviews = section.settings.show_reviews -%}
+              {%- assign rating_count = section.settings.rating_count | default: 1200 -%}
+
+              <!-- REVIEWS ROW -->
+              {% if show_reviews %}
+                <div class="sw-mt-4 sw-flex sw-items-center sw-gap-2">
+                  <div class="sw-flex sw-items-center sw-gap-0.5">
+                    {% for i in (1..5) %}
+                      <span class="sw-text-[14px] sw-text-[#FF60A6] leading-none">★</span>
+                    {% endfor %}
+                  </div>
+
+                  <span class="sw-text-sm sw-text-black/60"> {{ rating_count }}+ reviews </span>
+
+                  <span
+                    class="sw-inline-flex sw-items-center sw-justify-center sw-h-5 sw-w-5 sw-rounded-full sw-bg-emerald-500/15 sw-text-emerald-600 sw-text-[12px]"
+                  >
+                    ✓
+                  </span>
                 </div>
-                <div class="sw-text-right">
-                  <p class="sw-text-xs sw-text-black/50">MRP</p>
-                  <p class="sw-text-sm sw-text-black/45 sw-line-through {% unless v.compare_at_price > v.price %}sw-hidden{% endunless %}">
+              {% endif %}
+
+              <!-- PRICE ROW -->
+              <div class="sw-mt-3 sw-flex sw-items-end sw-gap-3 sw-flex-wrap">
+                <span
+                  data-role="price"
+                  class="sw-text-3xl md:sw-text-4xl sw-font-semibold sw-text-[#111111] sw-leading-none"
+                >
+                  {{ v.price | money }}
+                </span>
+
+                {% if v.compare_at_price > v.price %}
+                  {%- assign discount_pct = v.compare_at_price
+                    | minus: v.price
+                    | times: 100
+                    | divided_by: v.compare_at_price
+                  -%}
+
+                  <span class="sw-text-lg sw-text-black/35 sw-line-through sw-leading-none">
                     {{ v.compare_at_price | money }}
-                  </p>
-                  <p class="sw-text-xs sw-text-black/55">
-                    {% if v.available %}In stock{% else %}Sold out{% endif %}
-                  </p>
-                </div>
+                  </span>
+
+                  <span
+                    class="sw-inline-flex sw-items-center sw-rounded-full sw-bg-[#FF60A6]/10 sw-text-[#FF60A6] sw-text-sm sw-font-semibold sw-px-2.5 sw-py-1 sw-leading-none"
+                  >
+                    -{{ discount_pct }}%
+                  </span>
+                {% endif %}
               </div>
+
+              <!-- Badges -->
+              {% assign solve_title = section.settings.solve_title | default: 'Made to solve' %}
+              {% if section.blocks.size > 0 %}
+                <div class="sw-mt-4 sw-rounded-2xl  sw-p-4">
+                  <p class="sw-text-sm sw-font-semibold sw-text-[#111111]">{{ solve_title }}</p>
+
+                  <div class="sw-mt-3 sw-flex sw-flex-wrap sw-gap-x-6 sw-gap-y-3">
+                    {% for block in section.blocks %}
+                      {% if block.type == 'solve_item' %}
+                        <div class="sw-inline-flex sw-items-center sw-gap-2">
+                          {% if block.settings.icon != blank %}
+                            <img
+                              src="{{ block.settings.icon | image_url: width: 64 }}"
+                              alt=""
+                              class="sw-h-5 sw-w-5 sw-object-contain"
+                              loading="lazy"
+                            >
+                          {% else %}
+                            <span class="sw-h-5 sw-w-5 sw-rounded-full sw-bg-black/10"></span>
+                          {% endif %}
+
+                          <span class="sw-text-sm sw-text-black/70">{{ block.settings.text }}</span>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endif %}
 
               <!-- ATC -->
               <form data-role="atc-form" class="sw-mt-6">
                 <input type="hidden" data-role="variant-id" value="{{ v.id }}">
-
                 <div class="sw-flex sw-items-center sw-gap-3">
-                  <div class="sw-flex sw-items-center sw-justify-between sw-rounded-2xl sw-bg-white sw-border sw-border-black/10 sw-w-[160px] sw-h-12 sw-px-3">
+                  <div
+                    class="sw-flex sw-items-center sw-justify-between sw-rounded-2xl sw-bg-white sw-border sw-border-black/10 sw-w-[160px] sw-h-12 sw-px-3"
+                  >
                     <button type="button" data-role="qty-minus" class="sw-text-xl sw-text-black/60">–</button>
-                    <input data-role="qty" value="1" inputmode="numeric"
-                      class="sw-w-10 sw-text-center sw-bg-transparent sw-outline-none sw-text-sm sw-font-medium sw-text-[#111111]" />
+                    <input
+                      data-role="qty"
+                      value="1"
+                      inputmode="numeric"
+                      class="sw-w-10 sw-text-center sw-bg-transparent sw-outline-none sw-text-sm sw-font-medium sw-text-[#111111]"
+                    >
                     <button type="button" data-role="qty-plus" class="sw-text-xl sw-text-black/60">+</button>
                   </div>
 
                   <button
                     type="submit"
                     data-role="atc-btn"
-                    data-label="Buy Now"
+                    data-label="{{ section.settings.cta_label }}"
                     class="sw-flex-1 sw-h-12 sw-rounded-2xl sw-text-white sw-font-semibold sw-text-sm sw-shadow-sm"
                     style="background: {{ section.settings.accent }};"
-                    {% unless v.available %}disabled{% endunless %}
+                    {% unless available %}
+                      disabled
+                    {% endunless %}
                   >
-                    Buy Now
+                    {{ section.settings.cta_label }}
                   </button>
                 </div>
 
                 <p data-role="status" class="sw-mt-3 sw-text-xs sw-text-red-600"></p>
               </form>
 
-              <!-- Payment icons -->
-              <div class="sw-mt-5 sw-rounded-2xl sw-border sw-border-black/10 sw-bg-white sw-p-4">
-                <p class="sw-text-xs sw-font-semibold sw-text-black/70">Secure Checkout</p>
-                <div class="sw-mt-3 sw-flex sw-flex-wrap sw-gap-2 sw-items-center">
-                  {% for type in shop.enabled_payment_types %}
-                    {{ type | payment_type_svg_tag: class: 'sw-h-7 sw-w-auto' }}
-                  {% endfor %}
+              {% assign t1 = section.settings.trust_1 | default: 'Free Shipping' %}
+              {% assign t2 = section.settings.trust_2 | default: 'Easy Returns' %}
+              {% assign t3 = section.settings.trust_3 | default: 'COD Available' %}
+
+              <div class="sw-mt-4 sw-rounded-2xl sw-bg-white/70 sw-border sw-border-black/10 sw-px-4 sw-py-3">
+                <div class="sw-flex sw-flex-wrap sw-items-center sw-gap-x-6 sw-gap-y-3">
+                  <div class="sw-inline-flex sw-items-center sw-gap-2">
+                    <span
+                      class="sw-grid sw-place-items-center sw-h-8 sw-w-8 sw-rounded-full sw-bg-black/5 sw-border sw-border-black/10"
+                    >
+                      <!-- truck -->
+                      <svg
+                        viewBox="0 0 24 24"
+                        class="sw-h-4 sw-w-4 sw-text-black/70"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path d="M3 7h11v10H3z"></path>
+                        <path d="M14 10h4l3 3v4h-7z"></path>
+                        <circle cx="7" cy="19" r="1.5"></circle>
+                        <circle cx="17" cy="19" r="1.5"></circle>
+                      </svg>
+                    </span>
+                    <span class="sw-text-sm sw-text-black/70">{{ t1 }}</span>
+                  </div>
+
+                  <div class="sw-inline-flex sw-items-center sw-gap-2">
+                    <span
+                      class="sw-grid sw-place-items-center sw-h-8 sw-w-8 sw-rounded-full sw-bg-black/5 sw-border sw-border-black/10"
+                    >
+                      <!-- return -->
+                      <svg
+                        viewBox="0 0 24 24"
+                        class="sw-h-4 sw-w-4 sw-text-black/70"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+                        <path d="M3 4v6h6"></path>
+                      </svg>
+                    </span>
+                    <span class="sw-text-sm sw-text-black/70">{{ t2 }}</span>
+                  </div>
+
+                  <div class="sw-inline-flex sw-items-center sw-gap-2">
+                    <span
+                      class="sw-grid sw-place-items-center sw-h-8 sw-w-8 sw-rounded-full sw-bg-black/5 sw-border sw-border-black/10"
+                    >
+                      <!-- COD / wallet -->
+                      <svg
+                        viewBox="0 0 24 24"
+                        class="sw-h-4 sw-w-4 sw-text-black/70"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path d="M3 7h18v10H3z"></path>
+                        <path d="M16 12h3"></path>
+                      </svg>
+                    </span>
+                    <span class="sw-text-sm sw-text-black/70">{{ t3 }}</span>
+                  </div>
                 </div>
               </div>
 
+              {% if section.settings.show_payments %}
+                <div class="sw-mt-5 sw-rounded-2xl sw-border sw-border-black/10 sw-bg-white sw-p-4">
+                  <p class="sw-text-xs sw-font-semibold sw-text-black/70">{{ section.settings.payment_title }}</p>
+                  <div class="sw-mt-3 sw-flex sw-flex-wrap sw-gap-2 sw-items-center">
+                    {% for type in shop.enabled_payment_types %}
+                      {{ type | payment_type_svg_tag: class: 'sw-h-7 sw-w-auto' }}
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endif %}
+
+              <!-- MOBILE STICKY ATC -->
+              <div
+                data-role="sticky-atc"
+                class="
+                  sw-fixed sw-left-0 sw-right-0 sw-bottom-0 sw-z-[9999] sw-bg-white sw-border-t sw-border-black/10 sw-shadow-[0_-12px_30px_rgba(0,0,0,0.10)] sw-px-4 sw-pt-3 sw-pb-[calc(12px+env(safe-area-inset-bottom))]
+                  sw-transition sw-duration-300 sw-ease-out
+                  sw-translate-y-[120%] sw-opacity-0 sw-pointer-events-none
+                "
+              >
+                <div class="sw-flex sw-items-center sw-gap-3">
+                  <div class="sw-flex-1 sw-min-w-0">
+                    <div class="sw-text-[11px] sw-text-black/50 sw-leading-none">Total</div>
+                    <div
+                      data-role="sticky-price"
+                      class="sw-mt-1 sw-text-[16px] sw-font-semibold sw-text-[#111111] sw-leading-tight"
+                    >
+                      {{ v.price | money }}
+                    </div>
+                  </div>
+
+                  <div
+                    class="sw-flex sw-items-center sw-justify-between sw-rounded-2xl sw-bg-white sw-border sw-border-black/10 sw-w-[132px] sw-h-11 sw-px-3"
+                  >
+                    <button type="button" data-role="sticky-qty-minus" class="sw-text-xl sw-text-black/60">–</button>
+                    <input
+                      data-role="sticky-qty"
+                      value="1"
+                      inputmode="numeric"
+                      class="sw-w-10 sw-text-center sw-bg-transparent sw-outline-none sw-text-sm sw-font-medium sw-text-[#111111]"
+                    >
+                    <button type="button" data-role="sticky-qty-plus" class="sw-text-xl sw-text-black/60">+</button>
+                  </div>
+
+                  <button
+                    type="button"
+                    data-role="sticky-atc-btn"
+                    data-label="{{ section.settings.cta_label }}"
+                    class="
+                      sw-fixed sw-left-0 sw-right-0 sw-bottom-0 sw-z-[9999] sw-bg-white sw-border-t sw-border-black/10
+                      sw-shadow-[0_-12px_30px_rgba(0,0,0,0.10)] sw-px-4 sw-pt-3 sw-pb-[calc(12px+env(safe-area-inset-bottom))]
+                      sw-transition sw-duration-300 sw-ease-out sw-translate-y-[120%] sw-opacity-0 sw-pointer-events-none
+                    "
+                    style="background: {{ section.settings.accent }};"
+                    {% unless available %}
+                      disabled
+                    {% endunless %}
+                  >
+                    {{ section.settings.cta_label }}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-
         </div>
       </meziva-single-product-hero>
     {% endif %}
-
   </div>
 </section>
+
+<style>
+  .sw-no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .sw-no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+</style>
 
 {% schema %}
 {
   "name": "Single Product Hero",
   "settings": [
-    { "type": "product", "id": "product", "label": "Product (Home page)", "info": "Home page pe single product select karo" },
+     { "type": "text", "id": "section-id", "label": "Section ID", "info": "#banner" },
+    { "type": "product", "id": "product", "label": "Product (Home page)" },
+
     { "type": "text", "id": "kicker", "label": "Kicker", "default": "CLEAN • HYDRATING • TINTED" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Hydrating Tinted Lip Balm" },
-    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Skincare-first lip balm with hydration + tint in 1 swipe. Lightweight, non-sticky feel." },
+    { "type": "text", "id": "heading", "label": "Heading (optional)" },
+
+    { "type": "checkbox", "id": "show_reviews", "label": "Show reviews widget", "default": true },
+    {
+      "type": "range",
+      "id": "rating_value",
+      "label": "Rating (display only)",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 5
+    },
+    { "type": "number", "id": "rating_count", "label": "Reviews count (display only)", "default": 1200 },
+
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Skincare-first lip balm with hydration + tint in 1 swipe. Lightweight, non-sticky feel."
+    },
+
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Buy Now" },
+    { "type": "text", "id": "price_note", "label": "Price note", "default": "Inclusive of all taxes" },
+
+    { "type": "text", "id": "trust_1", "label": "Trust 1", "default": "Free Shipping" },
+    { "type": "text", "id": "trust_2", "label": "Trust 2", "default": "Easy Returns" },
+    { "type": "text", "id": "trust_3", "label": "Trust 3", "default": "COD Available" },
+
     { "type": "color", "id": "accent", "label": "Accent", "default": "#FF60A6" },
+
+    { "type": "checkbox", "id": "enable_sticky_atc", "label": "Enable mobile sticky ATC", "default": true },
+    {
+      "type": "select",
+      "id": "redirect_after_atc",
+      "label": "After Add to cart",
+      "default": "checkout",
+      "options": [
+        { "value": "checkout", "label": "Go to checkout" },
+        { "value": "cart", "label": "Go to cart" },
+        { "value": "none", "label": "Stay on page" }
+      ]
+    },
+
     { "type": "checkbox", "id": "enable_image_slider", "label": "Enable image slider", "default": true },
-{ "type": "range", "id": "slider_image_limit", "label": "Max images in slider", "min": 1, "max": 10, "step": 1, "default": 6 },
-{ "type": "checkbox", "id": "slider_show_arrows", "label": "Show arrows", "default": true },
-{ "type": "checkbox", "id": "slider_show_dots", "label": "Show dots", "default": true }
+    {
+      "type": "range",
+      "id": "slider_image_limit",
+      "label": "Max images in slider",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 6
+    },
+    { "type": "checkbox", "id": "slider_show_arrows", "label": "Show arrows", "default": true },
+    { "type": "checkbox", "id": "slider_show_dots", "label": "Show dots", "default": true },
+    { "type": "checkbox", "id": "slider_autoplay", "label": "Autoplay slider", "default": true },
+    {
+      "type": "range",
+      "id": "slider_interval",
+      "label": "Autoplay interval (seconds)",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4
+    },
 
+    { "type": "text", "id": "solve_title", "label": "Solve section title", "default": "Made to solve" },
 
+    { "type": "checkbox", "id": "show_payments", "label": "Show payment icons", "default": false },
+    { "type": "text", "id": "payment_title", "label": "Payment title", "default": "Secure Checkout" }
   ],
   "blocks": [
     {
-      "type": "badge",
-      "name": "Badge",
+      "type": "solve_item",
+      "name": "Solve item",
       "settings": [
-        { "type": "text", "id": "text", "label": "Badge text", "default": "Non-sticky" }
+        { "type": "image_picker", "id": "icon", "label": "Icon (PNG/SVG)" },
+        { "type": "text", "id": "text", "label": "Label", "default": "Dryness" }
       ]
     }
   ],
@@ -200,15 +465,13 @@
     {
       "name": "Single Product Hero",
       "blocks": [
-        { "type": "badge", "settings": { "text": "Non-sticky" } },
-        { "type": "badge", "settings": { "text": "Daily wear" } },
-        { "type": "badge", "settings": { "text": "Comfort hydration" } }
+        { "type": "solve_item", "settings": { "text": "Dryness" } },
+        { "type": "solve_item", "settings": { "text": "Chapping" } },
+        { "type": "solve_item", "settings": { "text": "Pigmentation" } }
       ]
     }
   ]
 }
 {% endschema %}
 
-
-
-    {% render 'vite-tag' with 'meziva-home-hero.js' %}
+{% render 'vite-tag' with 'meziva-home-hero.js' %}

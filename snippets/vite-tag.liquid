@@ -3,29 +3,29 @@
   Do not attempt to modify this file directly, as any changes will be overwritten by the next build.
 {% endcomment %}
 {% assign path = vite-tag | replace: '@fonts/', '../fonts/' | replace: '@modules/', '../modules/' | replace: '~/', '../' | replace: '@/', '../' %}
-{% if path == "/frontend/entrypoints/announcement-bar-v2.js" or path == "announcement-bar-v2.js" %}
-  <script src="{{ 'announcement-bar-v2-SC-qhi5U.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
-{% elsif path == "/frontend/entrypoints/announcementbar.js" or path == "announcementbar.js" %}
-  <script src="{{ 'announcementbar-SC-qhi5U.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
-{% elsif path == "/frontend/entrypoints/base.css" or path == "base.css" %}
-  {{ 'base-D_rHnBzC.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
-{% elsif path == "/frontend/entrypoints/featured-article-slider.js" or path == "featured-article-slider.js" %}
-  <script src="{{ 'featured-article-slider-BcSN_ETb.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
-{% elsif path == "/frontend/entrypoints/featured-collection-slider.js" or path == "featured-collection-slider.js" %}
-  <script src="{{ 'featured-collection-slider-BOsrJ140.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
-{% elsif path == "/frontend/entrypoints/featured-slider.js" or path == "featured-slider.js" %}
-  <script src="{{ 'featured-slider-DtR_jB18.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
-{% elsif path == "/frontend/entrypoints/featured-testmonial-slider.js" or path == "featured-testmonial-slider.js" %}
-  <script src="{{ 'featured-testmonial-slider-CSD-7OM2.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
-{% elsif path == "/frontend/entrypoints/header-v2.js" or path == "header-v2.js" %}
-  <script src="{{ 'header-v2-CoQqXZmc.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
-{% elsif path == "/frontend/entrypoints/ingredients.js" or path == "ingredients.js" %}
-  <script src="{{ 'ingredients-BG6jaZl3.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
-{% elsif path == "/frontend/entrypoints/keen-slider.js" or path == "keen-slider.js" %}
-  <script src="{{ 'keen-slider-CaOsryxZ.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
-  {{ 'keen-slider-BWf4Yhr3.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
-{% elsif path == "/frontend/entrypoints/meziva-home-hero.js" or path == "meziva-home-hero.js" %}
-  <script src="{{ 'meziva-home-hero-D1v4-q2f.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
-{% elsif path == "/frontend/entrypoints/slideshow-v2.js" or path == "slideshow-v2.js" %}
-  <script src="{{ 'slideshow-v2-DPrFYJCJ.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
+{% liquid
+  assign path_prefix = path | slice: 0
+  if path_prefix == '/'
+    assign file_url_prefix = 'http://127.0.0.1:3000'
+  else
+    assign file_url_prefix = 'http://127.0.0.1:3000/frontend/entrypoints/'
+  endif
+  assign file_url = path | prepend: file_url_prefix
+  assign file_name = path | split: '/' | last
+  if file_name contains '.'
+    assign file_extension = file_name | split: '.' | last
+  endif
+  assign css_extensions = 'css|less|sass|scss|styl|stylus|pcss|postcss' | split: '|'
+  assign is_css = false
+  if css_extensions contains file_extension
+    assign is_css = true
+  endif
+%}
+<script src="http://127.0.0.1:3000/@id/__x00__vite-plugin-shopify:react-refresh" type="module"></script>
+<script src="http://127.0.0.1:3000/@vite/client" type="module"></script>
+<script id="hot-reload-client" src="https://cdn.jsdelivr.net/npm/@shopify/theme-hot-reload/dist/theme-hot-reload.min.js" type="module"></script>
+{% if is_css == true %}
+  <link rel="stylesheet" href="{{ file_url }}" crossorigin="anonymous">
+{% else %}
+  <script src="{{ file_url }}" type="module"></script>
 {% endif %}

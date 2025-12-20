@@ -7,12 +7,12 @@
         transform:rotate(180deg);
     }
 {% endstyle %}
-<div data-role="header-overlay" class="sw-fixed sw-top-0 sw-left-0 sw-w-full sw-h-full sw-bg-[rgba(0,0,0,0.4)] sw-z-999 sw-backdrop-blur-sm sw-hidden [&.active]:sw-block sw-z-[999]"></div>
-<div class="sw-fixed sw-left-0 lg:sw-hidden sw-top-0 sw-h-full sw-w-[calc(100%_-_20px)] md:sw-max-w-[400px] sw-bg-[#ffffff] sw-hidden [&.active]:sw-block before:sw-content-[''] before:sw-w-full before:sw-opacity-0 before:sw-transition-all [&.updating]:before:sw-opacity-100 before:sw-pointer-events-none before:sw-h-full before:sw-bg-[#ffffff] before:sw-absolute before:sw-left-0 before:sw-top-0 before:sw-duration-[400ms] sw-z-[1000]" data-role="mobile-nav">
-    <div class="sw-py-5 sw-px-5">
-        <div class="sw-flex sw-justify-between sw-items-center">
-            <h1 class="sw-mb-0">
-                <a href="{{ shop.url }}" class="sw-text-[24px] sw-flex sw-justify-center sw-items-center">
+<div data-role="header-overlay" class="mb-fixed mb-top-0 mb-left-0 mb-w-full mb-h-full mb-bg-[rgba(0,0,0,0.4)] mb-z-999 mb-backdrop-blur-sm mb-hidden [&.active]:mb-block mb-z-[999]"></div>
+<div class="mb-fixed mb-left-0 xl:mb-hidden mb-top-0 mb-h-full mb-w-[calc(100%_-_20px)] md:mb-max-w-[400px] mb-bg-[#ffffff] mb-hidden [&.active]:mb-block before:mb-content-[''] before:mb-w-full before:mb-opacity-0 before:mb-transition-all [&.updating]:before:mb-opacity-100 before:mb-pointer-events-none before:mb-h-full before:mb-bg-[#ffffff] before:mb-absolute before:mb-left-0 before:mb-top-0 before:mb-duration-[400ms] mb-z-[1000]" data-role="mobile-nav">
+    <div class="mb-py-5 mb-px-5">
+        <div class="mb-flex mb-justify-between mb-items-center"> 
+            <h1 class="mb-mb-0">
+                <a href="{{ shop.url }}" class="mb-text-[24px] mb-flex mb-justify-center mb-items-center">
                      {% liquid
                       assign logo_type = section.settings.logo_type
                       if logo_type == 'svg'
@@ -23,25 +23,26 @@
                     %}
                     {% if logo != blank %}
                         {% if logo_type == 'svg' %}
-                            <span class="sw-inline-blocks">{{ logo }}</span>
+                            <span class="mb-flex mb-items-center mb-w-[200px] xl:mb-w-[220px]">{{ logo }}</span>
                         {% else %}
-                            <span class="sw-inline-block">{{ logo | image_url: width: 200, height: 200 | image_tag }}</span>
-                        {% endif %}
-                    {% else %}
+                        <span class="mb-inline-block">
+                            {{ logo | image_url: width: 140 | image_tag: loading: 'lazy', alt: shop.name }}
+                            </span>              {% endif %}
+                        {% else %}
                         {{ shop.name }}
-                    {% endif %}
-                </a>
+                        {% endif %}
+                </a> 
             </h1>
-            <button data-role="nav-hide" class="sw-grid sw-place-items-center sw-h-7 sw-w-7 sw-rounded-full sw-bg-[#FFF6FA] sw-border sw-border-black/5 sw-transition group-hover:sw-bg-white">
-                {% render 'icons-v2', icon:'icon-cross',class:"sw-fill-[#724430] sw-w-[14px] sw-h-[14px]" %}</button>
+            <button data-role="nav-hide" class="mb-grid mb-place-items-center mb-h-7 mb-w-7 mb-rounded-full mb-bg-[#FFF6FA] mb-border mb-border-black/5 mb-transition group-hover:mb-bg-white">
+                {% render 'icons-v2', icon:'icon-cross',class:"mb-fill-[#724430] mb-w-[14px] mb-h-[14px]" %}</button>
         </div>
-        <div class="sw-mt-6 sw-max-h-[calc(100vh_-_80px)] sw-overflow-y-auto">
+        <div class="mb-mt-6 mb-max-h-[calc(100vh_-_80px)] mb-overflow-y-auto">
             <div class="">
                 {% for link in mobile_navigation.links %}
-                    <div class="sw-py-4 sw-border-[#fff] sw-border-t-[1px]">
+                    <div class="mb-py-4 mb-border-[#fff] mb-border-t-[1px]">
                     {% if link.levels > 0 %}
                             <toggle-expand>
-                                <div data-role="header" class="sw-flex sw-justify-between">
+                                <div data-role="header" class="mb-flex mb-justify-between">
                                     {% assign style = false %}
                                     {% for block in section.blocks %}
                                         {% if block.type == 'style' and block.settings.navigation_title == link.title %}
@@ -49,28 +50,28 @@
                                             {% assign color = block.settings.text_color %}
                                         {% endif %}
                                     {% endfor %}
-                                    <a href="{{ link.url }}" {% if style %}style="color:{{ color }}!important;"{% endif %} class="!sw-text-[#724430] sw-font-medium sw-text-[16px] hover:sw-opacity-[.8]">{{ link.title }}</a>
-                                    <button data-role="trigger">{% render 'icons-v2', icon: 'icon-caret-down', class:'sw-w-4 sw-h-4 sw-text-[#fff] group-[&.active]:sw-rotate-[180deg] sw-trasition-all sw-duration-[400ms]' %}</button>
+                                    <a href="{{ link.url }}" {% if style %}style="color:{{ color }}!important;"{% endif %} class="!mb-text-[#724430] mb-font-medium mb-text-[16px] hover:mb-opacity-[.8]">{{ link.title }}</a>
+                                    <button data-role="trigger">{% render 'icons-v2', icon: 'icon-caret-down', class:'mb-w-4 mb-h-4 mb-text-[#fff] group-[&.active]:mb-rotate-[180deg] mb-trasition-all mb-duration-[400ms]' %}</button>
                                 </div>
-                                <div data-role="content" class="sw-max-h-[0px] sw-overflow-hidden">
+                                <div data-role="content" class="mb-max-h-[0px] mb-overflow-hidden">
                                     {% for child_link in link.links %}
                                         <div class="">
                                             {% if child_link.levels > 0 %}
                                                 <toggle-expand>
-                                                    <div data-role="header" class="sw-flex sw-justify-between sw-pt-4">
-                                                        <a href="{{ child_link.url }}" class="!sw-text-[#724430] sw-font-medium sw-text-[16px] hover:sw-opacity-[.8]">{{ child_link.title }}</a>
-                                                        <button class="" data-role="trigger">{% render 'icons-v2', icon: 'icon-caret-down', class:'sw-w-4 sw-h-4 sw-text-[#fff]  group-[&.active]:sw-rotate-[180deg] sw-trasition-all sw-duration-[400ms]' %}</button>
+                                                    <div data-role="header" class="mb-flex mb-justify-between mb-pt-4">
+                                                        <a href="{{ child_link.url }}" class="!mb-text-[#724430] mb-font-medium mb-text-[16px] hover:mb-opacity-[.8]">{{ child_link.title }}</a>
+                                                        <button class="" data-role="trigger">{% render 'icons-v2', icon: 'icon-caret-down', class:'mb-w-4 mb-h-4 mb-text-[#fff]  group-[&.active]:mb-rotate-[180deg] mb-trasition-all mb-duration-[400ms]' %}</button>
                                                     </div>
-                                                    <div data-role="content" class="sw-max-h-[0px] sw-overflow-hidden">
+                                                    <div data-role="content" class="mb-max-h-[0px] mb-overflow-hidden">
                                                         {% for grand_child in child_link.links %}
                                                             <div class="">
-                                                                <a class="!sw-text-[#724430] sw-font-medium sw-pt-4 sw-text-[14px]" href="{{ grand_child.url }}">{{ grand_child.title }}</a>
+                                                                <a class="!mb-text-[#724430] mb-font-medium mb-pt-4 mb-text-[14px]" href="{{ grand_child.url }}">{{ grand_child.title }}</a>
                                                             </div>
-                                                        {% endfor %}sw-
+                                                        {% endfor %}mb-
                                                     </div>
                                                 </toggle-expand>
                                             {% else %}
-                                                <a href="{{ child_link.url }}" class="!sw-text-[#724430] sw-font-medium sw-pt-4 sw-text-[14px]">{{ child_link.title }}</a>
+                                                <a href="{{ child_link.url }}" class="!mb-text-[#724430] mb-font-medium mb-pt-4 mb-text-[14px]">{{ child_link.title }}</a>
                                             {% endif %}
                                         </div>
                                     {% endfor %}
@@ -85,7 +86,7 @@
                                 {% assign color = block.settings.text_color %}
                             {% endif %}
                         {% endfor %}
-                        <a href="{{ link.url }}" {% if style %}style="color:{{ color }}!important;"{% endif %} class="!sw-text-[#724430] sw-font-medium sw-text-[16px]">{{ link.title }}</a>
+                        <a href="{{ link.url }}" {% if style %}style="color:{{ color }}!important;"{% endif %} class="!mb-text-[#724430] mb-font-medium mb-text-[16px]">{{ link.title }}</a>
                     {% endif %}
                     </div>
                 {% endfor %}

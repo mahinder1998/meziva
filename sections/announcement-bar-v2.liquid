@@ -18,12 +18,12 @@
 %}
 {% if blocks_to_render > 0 %}
     <section id="announcement-bar={{ section.id }}">
-        <announcement-bar class="sw-relative" data-section="{{ section.id }}"
+        <announcement-bar class="mb-relative" data-section="{{ section.id }}"
             data-autoplay="{{ section.settings.autoplay }}"
             data-time="{{ section.settings.autoplay_time }}"
             data-blocks="{{ blocks_to_render }}"
         >
-            <div style="{% if bg_type == 'image' %}background-image:url('{{ bg_image | image_url : 400 }}'){% else %}background-color:{{  bg_color }}{% endif %}" data-role="container" class="sw-flex sw-flex-nowrap {% if blocks_to_render > 1 %}keen-slider{% endif %}">
+            <div style="{% if bg_type == 'image' %}background-image:url('{{ bg_image | image_url : 400 }}'){% else %}background-color:{{  bg_color }}{% endif %}" data-role="container" class="mb-flex mb-flex-nowrap {% if blocks_to_render > 1 %}keen-slider{% endif %}">
                 {% for block in section.blocks %}
                     {% if block.type == block_type %}
                         {% liquid
@@ -33,17 +33,17 @@
                         assign copy_text = block.settings.copy_text_content
                         assign copy_icon = block.settings.copy_icon
                         %}
-                        <div class="sw-flex-[0_0_100%] sw-max-w-[100%] sw-flex sw-justify-center sw-items-center sw-px-3 sw-py-3 sw-group {% if blocks_to_render > 1 %}keen-slider__slide{% endif %}" data-beahavior="{{ behavior }}" data-role="announcement-strip" data-content="{{ copy_text }}" data-text="{{ text }}">
+                        <div class="mb-flex-[0_0_100%] mb-max-w-[100%] mb-flex mb-justify-center mb-items-center mb-px-3 mb-py-3 mb-group {% if blocks_to_render > 1 %}keen-slider__slide{% endif %}" data-beahavior="{{ behavior }}" data-role="announcement-strip" data-content="{{ copy_text }}" data-text="{{ text }}">
                             {% if behavior == 'redirect' %}
-                                <a href="{{ link }}" style="color:{{ text_color }};" class="sw-no-underline sw-text-[14px] lg:sw-text-[16px] sw-text-center sw-leading-[18px] *:sw-mb-0 sw-font-body sw-font-normal">{{ text }}</a>
+                                <a href="{{ link }}" style="color:{{ text_color }};" class="mb-no-underline mb-text-[14px] xl:mb-text-[16px] mb-text-center mb-leading-[18px] *:mb-mb-0 mb-font-body mb-font-normal">{{ text }}</a>
                             {% else %}
-                                <div data-role="copy" style="color:{{ text_color }};" class="sw-flex sw-items-center sw-gap-[4px] sw-cursor-pointer *:sw-mb-0"><span class="sw-opacity sw-no-underline sw-font-body sw-text-[13px] lg:sw-text-[14px] sw-font-medium *:sw-mb-0 sw-text-center sw-leading-[18px]">
+                                <div data-role="copy" style="color:{{ text_color }};" class="mb-flex mb-items-center mb-gap-[4px] mb-cursor-pointer *:mb-mb-0"><span class="mb-opacity mb-no-underline mb-font-body mb-text-[13px] xl:mb-text-[14px] mb-font-medium *:mb-mb-0 mb-text-center mb-leading-[18px]">
                                     {{ text }}
                                     </span>
                                     {% if copy_icon %}
-                                        <span class="sw-relative sw-w-[20px] sw-h-[20px] sw-flex sw-justify-center sw-items-center">
-                                            {% render 'icons-v2', icon:'icon-copy',class:'sw-w-[14px] sw-h-[14px] sw-transition-all group-[&.copied]:sw-opacity-0' %}
-                                            {% render 'icons-v2',icon:'icon-copy-check', class:'sw-w-[14px] sw-h-[14px] sw-absolute sw-opacity-0 group-[&.copied]:sw-opacity-100 sw-top-[50%] sw-left-[50%] sw-translate-x-[-50%] sw-translate-y-[-50%]' %}
+                                        <span class="mb-relative mb-w-[20px] mb-h-[20px] mb-flex mb-justify-center mb-items-center">
+                                            {% render 'icons-v2', icon:'icon-copy',class:'mb-w-[14px] mb-h-[14px] mb-transition-all group-[&.copied]:mb-opacity-0' %}
+                                            {% render 'icons-v2',icon:'icon-copy-check', class:'mb-w-[14px] mb-h-[14px] mb-absolute mb-opacity-0 group-[&.copied]:mb-opacity-100 mb-top-[50%] mb-left-[50%] mb-translate-x-[-50%] mb-translate-y-[-50%]' %}
                                         </span>
                                     {% endif %}
                                 </div>
@@ -53,8 +53,8 @@
                 {% endfor %}
             </div>
             {% if section.settings.arrows and blocks_to_render > 1 %}
-                <button class="sw-absolute sw-top-[50%] sw-translate-y-[-50%] sw-left-[10px] sw-z-[1] sw-w-[20px] sw-h-[20px] sw-flex sw-justify-center sw-items-center" data-role="prev" style="color:{{ text_color }}">{% render 'icons-v2', icon:'icon-caret-left',class:'sw-w-4 sw-h-4' %}</button>
-                <button class="sw-absolute sw-top-[50%] sw-translate-y-[-50%] sw-right-[10px] sw-z-[1] sw-w-[20px] sw-h-[20px] sw-flex jsw-ustify-center sw-items-center" data-role="next"  style="color:{{ text_color }}">{% render 'icons-v2', icon:'icon-caret-right',class:'sw-w-4 sw-h-4' %}</button>
+                <button class="mb-absolute mb-top-[50%] mb-translate-y-[-50%] mb-left-[10px] mb-z-[1] mb-w-[20px] mb-h-[20px] mb-flex mb-justify-center mb-items-center" data-role="prev" style="color:{{ text_color }}">{% render 'icons-v2', icon:'icon-caret-left',class:'mb-w-4 mb-h-4' %}</button>
+                <button class="mb-absolute mb-top-[50%] mb-translate-y-[-50%] mb-right-[10px] mb-z-[1] mb-w-[20px] mb-h-[20px] mb-flex jmb-ustify-center mb-items-center" data-role="next"  style="color:{{ text_color }}">{% render 'icons-v2', icon:'icon-caret-right',class:'mb-w-4 mb-h-4' %}</button>
             {% endif %}
         </announcement-bar>
     </section>

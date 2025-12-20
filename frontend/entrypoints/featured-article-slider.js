@@ -178,7 +178,7 @@ class FeaturedArticle extends HTMLElement {
 
     for (let i = 0; i < count; i++) {
       let dot = document.createElement("button");
-      dot.className = "dot sw-w-3 sw-h-3 sw-rounded-full sw-bg-white/40";
+      dot.className = "dot mb-w-3 mb-h-3 mb-rounded-full mb-bg-white/40";
       dot.dataset.index = i;
 
       dot.addEventListener("click", () => {

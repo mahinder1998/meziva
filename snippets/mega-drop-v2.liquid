@@ -7,9 +7,9 @@
         endif
       endfor
     %}
-    <div data-role="mega-drop"  class="sw-hidden lg:sw-absolute lg:sw-bottom-0 lg:sw-translate-y-full lg:sw-w-full lg:sw-left-0 lg:sw-h-full lg:sw-bg-[#fff] lg:sw-min-h-[350px] sw-shadow-md">
-        <div class="sw-py-10 sw-px-24 sw-relative">
-            <div class="sw-grid sw-grid-cols-5 sw-gap-5 sw-justify-center">
+    <div data-role="mega-drop"  class="mb-hidden xl:mb-absolute xl:mb-bottom-0 xl:mb-translate-y-full xl:mb-w-full xl:mb-left-0 xl:mb-h-full xl:mb-bg-[#fff] xl:mb-min-h-[350px] mb-shadow-md">
+        <div class="mb-py-10 mb-px-24 mb-relative">
+            <div class="mb-grid mb-grid-cols-5 mb-gap-5 mb-justify-center">
                 {% if link.levels > 0 %}
                         {% assign child_link_size = link.links.size %}
                         {% assign max_link_size = 6 %}
@@ -21,7 +21,7 @@
                                     {% for child_link in link.links %}
                                         {% assign current_index = forloop.index %}
                                         {% if current_index >= start_index and current_index <= current_temination_index %}
-                                            <a href="{{ child_link.url }}" class="sw-text-[14px] sw-font-primary sw-font-normal sw-mb-[10px] hover:sw-font-semibold">{{ child_link.title }}</a>
+                                            <a href="{{ child_link.url }}" class="mb-text-[14px] mb-font-primary mb-font-normal mb-mb-[10px] hover:mb-font-semibold">{{ child_link.title }}</a>
                                         {% endif %}
                                     {% endfor %}
                                 </div>
@@ -41,7 +41,7 @@
                             endif
                             %}
                             <div class="">
-                                <div class="sw-relative sw-overflow-hidden sw-bg-[#b1b1b1]" style="padding-bottom:{{ 1 | divided_by : image_ratio | times : 100 }}%">
+                                <div class="mb-relative mb-overflow-hidden mb-bg-[#b1b1b1]" style="padding-bottom:{{ 1 | divided_by : image_ratio | times : 100 }}%">
                                     <picture>
                                         <source
                                         media="(max-width: 1024px)"
@@ -60,10 +60,10 @@
                                         }}
                                     </picture>
                                     {% if block_redirection != blank %}
-                                            <a href="{{ block_redirection }}" class="sw-block sw-w-full sw-h-full sw-absolute sw-top-0 sw-left-0"></a>
+                                            <a href="{{ block_redirection }}" class="mb-block mb-w-full mb-h-full mb-absolute mb-top-0 mb-left-0"></a>
                                     {% endif %}
                                 </div>
-                                <a href="{{ block_redirection }}" class="sw-text-center sw-text-[14px] sw-mt-1">{{ block_title }}</a>
+                                <a href="{{ block_redirection }}" class="mb-text-center mb-text-[14px] mb-mt-1">{{ block_title }}</a>
                             </div>
                         {% endif %}
                     {% endfor %}

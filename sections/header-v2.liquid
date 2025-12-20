@@ -166,20 +166,20 @@
     }
   </script>
 
-  <div class="lg:sw-relative" style="background-color:{{ section.settings.header_bg }};" data-role="header-wrapper">
+  <div class="xl:mb-relative" style="background-color:{{ section.settings.header_bg }};" data-role="header-wrapper">
     <div
       data-role="header-top-bar "
       class="
-        sw-py-3 sw-px-[18px] sw-items-center
-
-        sw-grid sw-grid-cols-[100px,1fr,0,100px] sw-gap-0 lg:sw-flex
-         sw-max-w-[1240px] sw-mx-auto lg:sw-py-6
+        mb-py-3  mb-items-center
+        mb-px-4
+        mb-grid mb-grid-cols-[100px,1fr,0,100px] mb-gap-0 xl:mb-flex
+         mb-max-w-[1240px] mb-mx-auto xl:mb-py-6 xl:mb-px-0
       "
     >
-      <button data-role="nav-display" class="lg:sw-hidden">{% render 'icons-v2', icon: 'icon-hamburger' %}</button>
+      <button data-role="nav-display" class="xl:mb-hidden">{% render 'icons-v2', icon: 'icon-hamburger' %}</button>
       <div class="" data-role="header-icon">
-        <h1 class="sw-mb-0">
-          <a href="{{ shop.url }}" class="sw-text-[24px] sw-flex sw-items-center sw-justify-center">
+        <h1 class="mb-mb-0">
+          <a href="{{ shop.url }}" class="mb-text-[24px] mb-flex mb-items-center mb-justify-center">
             {% liquid
               assign logo_type = section.settings.logo_type
               if logo_type == 'svg'
@@ -190,38 +190,43 @@
             %}
             {% if logo != blank %}
               {% if logo_type == 'svg' %}
-                <span class="sw-flex sw-items-center sw-w-[200px] lg:sw-w-[220px]">{{ logo }}</span>
+                <span class="mb-flex mb-items-center mb-w-[200px] xl:mb-w-[220px]">{{ logo }}</span>
               {% else %}
-                <span class="sw-inline-block">{{ logo | image_url: width: 200, height: 200 | image_tag }}</span>
+              <span class="mb-inline-block xl:mb-hidden">
+                  {{ logo | image_url: width: 140 | image_tag: loading: 'lazy', alt: shop.name }}
+                </span>
+                 <span class=" mb-hidden xl:mb-inline-block">
+                  {{ logo | image_url: width: 200 | image_tag: loading: 'lazy', alt: shop.name }}
+                </span>
               {% endif %}
             {% else %}
               {{ shop.name }}
             {% endif %}
           </a>
-        </h1>
+          </h1>
       </div>
 
       {% render 'mega-menu-v2', section: section %}
       {% render 'mobile-nav-v2', section: section %}
-      <div class="sw-ml-auto sw-flex sw-gap-3 sw-items-center" data-role="header-actions">
+      <div class="mb-ml-auto mb-flex mb-gap-3 mb-items-center" data-role="header-actions">
         {% if section.settings.enable_search %}
-          <div class="sw-hidden lg:sw-flex">
-            <predective-search class="lg:sw-min-w-[250px] sw-block" data-inputs="{{ type_inputs }}">
+          <div class="mb-hidden xl:mb-flex">
+            <predective-search class="xl:mb-min-w-[250px] mb-block" data-inputs="{{ type_inputs }}">
               <label
                 for="search-input"
-                class="sw-bg-[#fff] sw-border-none sw-rounded-full sw-mb-0 sw-flex sw-gap-3 lg:sw-gap-1 sw-items-center sw-px-[10px] sw-py-[6px]"
+                class="mb-bg-[#fff] mb-border-none mb-rounded-full mb-mb-0 mb-flex mb-gap-3 xl:mb-gap-1 mb-items-center mb-px-[10px] mb-py-[6px]"
               >
                 <button data-role="search-icon">{% render 'icons-v2', icon: 'icon-search' %}</button>
                 <input
                   data-role="search-input"
-                  class="sw-text-[14px] sw-font-primary sw-peer sw-w-full sw-p-0 sw-bg-transparent !sw-outline-none !sw-border-none sw-font-normal placeholder:sw-text-[#303030] placeholder:sw-font-bold [&.active]:placeholder:sw-text-[#A6A6A6] [&.active]:placeholder:sw-font-normal sw-tracking-normal"
+                  class="mb-text-[14px] mb-font-primary mb-peer mb-w-full mb-p-0 mb-bg-transparent !mb-outline-none !mb-border-none mb-font-normal placeholder:mb-text-[#303030] placeholder:mb-font-bold [&.active]:placeholder:mb-text-[#A6A6A6] [&.active]:placeholder:mb-font-normal mb-tracking-normal"
                   type="text"
                   id="search-input"
                   placeholder=""
                   autocomplete="off"
                 >
-                <button data-role="search-close" class="peer-[&.active]:sw-block sw-hidden">
-                  {% render 'icons-v2', icon: 'icon-search-close', class: 'sw-w-[20px] sw-h-[20px]' %}
+                <button data-role="search-close" class="peer-[&.active]:mb-block mb-hidden">
+                  {% render 'icons-v2', icon: 'icon-search-close', class: 'mb-w-[20px] mb-h-[20px]' %}
                 </button>
               </label>
             </predective-search>
@@ -231,45 +236,45 @@
         {% if customer %}
           <a
             href="{{ routes.account_url }}"
-            class="sw-group sw-inline-flex sw-items-center sw-gap-2 sw-rounded-full sw-border xl:sw-border-[#FF60A6]/25 sw-bg-white/70 sw-backdrop-blur xl:sw-px-3.5 xl:sw-py-2 sw-shadow-[0_6px_18px_rgba(0,0,0,0.06)] sw-transition hover:sw-bg-white hover:sw-border-[#FF60A6]/40 hover:sw-shadow-[0_10px_26px_rgba(0,0,0,0.10)]"
+            class="mb-group mb-inline-flex mb-items-center mb-gap-2 mb-rounded-full mb-border xl:mb-border-[#FF60A6]/25 mb-bg-white/70 mb-backdrop-blur xl:mb-px-3.5 xl:mb-py-2 mb-shadow-[0_6px_18px_rgba(0,0,0,0.06)] mb-transition hover:mb-bg-white hover:mb-border-[#FF60A6]/40 hover:mb-shadow-[0_10px_26px_rgba(0,0,0,0.10)]"
             aria-label="My account"
           >
-            <span class="sw-grid sw-place-items-center sw-h-7 sw-w-7 sw-rounded-full sw-bg-[#FFF6FA] sw-border sw-border-black/5 sw-transition group-hover:sw-bg-white">
+            <span class="mb-grid mb-place-items-center mb-h-7 mb-w-7 mb-rounded-full mb-bg-[#FFF6FA] mb-border mb-border-black/5 mb-transition group-hover:mb-bg-white">
               {%- render 'icons-v2', icon: 'icon-quickpass' -%}
             </span>
 
-            <span class="sw-hidden md:sw-inline sw-font-primary sw-text-[13px] sw-leading-none sw-font-semibold  sw-max-w-[120px] sw-truncate">
+            <span class="mb-hidden md:mb-inline mb-font-primary mb-text-[13px] mb-leading-none mb-font-semibold  mb-max-w-[120px] mb-truncate">
               {{ customer.first_name | default: 'Account' }}
             </span>
           </a>
         {% else %}
           <a
             href="{{ routes.account_login_url }}"
-            class="sw-group sw-inline-flex sw-items-center sw-gap-3 sw-rounded-full xl:sw-border sw-border-[#FF60A6]/25 sw-bg-white/70 sw-backdrop-blur xl:sw-px-6 xl:sw-py-2 sw-shadow-[0_6px_18px_rgba(0,0,0,0.06)] sw-transition hover:sw-bg-white hover:sw-border-[#FF60A6]/40 hover:sw-shadow-[0_10px_26px_rgba(0,0,0,0.10)]"
+            class="mb-group mb-inline-flex mb-items-center mb-gap-3 mb-rounded-xl xl:mb-border mb-border-[#FF60A6]/25 mb-bg-white/70 mb-backdrop-blur xl:mb-px-6 xl:mb-py-2 mb-shadow-[0_6px_18px_rgba(0,0,0,0.06)] mb-transition hover:mb-bg-white hover:mb-border-[#FF60A6]/40 hover:mb-shadow-[0_10px_26px_rgba(0,0,0,0.10)]"
             aria-label="Login or register"
           >
-            <span class="sw-grid sw-place-items-center sw-h-7 sw-w-7 sw-rounded-full sw-bg-[#FFF6FA] sw-border sw-border-black/5 sw-transition group-hover:sw-bg-white">
+            <span class="mb-grid mb-place-items-center mb-h-6 mb-w-6 mb-rounded-full mb-bg-[#FFF6FA] mb-border mb-border-black/5 mb-transition group-hover:mb-bg-white">
               {%- render 'icons-v2', icon: 'icon-quickpass' -%}
             </span>
 
-            <span class="sw-hidden md:sw-inline sw-font-primary sw-text-[13px] sw-leading-none sw-font-semibold ">
+            <span class="mb-hidden md:mb-inline mb-font-primary mb-text-[13px] mb-leading-none mb-font-semibold ">
               Login
             </span>
           </a>
         {% endif %}
 
         {% comment %}
-          <button class="sw-hidden lg:sw-block">
+          <button class="mb-hidden xl:mb-block">
             <a href="{{ section.settings.tracking_url }}">{% render 'icons-v2', icon: 'icon-shipping' %}</a>
           </button>
         {% endcomment %}
 
         {% comment %}
-          <button data-role="cart-open" class="sw-relative">
+          <button data-role="cart-open" class="mb-relative">
             {% render 'icons-v2', icon: 'icon-cart' -%}
             <span
               data-role="cart-count"
-              class="sw-bg-[#fc2679] sw-text-[#fff] sw-text-[10px] sw-absolute sw-top-0 sw-left-[50%] sw-rounded-full sw-w-[16px] sw-h-[16px] sw-flex sw-justify-center sw-items-center sw-border-none cart-link__bubble-num {% if cart.item_count == 0 %}sw-opacity-0{% endif %}"
+              class="mb-bg-[#fc2679] mb-text-[#fff] mb-text-[10px] mb-absolute mb-top-0 mb-left-[50%] mb-rounded-full mb-w-[16px] mb-h-[16px] mb-flex mb-justify-center mb-items-center mb-border-none cart-link__bubble-num {% if cart.item_count == 0 %}mb-opacity-0{% endif %}"
             >
               {{- cart.item_count -}}
             </span>
@@ -280,38 +285,38 @@
 
     {% if section.settings.enable_search %}
       <div
-        class="sw-px-[18px] sw-pb-2 md:sw-max-w-[400px] md:sw-mx-auto sw-relative sw-z-[9] lg:sw-hidden"
+        class="mb-px-[18px] mb-pb-2 md:mb-max-w-[400px] md:mb-mx-auto mb-relative mb-z-[9] xl:mb-hidden"
         data-role="mobile-search-wrapper"
       >
         <predective-search data-inputs="{{ type_inputs }}">
           <label
             for="search-input"
-            class="sw-bg-[#fff] sw-border-none sw-rounded-full sw-flex sw-gap-3 sw-items-center sw-px-[10px] sw-py-[6px] sw-mb-0"
+            class="mb-bg-[#fff] mb-border-none mb-rounded-full mb-flex mb-gap-3 mb-items-center mb-px-[10px] mb-py-[6px] mb-mb-0"
           >
             <button data-role="search-icon">{% render 'icons-v2', icon: 'icon-search' %}</button>
             <input
               data-role="search-input"
-              class="sw-text-[14px] sw-font-primary sw-peer sw-w-full sw-p-0 sw-bg-transparent !sw-outline-none !sw-border-none sw-font-normal placeholder:sw-text-[#303030] placeholder:sw-font-medium placeholder:sw-font-primary [&.active]:placeholder:sw-text-[#A6A6A6] [&.active]:placeholder:sw-font-normal sw-tracking-normal"
+              class="mb-text-[14px] mb-font-primary mb-peer mb-w-full mb-p-0 mb-bg-transparent !mb-outline-none !mb-border-none mb-font-normal placeholder:mb-text-[#303030] placeholder:mb-font-medium placeholder:mb-font-primary [&.active]:placeholder:mb-text-[#A6A6A6] [&.active]:placeholder:mb-font-normal mb-tracking-normal"
               type="text"
               id="search-input"
               autocomplete="off"
               placeholder=""
             >
-            <button data-role="search-close" class="sw-hidden peer-[&.active]:sw-block">
-              {% render 'icons-v2', icon: 'icon-search-close', class: 'sw-w-[20px] sw-h-[20px]' %}
+            <button data-role="search-close" class="mb-hidden peer-[&.active]:mb-block">
+              {% render 'icons-v2', icon: 'icon-search-close', class: 'mb-w-[20px] mb-h-[20px]' %}
             </button>
           </label>
         </predective-search>
 
-        <div class="sw-ml-auto sw-flex sw-gap-3 sw-items-center" data-role="header-actions">
-          <button class="sw-hidden lg:sw-block">
+        <div class="mb-ml-auto mb-flex mb-gap-3 mb-items-center" data-role="header-actions">
+          <button class="mb-hidden xl:mb-block">
             <a href="{{ section.settings.tracking_url }}">{% render 'icons-v2', icon: 'icon-shipping' %}</a>
           </button>
-          <button data-role="cart-open" class="sw-relative">
+          <button data-role="cart-open" class="mb-relative">
             {% render 'icons-v2', icon: 'icon-cart' -%}
             <span
               data-role="cart-count"
-              class="sw-bg-[#fc2679] sw-text-[#fff] sw-text-[10px] sw-absolute sw-top-0 sw-left-[50%] sw-rounded-full sw-w-[16px] sw-h-[16px] sw-flex sw-justify-center sw-items-center sw-border-none cart-link__bubble-num {% if cart.item_count == 0 %}sw-opacity-0{% endif %}"
+              class="mb-bg-[#fc2679] mb-text-[#fff] mb-text-[10px] mb-absolute mb-top-0 mb-left-[50%] mb-rounded-full mb-w-[16px] mb-h-[16px] mb-flex mb-justify-center mb-items-center mb-border-none cart-link__bubble-num {% if cart.item_count == 0 %}mb-opacity-0{% endif %}"
             >
               {{- cart.item_count -}}
             </span>
@@ -321,7 +326,7 @@
 
       <div
         data-id="search-container"
-        class="sw-absolute lg:sw-max-w-[600px] lg:sw-overflow-hidden lg:sw-rounded-md lg:sw-right-[165px] lg:sw-left-[unset] sw-bg-[#fff] sw-w-full sw-group sw-h-full sw-bottom-0 sw-left-0 sw-translate-y-full sw-min-h-[480px] sw-hidden"
+        class="mb-absolute xl:mb-max-w-[600px] xl:mb-overflow-hidden xl:mb-rounded-md xl:mb-right-[165px] xl:mb-left-[unset] mb-bg-[#fff] mb-w-full mb-group mb-h-full mb-bottom-0 mb-left-0 mb-translate-y-full mb-min-h-[480px] mb-hidden"
       ></div>
     {% endif %}
   </div>

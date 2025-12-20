@@ -2,20 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
-  html {
-  scroll-behavior: smooth;
-}
+  html { scroll-behavior: smooth; }
+
   body {
-      -webkit-user-select: text;
+    -webkit-user-select: text;
     user-select: text;
-    @apply sw-font-body sw-text-sw-text;
+    @apply mb-font-body;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply sw-font-heading;
+    @apply mb-font-heading;
   }
 }
-

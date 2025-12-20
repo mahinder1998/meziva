@@ -1,10 +1,12 @@
 {% liquid
   assign desktop_nav = section.settings.desktop_navigation
 %}
-<div data-role="mega-menu" class="sw-w-full">
-    <div class="sw-hidden lg:sw-block">
+<div data-role="mega-menu" class="mb-w-full">
+    <div class="mb-hidden xl:mb-block">
         <div class="">
-          <div class="sw-flex sw-gap-[14px] lg:sw-gap-[50px]  sw-flex-wrap sw-justify-center">
+          <div class="mb-flex mb-gap-[14px] xl:mb-gap-[50px]   mb-flex-wrap mb-justify-center
+          xl:mb-justify-end xl:mb-pr-[50px]
+          ">
             {% for link in desktop_nav.links %}
               <div data-role="parent-nav">
                 {% liquid
@@ -23,7 +25,7 @@
                     assign nesting = true
                   endif
                 %}
-                <a href="{{ link.url }}" {% if style %} style="color:{{ color }}" {% endif %} class="sw-font-body sw-font-medium  sw-py-4  sw-text-sw-accent  sw-text-[16px] sw-relative after:sw-absolute after:sw-top-[96%]  after:sw-w-0 ">{{ link.title }}</a>
+                <a href="{{ link.url }}" {% if style %} style="color:{{ color }}" {% endif %} class="mb-font-body mb-font-medium  mb-py-4  mb-text-mb-accent  mb-text-[16px] mb-relative after:mb-absolute after:mb-top-[96%]  after:mb-w-0 ">{{ link.title }}</a>
                 {% if nesting %}
                   {% render 'mega-drop-v2',block:section.blocks,link: link %}
                 {% endif %}

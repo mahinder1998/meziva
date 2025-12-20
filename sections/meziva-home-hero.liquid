@@ -1,33 +1,38 @@
 {% assign p = section.settings.product %}
 
+<div id="{{ section.settings.section-id }}">
 <section
   id="meziva-single-hero-{{ section.id }}"
-  class="sw-relative sw-overflow-hidden sw-bg-[#FFF6FA] sw-py-10 md:sw-py-16"
+  class="mb-relative mb-overflow-hidden mb-py-10 md:mb-py-16"
+  style="background-color: {{ section.settings.section_bg }};"
 >
-  <div class="sw-relative sw-max-w-7xl sw-mx-auto sw-px-4 md:sw-px-8" id="{{section.settings.section-id}}">
+  <div class="mb-relative mb-max-w-7xl mb-mx-auto mb-px-4 md:mb-px-8">
     {% if p == blank %}
-      <div class="sw-rounded-2xl sw-bg-white sw-border sw-border-black/10 sw-p-6">
-        <p class="sw-font-semibold sw-text-[#111111]">Select a product</p>
-        <p class="sw-mt-1 sw-text-sm sw-text-black/60">Theme editor → this section → Product select</p>
+      <div class="mb-rounded-2xl mb-bg-white mb-border mb-border-black/10 mb-p-6">
+        <p class="mb-font-semibold mb-text-[#111111]">Select a product</p>
+        <p class="mb-mt-1 mb-text-sm mb-text-black/60">Theme editor → this section → Product select</p>
       </div>
     {% else %}
-      {% assign v = p.selected_or_first_available_variant %} 
+      {% assign v = p.selected_or_first_available_variant %}
       {% assign available = v.available %}
 
       <meziva-single-product-hero
-        class="sw-block"
+        class="mb-block"
         data-cart-add-url="{{ routes.cart_add_url }}.js"
         data-checkout-url="{{ routes.checkout_url }}"
         data-sticky-enabled="{{ section.settings.enable_sticky_atc }}"
         data-redirect="{{ section.settings.redirect_after_atc }}"
       >
-        <div class="sw-grid sw-grid-cols-1 lg:sw-grid-cols-12 sw-gap-6 lg:sw-gap-10 sw-items-center">
+        <div class="mb-grid mb-grid-cols-1 xl:mb-grid-cols-12 mb-gap-6 xl:mb-gap-10 ">
           <!-- LEFT: IMAGE / SLIDER -->
-          <div class="lg:sw-col-span-6">
-            <div class="sw-rounded-[28px] sw-overflow-hidde">
+          <div class="xl:mb-col-span-6">
+            <div class="mb-rounded-2xl">
               {% if section.settings.enable_image_slider and p.images.size > 1 %}
                 <meziva-simple-slider
-                  class="sw-relative sw-block"
+                  class="mb-relative mb-block
+                    mb-bg-red-white  mb-border-solid mb-border-red-50 mb-p-2 mb-border-2 mb-rounded-2xl
+                    mb-shadow-sm
+                  "
                   data-autoplay="{{ section.settings.slider_autoplay }}"
                   data-interval="{{ section.settings.slider_interval }}"
                   data-show-arrows="{{ section.settings.slider_show_arrows }}"
@@ -35,16 +40,18 @@
                 >
                   <div
                     data-slider-track
-                    class="sw-flex sw-overflow-x-auto sw-overflow-y-hidden sw-scroll-smooth sw-snap-x sw-snap-mandatory sw-overscroll-x-contain sw-no-scrollbar"
+                    class="mb-flex mb-overflow-x-auto mb-overflow-y-hidden mb-scroll-smooth mb-snap-x mb-snap-mandatory mb-overscroll-x-contain mb-no-scrollbar"
                     aria-label="Product images"
                   >
                     {% for img in p.images limit: section.settings.slider_image_limit %}
-                      <div data-slider-slide class="sw-min-w-full sw-snap-start">
+                      <div data-slider-slide class="mb-min-w-full mb-snap-start">
                         <img
-                          src="{{ img | image_url: width: 1800 }}"
-                          alt="{{ p.title | escape }}"
-                          class="sw-w-full sw-h-[340px] md:sw-h-[520px] sw-object-cover"
-                          loading="lazy"
+                           src="{{ p.featured_image | image_url: width: 1800 }}"
+                            data-zoom-src="{{ p.featured_image | image_url: width: 2400 }}"
+                            data-zoom-src-low="{{ p.featured_image | image_url: width: 1200 }}"
+                            alt="{{ p.title | escape }}"
+                            class="mb-w-full mb-h-[340px] md:mb-h-[520px] mb-object-cover mb-cursor-zoom-in mb-rounded-xl"
+                            loading="lazy"
                         >
                       </div>
                     {% endfor %}
@@ -55,7 +62,7 @@
                       type="button"
                       data-slider-prev
                       aria-label="Previous"
-                      class="sw-hidden md:sw-grid sw-place-items-center sw-absolute sw-left-4 sw-top-1/2 sw--translate-y-1/2 sw-h-11 sw-w-11 sw-rounded-full sw-bg-white/90 sw-border sw-border-black/10 sw-shadow-sm"
+                      class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-left-4 mb-top-1/2 mb--translate-y-1/2 mb-h-11 mb-w-11 mb-rounded-full mb-bg-white/90 mb-border mb-border-black/10 mb-shadow-sm"
                     >
                       ‹
                     </button>
@@ -63,7 +70,7 @@
                       type="button"
                       data-slider-next
                       aria-label="Next"
-                      class="sw-hidden md:sw-grid sw-place-items-center sw-absolute sw-right-4 sw-top-1/2 sw--translate-y-1/2 sw-h-11 sw-w-11 sw-rounded-full sw-bg-white/90 sw-border sw-border-black/10 sw-shadow-sm"
+                      class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-right-4 mb-top-1/2 mb--translate-y-1/2 mb-h-11 mb-w-11 mb-rounded-full mb-bg-white/90 mb-border mb-border-black/10 mb-shadow-sm"
                     >
                       ›
                     </button>
@@ -72,17 +79,20 @@
                   {% if section.settings.slider_show_dots %}
                     <div
                       data-slider-dots
-                      class="sw-absolute sw-bottom-4 sw-left-1/2 sw--translate-x-1/2 sw-flex sw-gap-2"
+                      class="mb-absolute mb-bottom-4 mb-left-1/2 mb--translate-x-1/2 mb-flex mb-gap-2"
                     ></div>
                   {% endif %}
                 </meziva-simple-slider>
               {% else %}
                 {% if p.featured_image %}
                   <img
-                    src="{{ p.featured_image | image_url: width: 1800 }}"
-                    alt="{{ p.title | escape }}"
-                    class="sw-w-full sw-h-[340px] md:sw-h-[520px] sw-object-cover"
-                    loading="lazy"
+                     src="{{ p.featured_image | image_url: width: 1800 }}"
+                      data-zoom-src="{{ p.featured_image | image_url: width: 2400 }}"
+                      data-zoom-src-low="{{ p.featured_image | image_url: width: 1200 }}"
+                      alt="{{ p.title | escape }}"
+                      class="mb-w-full mb-h-[340px] md:mb-h-[520px] mb-object-cover mb-cursor-zoom-in"
+                      loading="lazy"
+
                   >
                 {% endif %}
               {% endif %}
@@ -90,56 +100,64 @@
           </div>
 
           <!-- RIGHT: PRODUCT CARD -->
-          <div class="lg:sw-col-span-6">
-            <div class="sw-rounded-[28px]  sw-p-5 md:sw-p-7">
+          <div class="xl:mb-col-span-6">
+            <div class="mb-rounded-[16px]">
               {% if section.settings.kicker != blank %}
-                <div
-                  class="sw-inline-flex sw-items-center sw-gap-2 sw-rounded-full sw-border sw-border-black/10 sw-px-4 sw-py-2 sw-text-xs sw-text-black/70"
-                >
-                  <span class="sw-h-2 sw-w-2 sw-rounded-full" style="background: {{ section.settings.accent }};"></span>
+                <div class="mb-inline-flex mb-items-center mb-gap-2 mb-rounded-2xl mb-border mb-border-black/10 mb-px-4 mb-py-2 mb-text-xs mb-text-black/70">
+                  <span class="mb-h-2 mb-w-2 mb-rounded-full " style="background: {{ section.settings.accent }};"></span>
                   {{ section.settings.kicker }}
                 </div>
               {% endif %}
 
-              <h2 class="sw-mt-3 sw-text-2xl md:sw-text-3xl sw-font-semibold sw-text-[#111111]">
+              <h2 class="mb-mt-3 mb-text-2xl md:mb-text-3xl mb-font-semibold mb-text-mb-text">
                 {{ section.settings.heading | default: p.title }}
               </h2>
 
-              {% if section.settings.subheading != blank %}
-                <p class="sw-mt-2 sw-text-sm md:sw-text-base sw-text-black/60">
-                  {{ section.settings.subheading }}
-                </p>
-              {% endif %}
+             {% if section.settings.subheading != blank %}
+              <div class="mb-mt-2 mb-text-sm md:mb-text-base mb-text-black/60">
+                {{ section.settings.subheading }}
 
-              <!-- Price -->
+                <a
+                  href="{{ section.settings.readmore_link }}"
+                  class="mb-ml mb-inline-flex mb-items-center mb-justify-center-1  mb-gap-1 mb-text-sm mb-font-semibold hover:mb-opacity-[.9]"
+                  style="color: {{ section.settings.readmore_color }};"
+                >
+                  <span>Read more</span>
+                  <svg class="Icon Icon--arrow-right  mb-w-2 mb-h-2" role="presentation" viewBox="0 0 11 21">
+                      <polyline
+                        fill="none"
+                        stroke="#724430"
+                        points="0.5 0.5 10.5 10.5 0.5 20.5"
+                        stroke-width="3"
+                      />
+                      </svg>  
+                </a>
+              </div>
+            {% endif %}
+
+
               {%- assign show_reviews = section.settings.show_reviews -%}
               {%- assign rating_count = section.settings.rating_count | default: 1200 -%}
 
-              <!-- REVIEWS ROW -->
               {% if show_reviews %}
-                <div class="sw-mt-4 sw-flex sw-items-center sw-gap-2">
-                  <div class="sw-flex sw-items-center sw-gap-0.5">
+                <div class="mb-mt-4 mb-flex mb-items-center mb-gap-2">
+                  <div class="mb-flex mb-items-center mb-gap-0.5">
                     {% for i in (1..5) %}
-                      <span class="sw-text-[14px] sw-text-[#FF60A6] leading-none">★</span>
+                      <span class="mb-text-[14px] mb-text-[#FF60A6] mb-leading-none">★</span>
                     {% endfor %}
                   </div>
 
-                  <span class="sw-text-sm sw-text-black/60"> {{ rating_count }}+ reviews </span>
+                  <span class="mb-text-sm mb-text-black/60">{{ rating_count }}+ reviews</span>
 
-                  <span
-                    class="sw-inline-flex sw-items-center sw-justify-center sw-h-5 sw-w-5 sw-rounded-full sw-bg-emerald-500/15 sw-text-emerald-600 sw-text-[12px]"
-                  >
+                  <span class="mb-inline-flex mb-items-center mb-justify-center mb-h-5 mb-w-5 mb-rounded-full mb-bg-emerald-500/15 mb-text-emerald-600 mb-text-[12px]">
                     ✓
                   </span>
                 </div>
               {% endif %}
 
               <!-- PRICE ROW -->
-              <div class="sw-mt-3 sw-flex sw-items-end sw-gap-3 sw-flex-wrap">
-                <span
-                  data-role="price"
-                  class="sw-text-3xl md:sw-text-4xl sw-font-semibold sw-text-[#111111] sw-leading-none"
-                >
+              <div class="mb-mt-3 mb-flex mb-items-end mb-gap-3 mb-flex-wrap">
+                <span data-role="price" class="mb-text-3xl md:mb-text-4xl mb-font-semibold mb-text-[#111111] mb-leading-none">
                   {{ v.price | money }}
                 </span>
 
@@ -150,13 +168,11 @@
                     | divided_by: v.compare_at_price
                   -%}
 
-                  <span class="sw-text-lg sw-text-black/35 sw-line-through sw-leading-none">
+                  <span class="mb-text-lg mb-text-black/35 mb-line-through mb-leading-none">
                     {{ v.compare_at_price | money }}
                   </span>
 
-                  <span
-                    class="sw-inline-flex sw-items-center sw-rounded-full sw-bg-[#FF60A6]/10 sw-text-[#FF60A6] sw-text-sm sw-font-semibold sw-px-2.5 sw-py-1 sw-leading-none"
-                  >
+                  <span class="mb-inline-flex mb-items-center mb-rounded-full mb-bg-[#FF60A6]/10 mb-text-[#FF60A6] mb-text-sm mb-font-semibold mb-px-2.5 mb-py-1 mb-leading-none">
                     -{{ discount_pct }}%
                   </span>
                 {% endif %}
@@ -165,25 +181,25 @@
               <!-- Badges -->
               {% assign solve_title = section.settings.solve_title | default: 'Made to solve' %}
               {% if section.blocks.size > 0 %}
-                <div class="sw-mt-4 sw-rounded-2xl  sw-p-4">
-                  <p class="sw-text-sm sw-font-semibold sw-text-[#111111]">{{ solve_title }}</p>
+                <div class="mb-mt-4 mb-rounded-2xl mb-p-4">
+                  <p class="mb-text-sm mb-font-semibold mb-text-[#111111]">{{ solve_title }}</p>
 
-                  <div class="sw-mt-3 sw-flex sw-flex-wrap sw-gap-x-6 sw-gap-y-3">
+                  <div class="mb-mt-3 mb-flex mb-flex-wrap mb-gap-x-6 mb-gap-y-3">
                     {% for block in section.blocks %}
                       {% if block.type == 'solve_item' %}
-                        <div class="sw-inline-flex sw-items-center sw-gap-2">
+                        <div class="mb-inline-flex mb-items-center mb-gap-2">
                           {% if block.settings.icon != blank %}
                             <img
                               src="{{ block.settings.icon | image_url: width: 64 }}"
                               alt=""
-                              class="sw-h-5 sw-w-5 sw-object-contain"
+                              class="mb-h-5 mb-w-5 mb-object-contain"
                               loading="lazy"
                             >
                           {% else %}
-                            <span class="sw-h-5 sw-w-5 sw-rounded-full sw-bg-black/10"></span>
+                            <span class="mb-h-5 mb-w-5 mb-rounded-full mb-bg-black/10"></span>
                           {% endif %}
 
-                          <span class="sw-text-sm sw-text-black/70">{{ block.settings.text }}</span>
+                          <span class="mb-text-sm mb-text-black/70">{{ block.settings.text }}</span>
                         </div>
                       {% endif %}
                     {% endfor %}
@@ -192,112 +208,81 @@
               {% endif %}
 
               <!-- ATC -->
-              <form data-role="atc-form" class="sw-mt-6">
+              <form data-role="atc-form" class="mb-mt-6">
                 <input type="hidden" data-role="variant-id" value="{{ v.id }}">
-                <div class="sw-flex sw-items-center sw-gap-3">
-                  <div
-                    class="sw-flex sw-items-center sw-justify-between sw-rounded-2xl sw-bg-white sw-border sw-border-black/10 sw-w-[160px] sw-h-12 sw-px-3"
-                  >
-                    <button type="button" data-role="qty-minus" class="sw-text-xl sw-text-black/60">–</button>
+                <div class="mb-flex mb-items-center mb-gap-3">
+                  <div class="mb-flex mb-items-center mb-justify-between mb-rounded-2xl mb-bg-white mb-border mb-border-black/10 mb-w-[160px] mb-h-12 mb-px-3">
+                    <button type="button" data-role="qty-minus" class="mb-text-xl mb-text-black/60">–</button>
                     <input
                       data-role="qty"
                       value="1"
                       inputmode="numeric"
-                      class="sw-w-10 sw-text-center sw-bg-transparent sw-outline-none sw-text-sm sw-font-medium sw-text-[#111111]"
+                      class="mb-w-10 mb-text-center mb-bg-transparent mb-outline-none mb-text-sm mb-font-medium mb-text-[#111111]"
                     >
-                    <button type="button" data-role="qty-plus" class="sw-text-xl sw-text-black/60">+</button>
+                    <button type="button" data-role="qty-plus" class="mb-text-xl mb-text-black/60">+</button>
                   </div>
 
                   <button
                     type="submit"
                     data-role="atc-btn"
                     data-label="{{ section.settings.cta_label }}"
-                    class="sw-flex-1 sw-h-12 sw-rounded-2xl sw-text-white sw-font-semibold sw-text-sm sw-shadow-sm"
+                    class="mb-flex-1 mb-h-12 mb-rounded-2xl mb-text-white mb-font-semibold mb-text-sm mb-shadow-sm"
                     style="background: {{ section.settings.accent }};"
-                    {% unless available %}
-                      disabled
-                    {% endunless %}
+                    {% unless available %}disabled{% endunless %}
                   >
                     {{ section.settings.cta_label }}
                   </button>
                 </div>
 
-                <p data-role="status" class="sw-mt-3 sw-text-xs sw-text-red-600"></p>
+                <p data-role="status" class="mb-mt-3 mb-text-xs mb-text-red-600"></p>
               </form>
 
               {% assign t1 = section.settings.trust_1 | default: 'Free Shipping' %}
               {% assign t2 = section.settings.trust_2 | default: 'Easy Returns' %}
               {% assign t3 = section.settings.trust_3 | default: 'COD Available' %}
 
-              <div class="sw-mt-4 sw-rounded-2xl sw-bg-white/70 sw-border sw-border-black/10 sw-px-4 sw-py-3">
-                <div class="sw-flex sw-flex-wrap sw-items-center sw-gap-x-6 sw-gap-y-3">
-                  <div class="sw-inline-flex sw-items-center sw-gap-2">
-                    <span
-                      class="sw-grid sw-place-items-center sw-h-8 sw-w-8 sw-rounded-full sw-bg-black/5 sw-border sw-border-black/10"
-                    >
-                      <!-- truck -->
-                      <svg
-                        viewBox="0 0 24 24"
-                        class="sw-h-4 sw-w-4 sw-text-black/70"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
+              <div class="mb-mt-4 mb-rounded-2xl mb-bg-white/70 mb-border mb-border-black/10 mb-px-4 mb-py-3">
+                <div class="mb-flex mb-flex-wrap mb-items-center mb-gap-x-6 mb-gap-y-3">
+                  <div class="mb-inline-flex mb-items-center mb-gap-2">
+                    <span class="mb-grid mb-place-items-center mb-h-8 mb-w-8 mb-rounded-full mb-bg-black/5 mb-border mb-border-black/10">
+                      <svg viewBox="0 0 24 24" class="mb-h-4 mb-w-4 mb-text-black/70" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 7h11v10H3z"></path>
                         <path d="M14 10h4l3 3v4h-7z"></path>
                         <circle cx="7" cy="19" r="1.5"></circle>
                         <circle cx="17" cy="19" r="1.5"></circle>
                       </svg>
                     </span>
-                    <span class="sw-text-sm sw-text-black/70">{{ t1 }}</span>
+                    <span class="mb-text-sm mb-text-black/70">{{ t1 }}</span>
                   </div>
 
-                  <div class="sw-inline-flex sw-items-center sw-gap-2">
-                    <span
-                      class="sw-grid sw-place-items-center sw-h-8 sw-w-8 sw-rounded-full sw-bg-black/5 sw-border sw-border-black/10"
-                    >
-                      <!-- return -->
-                      <svg
-                        viewBox="0 0 24 24"
-                        class="sw-h-4 sw-w-4 sw-text-black/70"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
+                  <div class="mb-inline-flex mb-items-center mb-gap-2">
+                    <span class="mb-grid mb-place-items-center mb-h-8 mb-w-8 mb-rounded-full mb-bg-black/5 mb-border mb-border-black/10">
+                      <svg viewBox="0 0 24 24" class="mb-h-4 mb-w-4 mb-text-black/70" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 12a9 9 0 1 0 3-6.7"></path>
                         <path d="M3 4v6h6"></path>
                       </svg>
                     </span>
-                    <span class="sw-text-sm sw-text-black/70">{{ t2 }}</span>
+                    <span class="mb-text-sm mb-text-black/70">{{ t2 }}</span>
                   </div>
 
-                  <div class="sw-inline-flex sw-items-center sw-gap-2">
-                    <span
-                      class="sw-grid sw-place-items-center sw-h-8 sw-w-8 sw-rounded-full sw-bg-black/5 sw-border sw-border-black/10"
-                    >
-                      <!-- COD / wallet -->
-                      <svg
-                        viewBox="0 0 24 24"
-                        class="sw-h-4 sw-w-4 sw-text-black/70"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
+                  <div class="mb-inline-flex mb-items-center mb-gap-2">
+                    <span class="mb-grid mb-place-items-center mb-h-8 mb-w-8 mb-rounded-full mb-bg-black/5 mb-border mb-border-black/10">
+                      <svg viewBox="0 0 24 24" class="mb-h-4 mb-w-4 mb-text-black/70" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 7h18v10H3z"></path>
                         <path d="M16 12h3"></path>
                       </svg>
                     </span>
-                    <span class="sw-text-sm sw-text-black/70">{{ t3 }}</span>
+                    <span class="mb-text-sm mb-text-black/70">{{ t3 }}</span>
                   </div>
                 </div>
               </div>
 
               {% if section.settings.show_payments %}
-                <div class="sw-mt-5 sw-rounded-2xl sw-border sw-border-black/10 sw-bg-white sw-p-4">
-                  <p class="sw-text-xs sw-font-semibold sw-text-black/70">{{ section.settings.payment_title }}</p>
-                  <div class="sw-mt-3 sw-flex sw-flex-wrap sw-gap-2 sw-items-center">
+                <div class="mb-mt-5 mb-rounded-2xl mb-border mb-border-black/10 mb-bg-white mb-p-4">
+                  <p class="mb-text-xs mb-font-semibold mb-text-black/70">{{ section.settings.payment_title }}</p>
+                  <div class="mb-mt-3 mb-flex mb-flex-wrap mb-gap-2 mb-items-center">
                     {% for type in shop.enabled_payment_types %}
-                      {{ type | payment_type_svg_tag: class: 'sw-h-7 sw-w-auto' }}
+                      {{ type | payment_type_svg_tag: class: 'mb-h-7 mb-w-auto' }}
                     {% endfor %}
                   </div>
                 </div>
@@ -307,76 +292,144 @@
               <div
                 data-role="sticky-atc"
                 class="
-                  sw-fixed sw-left-0 sw-right-0 sw-bottom-0 sw-z-[9999] sw-bg-white sw-border-t sw-border-black/10 sw-shadow-[0_-12px_30px_rgba(0,0,0,0.10)] sw-px-4 sw-pt-3 sw-pb-[calc(12px+env(safe-area-inset-bottom))]
-                  sw-transition sw-duration-300 sw-ease-out
-                  sw-translate-y-[120%] sw-opacity-0 sw-pointer-events-none
+                  mb-fixed mb-left-0 mb-right-0 mb-bottom-0 mb-z-[999]
+                  mb-bg-white mb-border-t mb-border-black/10
+                  mb-shadow-[0_-12px_30px_rgba(0,0,0,0.10)]
+                  mb-px-4 mb-pt-3 mb-pb-[calc(12px+env(safe-area-inset-bottom))]
+                  mb-transition mb-duration-300 mb-ease-out
+                  mb-translate-y-[120%] mb-opacity-0 mb-pointer-events-none
                 "
               >
-                <div class="sw-flex sw-items-center sw-gap-3">
-                  <div class="sw-flex-1 sw-min-w-0">
-                    <div class="sw-text-[11px] sw-text-black/50 sw-leading-none">Total</div>
-                    <div
-                      data-role="sticky-price"
-                      class="sw-mt-1 sw-text-[16px] sw-font-semibold sw-text-[#111111] sw-leading-tight"
-                    >
+                <div class="mb-flex mb-items-center mb-gap-3">
+                  <div class="mb-flex-1 mb-min-w-0">
+                    <div class="mb-text-[11px] mb-text-black/50 mb-leading-none">Total</div>
+                    <div data-role="sticky-price" class="mb-mt-1 mb-text-[16px] mb-font-semibold mb-text-[#111111] mb-leading-tight">
                       {{ v.price | money }}
                     </div>
                   </div>
 
-                  <div
-                    class="sw-flex sw-items-center sw-justify-between sw-rounded-2xl sw-bg-white sw-border sw-border-black/10 sw-w-[132px] sw-h-11 sw-px-3"
-                  >
-                    <button type="button" data-role="sticky-qty-minus" class="sw-text-xl sw-text-black/60">–</button>
+                  <div class="mb-flex mb-items-center mb-justify-between mb-rounded-2xl mb-bg-white mb-border mb-border-black/10 mb-w-[132px] mb-h-11 mb-px-3">
+                    <button type="button" data-role="sticky-qty-minus" class="mb-text-xl mb-text-black/60">–</button>
                     <input
                       data-role="sticky-qty"
                       value="1"
                       inputmode="numeric"
-                      class="sw-w-10 sw-text-center sw-bg-transparent sw-outline-none sw-text-sm sw-font-medium sw-text-[#111111]"
+                      class="mb-w-10 mb-text-center mb-bg-transparent mb-outline-none mb-text-sm mb-font-medium mb-text-[#111111]"
                     >
-                    <button type="button" data-role="sticky-qty-plus" class="sw-text-xl sw-text-black/60">+</button>
+                    <button type="button" data-role="sticky-qty-plus" class="mb-text-xl mb-text-black/60">+</button>
                   </div>
 
                   <button
                     type="button"
                     data-role="sticky-atc-btn"
                     data-label="{{ section.settings.cta_label }}"
-                    class="
-                      sw-fixed sw-left-0 sw-right-0 sw-bottom-0 sw-z-[9999] sw-bg-white sw-border-t sw-border-black/10
-                      sw-shadow-[0_-12px_30px_rgba(0,0,0,0.10)] sw-px-4 sw-pt-3 sw-pb-[calc(12px+env(safe-area-inset-bottom))]
-                      sw-transition sw-duration-300 sw-ease-out sw-translate-y-[120%] sw-opacity-0 sw-pointer-events-none
-                    "
+                    class="mb-h-11 mb-rounded-2xl mb-px-5 mb-text-white mb-font-semibold mb-text-sm mb-shadow-sm"
                     style="background: {{ section.settings.accent }};"
-                    {% unless available %}
-                      disabled
-                    {% endunless %}
+                    {% unless available %}disabled{% endunless %}
                   >
                     {{ section.settings.cta_label }}
                   </button>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
+
+        <!-- ZOOM LIGHTBOX + SLIDER + SMOOTH ANIMATION (mb- only) -->
+        <div
+          id="mb-zoom-overlay-{{ section.id }}"
+          class="
+            mb-fixed mb-inset-0 mb-z-[99999] mb-flex mb-items-center mb-justify-center
+            mb-bg-black/70 mb-backdrop-blur-[6px] mb-p-4
+            mb-opacity-0 mb-pointer-events-none
+            mb-transition mb-duration-200 mb-ease-out
+          "
+          aria-hidden="true"
+        >
+          <div
+            data-lb-panel
+            class="
+              mb-relative mb-w-full mb-max-w-[1100px] mb-h-[78vh]
+              mb-rounded-[18px] mb-overflow-hidden mb-border mb-border-white/20 mb-bg-white/5
+              mb-scale-[0.98] mb-opacity-0
+              mb-transition mb-duration-200 mb-ease-out
+            "
+          >
+            <!-- Top toolbar -->
+            <div class="mb-absolute mb-right-3 mb-top-3 mb-z-[3] mb-flex mb-gap-2">
+              {% comment %} <button type="button" data-zoom-out class="mb-h-10 mb-w-10 mb-rounded-xl mb-border mb-border-white/20 mb-bg-black/35 mb-text-white mb-grid mb-place-items-center" aria-label="Zoom out">
+                      
+              </button>
+              <button type="button" data-zoom-in class="mb-h-10 mb-w-10 mb-rounded-xl mb-border mb-border-white/20 mb-bg-black/35 mb-text-white mb-grid mb-place-items-center" aria-label="Zoom in">
+                      
+              </button>
+              <button type="button" data-zoom-reset class="mb-h-10 mb-w-10 mb-rounded-xl mb-border mb-border-white/20 mb-bg-black/35 mb-text-white mb-grid mb-place-items-center" aria-label="Reset">
+                      
+              </button> {% endcomment %}
+        
+              <button type="button" data-zoom-close  class="mb-grid mb-place-items-center mb-h-7 mb-w-7 mb-rounded-full mb-bg-[#FFF6FA] mb-border mb-border-black/5 mb-transition group-hover:mb-bg-white" aria-label="Close">
+                {% render 'icons-v2', icon:'icon-cross',class:"mb-fill-[#724430] mb-w-[14px] mb-h-[14px]" %}
+                </button>
+
+              
+            </div>
+
+            <!-- Slider arrows -->
+            <button
+              type="button"
+              data-lb-prev
+              aria-label="Previous"
+              class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-left-3 mb-top-1/2 mb--translate-y-1/2 mb-z-[3] mb-h-11 mb-w-11 mb-rounded-full"
+            >
+                     <svg class="Icon Icon--arrow-left mb-w-5 mb-h-5" role="presentation" viewBox="0 0 11 21">
+                      <polyline fill="none" stroke="#724430" points="10.5 0.5 0.5 10.5 10.5 20.5" stroke-width="1.25"></polyline>
+                    </svg>
+            </button>
+ 
+            <button
+              type="button"
+              data-lb-next
+              aria-label="Next"
+              class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-right-3 mb-top-1/2 mb--translate-y-1/2 mb-z-[3] mb-h-11 mb-w-11 mb-rounded-full"
+            >
+                    <svg class="Icon Icon--arrow-right  mb-w-5 mb-h-5" role="presentation" viewBox="0 0 11 21">
+                      <polyline
+                        fill="none"
+                        stroke="#724430"
+                        points="0.5 0.5 10.5 10.5 0.5 20.5"
+                        stroke-width="1.6"
+                      />
+                      </svg>  
+            </button>
+
+            <!-- Track (slides injected by JS) -->
+            <div
+              data-lb-track
+              class="mb-h-full mb-w-full mb-flex mb-overflow-x-auto mb-overflow-y-hidden mb-scroll-smooth mb-snap-x mb-snap-mandatory mb-overscroll-x-contain mb-no-scrollbar"
+              aria-label="Zoomed product images"
+            ></div>
+           
+          </div>
+        </div>
+
       </meziva-single-product-hero>
     {% endif %}
   </div>
 </section>
+</div>
 
 <style>
-  .sw-no-scrollbar {
-    scrollbar-width: none;
-  }
-
-  .sw-no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
+  .mb-no-scrollbar { scrollbar-width: none; }
+  .mb-no-scrollbar::-webkit-scrollbar { display: none; }
 </style>
 
 {% schema %}
 {
   "name": "Single Product Hero",
   "settings": [
-     { "type": "text", "id": "section-id", "label": "Section ID", "info": "#banner" },
+    { "type": "text", "id": "section-id", "label": "Section ID", "info": "#banner" },
+    { "type": "color", "id": "section_bg", "label": "Section BG"},
     { "type": "product", "id": "product", "label": "Product (Home page)" },
 
     { "type": "text", "id": "kicker", "label": "Kicker", "default": "CLEAN • HYDRATING • TINTED" },
@@ -395,12 +448,23 @@
     { "type": "number", "id": "rating_count", "label": "Reviews count (display only)", "default": 1200 },
 
     {
-      "type": "textarea",
+      "type": "richtext",
       "id": "subheading",
       "label": "Subheading",
-      "default": "Skincare-first lip balm with hydration + tint in 1 swipe. Lightweight, non-sticky feel."
+      "default": "<p>Skincare-first lip balm with hydration + tint in 1 swipe. Lightweight, non-sticky feel.</p>"
     },
-
+    {
+      "type": "url",
+      "id": "readmore_link",
+      "label": "Read more link",
+      "info": "Redirect user to product detail / about page"
+        },
+    {
+      "type": "color",
+      "id": "readmore_color",
+      "label": "Read more color",
+      "default": "#724430"
+    },
     { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Buy Now" },
     { "type": "text", "id": "price_note", "label": "Price note", "default": "Inclusive of all taxes" },
 

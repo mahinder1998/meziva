@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
-  prefix: 'sw-',
+  prefix: 'mb-',
   content: [
     './assets/*.{liquid,js,mjs}',
     '!./assets/*.min.{js,mjs}',
@@ -11,12 +11,12 @@ module.exports = {
     './blocks/*.liquid',
     './snippets/*.liquid',
     './templates/**/*.{liquid,json}',
-    './frontend/entrypoints/*.{js,ts}',
+    './frontend/entrypoints/*.{js,ts,css}',
     './blocks/*.liquid',
   ],
   theme: {
    fontFamily: {
-        // use like: sw-font-heading / sw-font-body if you mapped classes
+        // use like: mb-font-heading / mb-font-body if you mapped classes
         heading: ["Peachi", "ui-sans-serif", "system-ui", "sans-serif"],
         body: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
@@ -26,11 +26,10 @@ module.exports = {
         'popup': '0px 0px 2px 0px rgba(0, 0, 0, 0.25)'
       },
       colors: {
-        sw: {
+        mb: {
           primary: "#f79ac3",
           accent: "#724430",
           text: "#111111",
-          // optional neutrals for backgrounds
           bg: "#fff5f9",
           surface: "#FFFFFF"
         }

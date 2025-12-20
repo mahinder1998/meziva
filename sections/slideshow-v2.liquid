@@ -13,12 +13,12 @@
   endfor
 %}
 <banner-slideshow id="{{ section.id }}" data-autoplay="{{ section.settings.autoplay }}" data-autoplay-interval="{{ section.settings.autoplay_interval }}">
-    <div class="slide-show-wrapper sw-relative"  >
-        <div data-role="slides-wrapper" class="sw-flex sw-max-w-full sw-overflow-hidden sw-flex-row sw-flex-nowrap keen-slider">
+    <div class="slide-show-wrapper mb-relative"  >
+        <div data-role="slides-wrapper" class="mb-flex mb-max-w-full mb-overflow-hidden mb-flex-row mb-flex-nowrap keen-slider">
             {% assign block_count = 0 %}
             {% for block in section.blocks %}
                 {% if block.type == block_to_render %}
-                    <div data-role="slide" class="sw-flex-[0_0_100%] keen-slider__slide" style="transition: opacity 0.8s ease-in-out;">
+                    <div data-role="slide" class="mb-flex-[0_0_100%] keen-slider__slide" style="transition: opacity 0.8s ease-in-out;">
                         {% liquid
                             assign mobile_image = block.settings.mobile_image
                             assign desktop_image = block.settings.desktop_image
@@ -37,7 +37,7 @@
                                     }
                                 }
                             {% endstyle %}
-                            <div id="{{ section.id }}-{{ forloop.index }}-image" class="sw-relative sw-overflow-hidden sw-bg-[#000]"
+                            <div id="{{ section.id }}-{{ forloop.index }}-image" class="mb-relative mb-overflow-hidden mb-bg-[#000]"
                                 style="padding-bottom:{{ 1 | divided_by : mobile_image.aspect_ratio | times : 100 }}%"
                             >
                                 <picture>
@@ -56,7 +56,7 @@
                                         loading: load_lazy
                                     }}
                                 </picture>
-                                {% if block.settings.banner_redirection != blank %}<a class="sw-block sw-absolute sw-top-0 sw-left-0 sw-w-full sw-h-full sw-cursor-pointer" href="{{  block.settings.banner_redirection}}"></a>{% endif %}
+                                {% if block.settings.banner_redirection != blank %}<a class="mb-block mb-absolute mb-top-0 mb-left-0 mb-w-full mb-h-full mb-cursor-pointer" href="{{  block.settings.banner_redirection}}"></a>{% endif %}
                             </div>
                         {% endif %}
                     </div>
@@ -64,9 +64,9 @@
             {% endfor %}
         </div>
         {% if rendered_block_count > 1 and section.settings.arrows %}
-            <div class="sw-absolute sw-z-10 sw-bottom-0 sw-left-[80%] lg:sw-left-[90%] sw-translate-y-[50%] sw-flex sw-gap-[6px] lg:sw-gap-[10px] sw-items-center">
-                <button data-role="prev-btn" class="sw-bg-[#fff] sw-rounded-full sw-p-[6px] lg:sw-p-[10px] sw-shadow-lg sw-transition-all hover:sw-scale-110">{% render 'icons-v2', icon: 'icon-caret-left', class:'sw-w-[16px] lg:sw-w-[20px] lg:sw-h-[20px] sw-h-[16px]' %}</button>
-                <button data-role="next-btn" class="sw-bg-[#fff] sw-rounded-full sw-p-[6px] lg:sw-p-[10px] sw-shadow-lg sw-transition-all hover:sw-scale-110">{% render 'icons-v2', icon: 'icon-caret-right', class:'sw-w-[16px] lg:sw-w-[20px] lg:sw-h-[20px] sw-h-[16px]' %}</button>
+            <div class="mb-absolute mb-z-10 mb-bottom-0 mb-left-[80%] xl:mb-left-[90%] mb-translate-y-[50%] mb-flex mb-gap-[6px] xl:mb-gap-[10px] mb-items-center">
+                <button data-role="prev-btn" class="mb-bg-[#fff] mb-rounded-full mb-p-[6px] xl:mb-p-[10px] mb-shadow-lg mb-transition-all hover:mb-scale-110">{% render 'icons-v2', icon: 'icon-caret-left', class:'mb-w-[16px] xl:mb-w-[20px] xl:mb-h-[20px] mb-h-[16px]' %}</button>
+                <button data-role="next-btn" class="mb-bg-[#fff] mb-rounded-full mb-p-[6px] xl:mb-p-[10px] mb-shadow-lg mb-transition-all hover:mb-scale-110">{% render 'icons-v2', icon: 'icon-caret-right', class:'mb-w-[16px] xl:mb-w-[20px] xl:mb-h-[20px] mb-h-[16px]' %}</button>
             </div>
         {% endif %} 
     </div>

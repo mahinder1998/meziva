@@ -12,7 +12,7 @@
     <div class="sw-py-5 sw-px-5">
         <div class="sw-flex sw-justify-between sw-items-center">
             <h1 class="sw-mb-0">
-                <a href="{{ shop.url }}" class="sw-text-[24px]">
+                <a href="{{ shop.url }}" class="sw-text-[24px] sw-flex sw-justify-center sw-items-center">
                      {% liquid
                       assign logo_type = section.settings.logo_type
                       if logo_type == 'svg'
@@ -32,7 +32,8 @@
                     {% endif %}
                 </a>
             </h1>
-            <button data-role="nav-hide">{% render 'icons-v2', icon:'icon-cross',class:"sw-fill-[#724430] sw-w-[14px] sw-h-[14px]" %}</button>
+            <button data-role="nav-hide" class="sw-grid sw-place-items-center sw-h-7 sw-w-7 sw-rounded-full sw-bg-[#FFF6FA] sw-border sw-border-black/5 sw-transition group-hover:sw-bg-white">
+                {% render 'icons-v2', icon:'icon-cross',class:"sw-fill-[#724430] sw-w-[14px] sw-h-[14px]" %}</button>
         </div>
         <div class="sw-mt-6 sw-max-h-[calc(100vh_-_80px)] sw-overflow-y-auto">
             <div class="">
@@ -48,7 +49,7 @@
                                             {% assign color = block.settings.text_color %}
                                         {% endif %}
                                     {% endfor %}
-                                    <a href="{{ link.url }}" {% if style %}style="color:{{ color }}!important;"{% endif %} class="!sw-text-[#724430] sw-font-medium sw-text-[14px]">{{ link.title }}</a>
+                                    <a href="{{ link.url }}" {% if style %}style="color:{{ color }}!important;"{% endif %} class="!sw-text-[#724430] sw-font-medium sw-text-[16px] hover:sw-opacity-[.8]">{{ link.title }}</a>
                                     <button data-role="trigger">{% render 'icons-v2', icon: 'icon-caret-down', class:'sw-w-4 sw-h-4 sw-text-[#fff] group-[&.active]:sw-rotate-[180deg] sw-trasition-all sw-duration-[400ms]' %}</button>
                                 </div>
                                 <div data-role="content" class="sw-max-h-[0px] sw-overflow-hidden">
@@ -57,19 +58,19 @@
                                             {% if child_link.levels > 0 %}
                                                 <toggle-expand>
                                                     <div data-role="header" class="sw-flex sw-justify-between sw-pt-4">
-                                                        <a href="{{ child_link.url }}" class="!sw-text-[#724430] sw-font-medium sw-text-[14px]">{{ child_link.title }}</a>
+                                                        <a href="{{ child_link.url }}" class="!sw-text-[#724430] sw-font-medium sw-text-[16px] hover:sw-opacity-[.8]">{{ child_link.title }}</a>
                                                         <button class="" data-role="trigger">{% render 'icons-v2', icon: 'icon-caret-down', class:'sw-w-4 sw-h-4 sw-text-[#fff]  group-[&.active]:sw-rotate-[180deg] sw-trasition-all sw-duration-[400ms]' %}</button>
                                                     </div>
                                                     <div data-role="content" class="sw-max-h-[0px] sw-overflow-hidden">
                                                         {% for grand_child in child_link.links %}
                                                             <div class="">
-                                                                <a class="!sw-text-[#fff] sw-font-medium sw-pt-4 sw-text-[14px]" href="{{ grand_child.url }}">{{ grand_child.title }}</a>
+                                                                <a class="!sw-text-[#724430] sw-font-medium sw-pt-4 sw-text-[14px]" href="{{ grand_child.url }}">{{ grand_child.title }}</a>
                                                             </div>
                                                         {% endfor %}sw-
                                                     </div>
                                                 </toggle-expand>
                                             {% else %}
-                                                <a href="{{ child_link.url }}" class="!sw-text-[#fff] sw-font-medium sw-pt-4 sw-text-[14px]">{{ child_link.title }}</a>
+                                                <a href="{{ child_link.url }}" class="!sw-text-[#724430] sw-font-medium sw-pt-4 sw-text-[14px]">{{ child_link.title }}</a>
                                             {% endif %}
                                         </div>
                                     {% endfor %}
@@ -84,7 +85,7 @@
                                 {% assign color = block.settings.text_color %}
                             {% endif %}
                         {% endfor %}
-                        <a href="{{ link.url }}" {% if style %}style="color:{{ color }}!important;"{% endif %} class="!sw-text-[#724430] sw-font-medium sw-text-[14px]">{{ link.title }}</a>
+                        <a href="{{ link.url }}" {% if style %}style="color:{{ color }}!important;"{% endif %} class="!sw-text-[#724430] sw-font-medium sw-text-[16px]">{{ link.title }}</a>
                     {% endif %}
                     </div>
                 {% endfor %}

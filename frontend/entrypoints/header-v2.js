@@ -139,16 +139,62 @@ class StickyHeader extends HTMLElement {
     );
   }
 
-  // ✅ helpers (NEW)
+  // ✅ helpers
   getAnchorFromEvent(e) {
     return e.target?.closest?.("a");
   }
 
-  getScrollOffset() {
-    const headerH = this.headerMainWrapper
-      ? this.headerMainWrapper.getBoundingClientRect().height
-      : 0;
-    return Math.max(this.landingOffset || 0, headerH || 0);
+ getScrollOffset() {
+  const headerEl =
+    document.querySelector("#shopify-section-header-v2") || this.headerMainWrapper;
+
+  const headerH = headerEl ? headerEl.getBoundingClientRect().height : 0;
+
+  const annEl = document.querySelector("#shopify-section-announcement-bar-v2");
+  const annH = annEl ? annEl.getBoundingClientRect().height : 0;
+
+  const extra = Number(this.landingOffset || 0); // slider
+
+  // ✅ header + announcement + extra gap
+  return Math.ceil(headerH + annH + extra);
+}
+
+
+
+  // ✅ NEW: close mobile menu + clean body states
+  closeMobileMenuStates() {
+    // close nav ui
+    this.headerOverlay?.classList.remove("active");
+    this.mobileNavigation?.classList.remove("active");
+
+    // ✅ must remove both
+    document.body.classList.remove("menu-open");
+    document.body.style.overflow = ""; // remove overflow:hidden
+  }
+
+  // ✅ NEW: find target by div-id (supports id="product" AND id="#product")
+  findLandingTargetByHash(hashId) {
+    if (!hashId) return null;
+
+    // Normal id
+    let el = document.getElementById(hashId);
+    if (el) return el;
+
+    // Some markup has id="#product" (with # inside id attribute)
+    el = document.getElementById(`#${hashId}`);
+    if (el) return el;
+
+    // Safe attribute selector fallback
+    try {
+      const esc = (v) =>
+        window.CSS && CSS.escape ? CSS.escape(v) : v.replace(/"/g, '\\"');
+      return (
+        document.querySelector(`[id="${esc(hashId)}"]`) ||
+        document.querySelector(`[id="${esc(`#${hashId}`)}"]`)
+      );
+    } catch (e) {
+      return null;
+    }
   }
 
   displayMegaDrop(el, show) {
@@ -182,6 +228,9 @@ class StickyHeader extends HTMLElement {
     this.headerOverlay?.classList.remove("active");
     document.body.style.overflow = "";
     this.shrink();
+
+    // ✅ also ensure menu-open removed whenever nav closes
+    document.body.classList.remove("menu-open");
   }
 
   expand() {
@@ -224,7 +273,7 @@ class StickyHeader extends HTMLElement {
     this.mobileNavigation?.classList.remove("updating");
   }
 
-  // ✅ UPDATED: landing scroll support (checkbox ON), else old behavior
+  // ✅ UPDATED: div-id based smooth scroll + close mobile menu & cleanup body states
   handleLinkClick(e) {
     const a = this.getAnchorFromEvent(e);
     const href = a?.getAttribute("href") || "";
@@ -234,21 +283,21 @@ class StickyHeader extends HTMLElement {
     // If user is opening in new tab or using cmd/ctrl click -> allow default
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
-    // ✅ Smooth scroll only for #section-id and only when enabled
+    // ✅ Smooth scroll only for hash links when enabled
     if (this.enableLandingScroll && href.startsWith("#") && href.length > 1) {
       const id = href.slice(1);
-      const targetEl = document.getElementById(id);
+      const targetEl = this.findLandingTargetByHash(id);
 
       if (targetEl) {
         e.preventDefault();
 
-        // Close mobile nav if open (keep existing UX)
-        this.hideMobileNavigation?.();
-        document.body.classList.remove("menu-open");
+        // ✅ close mobile menu + remove overflow hidden + remove menu-open
+        this.closeMobileMenuStates();
 
         const offset = this.getScrollOffset();
-        const top =
-          window.scrollY + targetEl.getBoundingClientRect().top - offset;
+        let top = window.scrollY + targetEl.getBoundingClientRect().top - offset;
+top = Math.max(0, top);
+
 
         window.history.replaceState(null, "", href);
         window.scrollTo({ top, behavior: "smooth" });
@@ -257,21 +306,22 @@ class StickyHeader extends HTMLElement {
       // If id not found, fallback to normal navigation
     }
 
-    // ✅ Old behavior (exactly like your previous intent)
+    // ✅ Old behavior (navigate)
     e.preventDefault();
+
+    // ✅ also close mobile menu states for normal navigation
+    this.closeMobileMenuStates();
 
     // If href is absolute or has full path -> navigate safely
     try {
       const url = new URL(href, window.location.origin);
 
-      // If same origin: go to full url (keeps query/hash if any)
       if (url.origin === window.location.origin) {
         window.location.href = url.href;
       } else {
         window.open(url.href, "_self");
       }
     } catch (err) {
-      // Fallback
       window.location.pathname = href;
     }
   }
@@ -359,6 +409,8 @@ class StickyHeader extends HTMLElement {
   }
 
   hideHeaderTopBar() {
+    if (!this.headerTopBar || !this.announcementBar || !this.headerMainWrapper) return;
+
     if (!this.currentDisplay) return;
     this.currentDisplay = false;
 
@@ -391,6 +443,8 @@ class StickyHeader extends HTMLElement {
   }
 
   displayHeaderTopBar() {
+    if (!this.headerTopBar || !this.announcementBar || !this.headerMainWrapper) return;
+
     if (this.currentDisplay) return;
     this.currentDisplay = true;
 
@@ -748,6 +802,7 @@ mobileMenuTrigger?.addEventListener("click", () => {
 
 mobileMenuClose?.addEventListener("click", () => {
   body.classList.remove("menu-open");
+  body.style.overflow = ""; // ✅ ensure overflow reset here too
 });
 
 function openSearch() {

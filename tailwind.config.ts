@@ -17,8 +17,8 @@ module.exports = {
   theme: {
    fontFamily: {
         // use like: sw-font-heading / sw-font-body if you mapped classes
-        heading: ["Bebas Neue", "ui-sans-serif", "system-ui", "sans-serif"],
-        body: ['Proxima Nova Rg', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        heading: ["Peachi", "ui-sans-serif", "system-ui", "sans-serif"],
+        body: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
     extend: {
       boxShadow: {

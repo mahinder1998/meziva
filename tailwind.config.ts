@@ -30,7 +30,7 @@ module.exports = {
           primary: "#f79ac3",
           accent: "#724430",
           text: "#111111",
-          bg: "#fff5f9",
+          bg: "#fff5f9", 
           surface: "#FFFFFF"
         }
       },

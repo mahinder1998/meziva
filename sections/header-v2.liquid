@@ -192,9 +192,13 @@
               {% if logo_type == 'svg' %}
                 <span class="mb-flex mb-items-center mb-w-[200px] xl:mb-w-[220px]">{{ logo }}</span>
               {% else %}
-              <span class="mb-inline-block">
-                  {{ logo | image_url: width: 130 | image_tag: loading: 'lazy', alt: shop.name }}
-                </span>              {% endif %}
+              <span class="mb-inline-block xl:mb-hidden">
+                  {{ logo | image_url: width: 140 | image_tag: loading: 'lazy', alt: shop.name }}
+                </span>
+                 <span class=" mb-hidden xl:mb-inline-block">
+                  {{ logo | image_url: width: 200 | image_tag: loading: 'lazy', alt: shop.name }}
+                </span>
+              {% endif %}
             {% else %}
               {{ shop.name }}
             {% endif %}

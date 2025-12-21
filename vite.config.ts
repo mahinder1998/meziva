@@ -36,6 +36,7 @@ export default defineConfig({
     watch: {},
     host: false,
     port: 3000,
+    usePolling: false,
   },
   publicDir: "public",
   resolve: {

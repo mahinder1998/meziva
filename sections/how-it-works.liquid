@@ -1,0 +1,90 @@
+<section class="mb-max-w-7xl mb-mx-auto mb-px-4 mb-py-20">
+
+  <!-- Heading -->
+  <div class="mb-text-center mb-mb-20">
+    <h2 class="mb-text-3xl mb-font-light mb-tracking-[0.3em] mb-uppercase">
+      {{ section.settings.heading }}
+    </h2>
+  </div>
+
+  <!-- Grid -->
+  <div class="mb-grid mb-grid-cols-1 lg:mb-grid-cols-3 mb-gap-y-20 mb-gap-x-16 mb-max-w-[1200px] mb-mx-auto">
+
+    {% for block in section.blocks %}
+      <div class="mb-flex mb-flex-col mb-items-center mb-text-center">
+
+        <!-- Circle Image -->
+        <div class="mb-w-[220px] mb-h-[220px] mb-rounded-full mb-overflow-hidden mb-border mb-bg-gray-100 mb-mb-8">
+          {% if block.settings.image != blank %}
+            <img
+              src="{{ block.settings.image | image_url: width: 500 }}"
+              alt=""
+              class="mb-w-full mb-h-full mb-object-cover"
+              loading="lazy"
+            >
+          {% endif %}
+        </div>
+
+        <!-- Text -->
+        <p class="mb-text-sm mb-uppercase mb-tracking-wider mb-mb-2">
+          {{ block.settings.text_1 }}
+        </p>
+
+        <p class="mb-text-lg mb-font-light">
+          {{ block.settings.text_2 }}
+        </p>
+
+      </div>
+    {% endfor %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "How it works",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "MEET NEW ARRIVALS"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "text_1",
+          "label": "Step Label",
+          "default": "STEP 1"
+        },
+        {
+          "type": "text",
+          "id": "text_2",
+          "label": "Step Title",
+          "default": "Remove Cap"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "How it works",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

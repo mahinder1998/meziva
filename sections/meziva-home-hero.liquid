@@ -1,476 +1,727 @@
+ <style>
+    @media (min-width: 1024px) {
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ section.settings.padding_top_desktop }}px;
+        padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+      }
+    }
+  </style>
+
 {% assign p = section.settings.product %}
 
-<div id="{{ section.settings.section-id }}">
-<section
-  id="meziva-single-hero-{{ section.id }}"
-  class="mb-relative mb-overflow-hidden mb-py-10 md:mb-py-16"
-  style="background-color: {{ section.settings.section_bg }};"
->
-  <div class="mb-relative mb-max-w-7xl mb-mx-auto mb-px-4 md:mb-px-8">
-    {% if p == blank %}
-      <div class="mb-rounded-2xl mb-bg-white mb-border mb-border-black/10 mb-p-6">
-        <p class="mb-font-semibold mb-text-[#111111]">Select a product</p>
-        <p class="mb-mt-1 mb-text-sm mb-text-black/60">Theme editor → this section → Product select</p>
-      </div>
-    {% else %}
-      {% assign v = p.selected_or_first_available_variant %}
-      {% assign available = v.available %}
+<div id="{{ section.settings.section_id | escape }}">
+  <section
+    id="meziva-single-hero-{{ section.id }}"
+    class="mb-relative mb-overflow-hidden mb-py-10 md:mb-py-16"
+    style="background-color: {{ section.settings.section_bg }};
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    "
+  >
+    <div class="mb-relative mb-max-w-7xl mb-mx-auto mb-px-4 md:mb-px-8">
+      {% if p == blank %}
+        <div class="mb-rounded-2xl mb-bg-white mb-border mb-border-black/10 mb-p-6">
+          <p class="mb-font-semibold mb-text-mb-heading">Select a product</p>
+          <p class="mb-mt-1 mb-text-sm mb-text-black/60">Theme editor → this section → Product select</p>
+        </div>
+      {% else %}
+        {% assign v = p.selected_or_first_available_variant %}
+        {% assign available = v.available %}
+        {% assign compare = v.compare_at_price | default: 0 %}
+        {% assign price = v.price | default: 0 %}
+        {% assign save_amount = 0 %}
+        {% if compare > price %}
+          {% assign save_amount = compare | minus: price %}
+        {% endif %}
 
-      <meziva-single-product-hero
-        class="mb-block"
-        data-cart-add-url="{{ routes.cart_add_url }}.js"
-        data-checkout-url="{{ routes.checkout_url }}"
-        data-sticky-enabled="{{ section.settings.enable_sticky_atc }}"
-        data-redirect="{{ section.settings.redirect_after_atc }}"
-      >
-        <div class="mb-grid mb-grid-cols-1 xl:mb-grid-cols-12 mb-gap-6 xl:mb-gap-10 ">
-          <!-- LEFT: IMAGE / SLIDER -->
-          <div class="xl:mb-col-span-6">
-            <div class="mb-rounded-2xl">
-              {% if section.settings.enable_image_slider and p.images.size > 1 %}
-                <meziva-simple-slider
-                  class="mb-relative mb-block
-                    mb-bg-red-white  mb-border-solid mb-border-red-50 mb-p-2 mb-border-2 mb-rounded-2xl
-                    mb-shadow-sm
-                  "
-                  data-autoplay="{{ section.settings.slider_autoplay }}"
-                  data-interval="{{ section.settings.slider_interval }}"
-                  data-show-arrows="{{ section.settings.slider_show_arrows }}"
-                  data-show-dots="{{ section.settings.slider_show_dots }}"
-                >
-                  <div
-                    data-slider-track
-                    class="mb-flex mb-overflow-x-auto mb-overflow-y-hidden mb-scroll-smooth mb-snap-x mb-snap-mandatory mb-overscroll-x-contain mb-no-scrollbar"
-                    aria-label="Product images"
-                  >
-                    {% for img in p.images limit: section.settings.slider_image_limit %}
-                      <div data-slider-slide class="mb-min-w-full mb-snap-start">
-                        <img
-                           src="{{ p.featured_image | image_url: width: 1800 }}"
-                            data-zoom-src="{{ p.featured_image | image_url: width: 2400 }}"
-                            data-zoom-src-low="{{ p.featured_image | image_url: width: 1200 }}"
-                            alt="{{ p.title | escape }}"
-                            class="mb-w-full mb-h-[340px] md:mb-h-[520px] mb-object-cover mb-cursor-zoom-in mb-rounded-xl"
-                            loading="lazy"
-                        >
+        {%- comment -%} Mini card image fallbacks from product gallery {%- endcomment -%}
+        {% assign mini1 = section.settings.mini_card_1_image %}
+        {% assign mini2 = section.settings.mini_card_2_image %}
+        {% if mini1 == blank and p.images.size > 1 %}
+          {% assign mini1 = p.images[1] %}
+        {% endif %}
+        {% if mini2 == blank and p.images.size > 2 %}
+          {% assign mini2 = p.images[2] %}
+        {% endif %}
+
+        <meziva-single-product-hero
+          class="mb-block"
+          data-cart-add-url="{{ routes.cart_add_url }}.js"
+          data-checkout-url="{{ routes.checkout_url }}"
+          data-sticky-enabled="{{ section.settings.enable_sticky_atc }}"
+          data-redirect="{{ section.settings.redirect_after_atc }}"
+        >
+          <div class="mb-grid mb-grid-cols-1 xl:mb-grid-cols-12 mb-gap-8 xl:mb-gap-12">
+            <!-- LEFT COLUMN (Screenshot-2 layout) -->
+            <div class="xl:mb-col-span-6">
+              <div class="mb-rounded-[12px] mb-bg-white mb-border mb-border-black/5 mb-p-2">
+                <!-- Main slider -->
+                <div class="mb-rounded-[12px] mb-overflow-hidden">
+                  {% if section.settings.enable_image_slider and p.images.size > 1 %}
+                    <meziva-simple-slider
+                      class="mb-relative mb-block"
+                      data-autoplay="{{ section.settings.slider_autoplay }}"
+                      data-interval="{{ section.settings.slider_interval }}"
+                      data-show-arrows="{{ section.settings.slider_show_arrows }}"
+                      data-show-dots="{{ section.settings.slider_show_dots }}"
+                    >
+                      <div
+                        data-slider-track
+                        class="mb-flex mb-overflow-x-auto mb-overflow-y-hidden mb-scroll-smooth mb-snap-x mb-snap-mandatory mb-overscroll-x-contain mb-no-scrollbar"
+                        aria-label="Product images"
+                      >
+                        {% for img in p.images limit: section.settings.slider_image_limit %}
+                          <div data-slider-slide class="mb-min-w-full mb-snap-start">
+                            <div class="mb-relative mb-w-full mb-aspect-[4/3] md:mb-aspect-[5/4]">
+                              <img
+                                src="{{ img | image_url: width: 900 }}"
+                                srcset="{{ img | image_url: width: 600 }} 600w, {{ img | image_url: width: 900 }} 900w, {{ img | image_url: width: 1200 }} 1200w, {{ img | image_url: width: 1800 }} 1800w"
+                                sizes="(min-width: 1280px) 560px, (min-width: 768px) 640px, 92vw"
+                                alt="{{ img.alt | default: p.title | escape }}"
+                                width="{{ img.width }}"
+                                height="{{ img.height }}"
+                                class="mb-absolute mb-inset-0 mb-h-full mb-w-full mb-object-cover mb-cursor-zoom-in"
+                                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                                fetchpriority="{% if forloop.first %}high{% else %}auto{% endif %}"
+                                decoding="async"
+                                data-role="zoom-trigger"
+                                data-zoom-src="{{ img | image_url: width: 2400 }}"
+                                data-zoom-src-low="{{ img | image_url: width: 1200 }}"
+                              >
+                            </div>
+                          </div>
+                        {% endfor %}
                       </div>
-                    {% endfor %}
-                  </div>
 
-                  {% if section.settings.slider_show_arrows %}
-                    <button
-                      type="button"
-                      data-slider-prev
-                      aria-label="Previous"
-                      class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-left-4 mb-top-1/2 mb--translate-y-1/2 mb-h-11 mb-w-11 mb-rounded-full mb-bg-white/90 mb-border mb-border-black/10 mb-shadow-sm"
-                    >
-                      ‹
-                    </button>
-                    <button
-                      type="button"
-                      data-slider-next
-                      aria-label="Next"
-                      class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-right-4 mb-top-1/2 mb--translate-y-1/2 mb-h-11 mb-w-11 mb-rounded-full mb-bg-white/90 mb-border mb-border-black/10 mb-shadow-sm"
-                    >
-                      ›
-                    </button>
+                      {% if section.settings.slider_show_arrows %}
+                        <button
+                          type="button"
+                          data-slider-prev
+                          aria-label="Previous"
+                          class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-left-4 mb-top-1/2 mb--translate-y-1/2 mb-h-11 mb-w-11 mb-rounded-full mb-bg-white/90 mb-border mb-border-black/10 mb-shadow-sm"
+                        >
+                          ‹
+                        </button>
+                        <button
+                          type="button"
+                          data-slider-next
+                          aria-label="Next"
+                          class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-right-4 mb-top-1/2 mb--translate-y-1/2 mb-h-11 mb-w-11 mb-rounded-full mb-bg-white/90 mb-border mb-border-black/10 mb-shadow-sm"
+                        >
+                          ›
+                        </button>
+                      {% endif %}
+
+                      {% if section.settings.slider_show_dots %}
+                        <div
+                          data-slider-dots
+                          class="mb-absolute mb-bottom-4 mb-left-1/2 mb--translate-x-1/2 mb-flex mb-gap-2"
+                        ></div>
+                      {% endif %}
+                    </meziva-simple-slider>
+                  {% else %}
+                    {% assign img = p.featured_image %}
+                    <div class="mb-relative mb-w-full mb-aspect-[4/3] md:mb-aspect-[5/4]">
+                      <img
+                        src="{{ img | image_url: width: 900 }}"
+                        srcset="{{ img | image_url: width: 600 }} 600w, {{ img | image_url: width: 900 }} 900w, {{ img | image_url: width: 1200 }} 1200w, {{ img | image_url: width: 1800 }} 1800w"
+                        sizes="(min-width: 1280px) 560px, (min-width: 768px) 640px, 92vw"
+                        alt="{{ img.alt | default: p.title | escape }}"
+                        width="{{ img.width }}"
+                        height="{{ img.height }}"
+                        class="mb-absolute mb-inset-0 mb-h-full mb-w-full mb-object-cover mb-cursor-zoom-in"
+                        loading="eager"
+                        fetchpriority="high"
+                        decoding="async"
+                        data-role="zoom-trigger"
+                        data-zoom-src="{{ img | image_url: width: 2400 }}"
+                        data-zoom-src-low="{{ img | image_url: width: 1200 }}"
+                      >
+                    </div>
                   {% endif %}
-
-                  {% if section.settings.slider_show_dots %}
-                    <div
-                      data-slider-dots
-                      class="mb-absolute mb-bottom-4 mb-left-1/2 mb--translate-x-1/2 mb-flex mb-gap-2"
-                    ></div>
-                  {% endif %}
-                </meziva-simple-slider>
-              {% else %}
-                {% if p.featured_image %}
-                  <img
-                     src="{{ p.featured_image | image_url: width: 1800 }}"
-                      data-zoom-src="{{ p.featured_image | image_url: width: 2400 }}"
-                      data-zoom-src-low="{{ p.featured_image | image_url: width: 1200 }}"
-                      alt="{{ p.title | escape }}"
-                      class="mb-w-full mb-h-[340px] md:mb-h-[520px] mb-object-cover mb-cursor-zoom-in"
-                      loading="lazy"
-
-                  >
-                {% endif %}
-              {% endif %}
-            </div>
-          </div>
-
-          <!-- RIGHT: PRODUCT CARD -->
-          <div class="xl:mb-col-span-6">
-            <div class="mb-rounded-[16px]">
-              {% if section.settings.kicker != blank %}
-                <div class="mb-inline-flex mb-items-center mb-gap-2 mb-rounded-2xl mb-border mb-border-black/10 mb-px-4 mb-py-2 mb-text-xs mb-text-black/70">
-                  <span class="mb-h-2 mb-w-2 mb-rounded-full " style="background: {{ section.settings.accent }};"></span>
-                  {{ section.settings.kicker }}
                 </div>
-              {% endif %}
-              <h2 class="mb-mt-3 mb-text-2xl md:mb-text-3xl mb-font-semibold mb-text-mb-heading">
-                {{ section.settings.heading | default: p.title }}
-              </h2>
-
-              {%- assign show_reviews = section.settings.show_reviews -%}
-              {%- assign rating_count = section.settings.rating_count | default: 1200 -%}
-              {% if show_reviews %}
-                <div class="mb-mt-4 mb-flex mb-items-center mb-gap-2">
-                  <div class="mb-flex mb-items-center mb-gap-0.5">
-                    {% for i in (1..5) %}
-                      <span class="mb-text-[14px] mb-text-mb-primary mb-leading-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14px" height="14px" viewBox="0 0 22.5 22.5"><g data-name="Group 13381" fill="none"><path data-name="Path 17274" d="M0 0h22.239v22.239H0Z"></path><path data-name="Path 17275" d="M0 0h22.239v22.239H0Z"></path></g><g data-name="Group 13382"><path data-name="Path 17276" d="m11.119 16.002 5.726 3.456-1.52-6.514 5.059-4.383-6.661-.565-2.604-6.143-2.6 6.143-6.666.566 5.059 4.383-1.519 6.514Z" fill="#ff4f8b"></path></g></svg>
-                      </span>
-                    {% endfor %}
-                  </div>
-
-                  <span class="mb-text-sm mb-text-mb-body">({{ rating_count }}+ reviews)</span>
-                </div>
-              {% endif %}
-
-             {% if section.settings.subheading != blank %}
-              <p class="mb-mt-3 mb-text-sm md:mb-text-base mb-text-mb-subheading mb-inline-block mb-leading-7 ">
-                {{ section.settings.subheading }}
-                <a
-                  href="{{ section.settings.readmore_link }}"
-                  class="mb-ml mb-inline-flex mb-items-center mb-justify-center-1  mb-gap-1 mb-text-sm mb-font-semibold hover:mb-text-mb-primary" 
-                  style="color: {{ section.settings.readmore_color }};"
-                >
-                  <span>Read more</span>
-                  <svg class="Icon Icon--arrow-right  mb-w-2 mb-h-2" role="presentation" viewBox="0 0 11 21">
-                      <polyline
-                        fill="none"
-                        stroke="#724430"
-                        points="0.5 0.5 10.5 10.5 0.5 20.5"
-                        stroke-width="3"
-                      />
-                      </svg>  
-                </a>
-              </p>
-            {% endif %}
-
-
-
-              <!-- PRICE ROW -->
-              <div class="mb-mt-4 mb-flex mb-gap-3 mb-flex-wrap mb-items-center ">
-                <span data-role="price" class="mb-text-3xl md:mb-text-3xl mb-font-semibold mb-text-mb-body mb-font-heading mb-leading-none">
-                  {{ v.price | money }}
-                </span>
-
-                {% if v.compare_at_price > v.price %}
-                  {%- assign discount_pct = v.compare_at_price
-                    | minus: v.price
-                    | times: 100
-                    | divided_by: v.compare_at_price
-                  -%}
-
-                  <span class="mb-text-lg mb-text-mb-muted  mb-line-through mb-leading-none">
-                    {{ v.compare_at_price | money }}
-                  </span>
-                  <span class="mb-inline-flex mb-items-center mb-rounded-full mb-bg-mb-accent mb-text-mb-surface mb-text-sm mb-font-semibold mb-px-2.5 mb-py-1 mb-leading-none">
-                    {{ discount_pct }}% OFF
-                  </span>
-                  <span class="mb-text-sm">
-                     (Inclusive of all taxes)
-                  </span>
-                  
-                {% endif %}
               </div>
 
-              <!-- Badges -->
-              {% assign solve_title = section.settings.solve_title | default: 'Made to solve' %}
-              {% if section.blocks.size > 0 %}
-                <div class="mb-mt-4 mb-rounded-2xl ">
-                  <p class="mb-text-sm mb-font-semibold mb-text-mb-subheading">{{ solve_title }}</p>
+              <!-- Bottom area -->
+              <div
+                class="
+                  mb-grid mb-grid-cols-12 mb-gap-5 mb-h-max sm:mb-hidden mb-min-h-[120px]
+                  xl:mb-flex
+                "
+              >
+                <!-- Mini cards stack -->
+                <div class="mb-col-span-6 mb-h-full xl:mb-col-span-6  xl:mb-w-1/2 ">
+                  <div class="mb-relative">
+                    <div
+                      class="
+                        mb-absolute mb-left-[-10px]  mb-top-[-40px] mb-min-w-[100px] mb-w-1/2 xl:mb-w-[50%] mb-min-h-[100px] mb-rounded-[12px] mb-p-1 mb-overflow-hidden mb-bg-white mb-border mb-border-black/5
+                        xl:mb-min-h-[160px] xl:mb-top-[-80px] xl:mb-left-[-15px]
+                      "
+                    >
+                      {% if mini1 != blank %}
+                        <img
+                          src="{{ mini1 | image_url: width: 400 }}"
+                          alt="Mini image"
+                          class="mb-h-full mb-w-full mb-object-cover"
+                          loading="lazy"
+                          decoding="async"
+                        >
+                      {% else %}
+                        <div class="mb-h-full mb-w-full mb-bg-black/5"></div>
+                      {% endif %}
+                    </div>
 
-                  <div class="mb-mt-3 mb-flex mb-flex-wrap mb-gap-x-6 mb-gap-y-3">
-                    {% for block in section.blocks %}
-                      {% if block.type == 'solve_item' %}
+                    <div
+                      class="
+                        mb-absolute mb-left-[40%] mb-top-[5px] mb-p-1 mb-w-1/2  mb-min-w-[100px] mb-min-h-[100px] xl:mb-w-[50%]  md:mb-w-[60%] mb-rounded-[12px] mb-overflow-hidden mb-bg-white mb-border mb-border-black/5 mb-shadow-sm
+                        xl:mb-min-h-[140px] xl:mb-top-[5px]  xl:mb-left-[40%]
+                      "
+                    >
+                      {% if mini2 != blank %}
+                        <img
+                          src="{{ mini2 | image_url: width: 400 }}"
+                          alt="Mini image"
+                          class="mb-h-full mb-w-full mb-object-cover"
+                          loading="lazy"
+                          decoding="async"
+                        >
+                      {% else %}
+                        <div class="mb-h-full mb-w-full mb-bg-black/5"></div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <!-- Solve card -->
+                <div
+                  class="
+                    mb-col-span-6 xl:mb-col-span-6 mb-ml-[-7%] mb-mt-[5px]
+                    xl:mb-ml-0 xl:mb-w-1/2
+                  "
+                >
+                  <div
+                    class="
+                      mb-space-y-2 mb-rounded-[12px] mb-bg-white/70 mb-border mb-border-black/5 mb-p-1 mb-py-[6px]
+                      xl:mb-ml-[-15%]  xl:mb-p-5 xl:mb-space-y-3
+                    "
+                  >
+                    <div class="mb-flex mb-items-center mb-gap-3 xl:mb-gap-4">
+                      <span class="mb-h-5 mb-w-5 mb-rounded-xl mb-bg-mb-gray mb-border mb-border-mb-gray mb-flex mb-items-center mb-justify-center mb-place-items-center"
+                        ><span class="mb-text-[12px]">💧</span></span
+                      >
+                      <div class="mb-text-xs md:mb-text-base  mb-text-mb-heading">
+                        {{ section.settings.solve_card_item_1 }}
+                      </div>
+                    </div>
+
+                    <div class="mb-flex mb-items-center mb-gap-3 xl:mb-gap-4">
+                      <span class="mb-h-5 mb-w-5 mb-rounded-xl mb-bg-mb-gray mb-border mb-border-mb-gray mb-flex mb-items-center mb-justify-center mb-place-items-center"
+                        ><span class="mb-text-[12px]">💋</span></span
+                      >
+                      <div class="mb-text-xs md:mb-text-base  mb-text-mb-heading">
+                        {{ section.settings.solve_card_item_2 }}
+                      </div>
+                    </div>
+
+                    <div class="mb-flex mb-items-center mb-gap-3 xl:mb-gap-4">
+                      <span class="mb-h-5 mb-w-5 mb-rounded-xl mb-bg-mb-gray mb-border mb-border-mb-gray mb-flex mb-items-center mb-justify-center mb-place-items-center"
+                        ><span class="mb-text-[12px]">🎨</span></span
+                      >
+                      <div class="mb-text-xs md:mb-text-base  mb-text-mb-heading">
+                        {{ section.settings.solve_card_item_3 }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="mb-mt-0 xl:mb-col-span-6">
+              <div class="mb-rounded-[16px]">
+                <h2 class="mb-text-3xl md:mb-text-5xl mb-font-semibold mb-text-mb-heading mb-leading-tight">
+                  {{ section.settings.heading | default: p.title }}
+                </h2>
+
+                {% if section.settings.show_reviews %}
+                  <div class="mb-mt-3 mb-flex mb-items-center mb-gap-2">
+                    <div class="mb-flex mb-items-center">
+                      {% for i in (1..5) %}
+                        <span class="mb-leading-none">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 22.5 22.5">
+                            <path d="m11.119 16.002 5.726 3.456-1.52-6.514 5.059-4.383-6.661-.565-2.604-6.143-2.6 6.143-6.666.566 5.059 4.383-1.519 6.514Z" fill="{{ section.settings.review_star_color }}"></path>
+                          </svg>
+                        </span>
+                      {% endfor %}
+                    </div>
+                    <span class="mb-text-sm md:mb-text-base mb-text-mb-subheading">
+                      <a href="#" class="mb-inline-block">
+                        <span class="mb-font-semibold">{{ section.settings.rating_value }}</span>
+                        <span class="mb-text-black/35">|</span>
+                        {{ section.settings.rating_line }}
+                      </a>
+                    </span>
+                  </div>
+                {% endif %}
+
+                {% if section.settings.subheading != blank %}
+                  <p class="mb-mt-5 mb-text-sm md:mb-text-lg mb-leading-7 md:mb-leading-6 mb-text-mb-subheading">
+                    {{ section.settings.subheading }}
+                  </p>
+                {% endif %}
+
+                <ul class="mb-mt-2 mb-space-y-1 xl:mb-mt-3 xl:mb-space-y-2">
+                  {% if section.settings.bullet_1 != blank %}
+                    <li class="mb-flex mb-items-center mb-gap-2">
+                      <span class="mb-mt-1" style="color: {{ section.settings.accent }};">
+                        <svg
+                          class="w-3 h-3 text-gray-800 dark:text-white"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <path stroke="#4b1f00" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
+                        </svg>
+                      </span>
+                      <span class="mb-text-mb-body mb-text-sm md:mb-text-lg">{{ section.settings.bullet_1 }}</span>
+                    </li>
+                  {% endif %}
+
+                  {% if section.settings.bullet_2 != blank %}
+                    <li class="mb-flex mb-items-center mb-gap-2">
+                      <span class="mb-mt-1" style="color: {{ section.settings.accent }};">
+                        <svg
+                          class="w-3 h-3 text-gray-800 dark:text-white"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <path stroke="#4b1f00" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
+                        </svg>
+                      </span>
+                      <span class="mb-text-mb-body mb-text-sm md:mb-text-lg">{{ section.settings.bullet_2 }}</span>
+                    </li>
+                  {% endif %}
+
+                  {% if section.settings.bullet_3 != blank %}
+                    <li class="mb-flex mb-items-center mb-gap-2">
+                      <span class="mb-mt-1" style="color: {{ section.settings.accent }};">
+                        <svg
+                          class="w-3 h-3 text-gray-800 dark:text-white"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <path stroke="#4b1f00" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
+                        </svg>
+                      </span>
+                      <span class="mb-text-mb-body mb-text-sm md:mb-text-lg">{{ section.settings.bullet_3 }}</span>
+                    </li>
+                  {% endif %}
+                </ul>
+
+                {% if section.settings.readmore_link != blank %}
+                  <a
+                    href="{{ section.settings.readmore_link }}"
+                    class="mb-inline-flex mb-items-center mb-gap-2 mb-mt-3 mb-text-sm mb-font-semibold md:mb-text-"
+                    style="color: {{ section.settings.readmore_color }};"
+                  >
+                    <span>Read more</span>
+                    <svg class="mb-w-2 mb-h-2" viewBox="0 0 11 21" aria-hidden="true">
+                      <polyline fill="none" stroke="{{ section.settings.readmore_color }}" points="0.5 0.5 10.5 10.5 0.5 20.5" stroke-width="4" />
+                    </svg>
+                  </a>
+                {% endif %}
+
+                <div class="mb-mt-7 mb-flex mb-flex-wrap mb-items-center mb-gap-x-2 mb-gap-y-3">
+                  <span class="mb-text-3xl md:mb-text-4xl mb-font-semibold mb-text-mb-heading mb-font-heading mb-leading-none">
+                    {{ v.price | money }}
+                  </span>
+                  {% if compare > price %}
+                    <span class="mb-text-lg md:mb-text-xl mb-text-mb-muted mb-line-through mb-font-heading mb-leading-none">
+                      {{ compare | money }}
+                    </span>
+
+                    <span
+                      class="mb-inline-flex mb-items-center mb-rounded-full mb-px-5 mb-py-1 mb-text-sm md:mb-text-sm mb-font-semibold mb-leading-none"
+                      style="background: {{ section.settings.save_pill_bg }}; color: {{ section.settings.save_pill_text }};"
+                    >
+                      {{ section.settings.save_pill_prefix }}
+                      {{ save_amount | money }}
+                      {{ section.settings.save_pill_suffix }}
+                    </span>
+                  {% endif %}
+
+                  <span class="mb-text-sm md:mb-text-base mb-text-mb-subheading">
+                    {{ section.settings.price_note }}
+                  </span>
+                </div>
+
+                {% if section.settings.show_launch_pill %}
+                  <div class="mb-mt-4">
+                    <span
+                      class="mb-inline-flex mb-items-center mb-gap-2 mb-rounded-full mb-px-5 mb-py-2 mb-text-sm md:mb-text-base mb-font-semibold"
+                      style="background: {{ section.settings.launch_pill_bg }}; color: {{ section.settings.launch_pill_text }};"
+                    >
+                      <span>⏰</span>
+                      {{ section.settings.launch_pill_text_line }}
+                    </span>
+                  </div>
+                {% endif %}
+
+                <form data-role="atc-form" class="mb-mt-7">
+                  <input type="hidden" data-role="variant-id" value="{{ v.id }}">
+
+                  <div class="mb-flex mb-items-center mb-gap-4">
+                    <div class="mb-flex mb-items-center mb-justify-between mb-rounded-xl mb-border mb-border-mb-gray mb-bg-mb-gray  mb-w-[170px] mb-h-12 mb-px-4">
+                      <button
+                        type="button"
+                        data-role="qty-minus"
+                        class="mb-text-xl mb-text-mb-heading"
+                        aria-label="Decrease quantity"
+                      >
+                        –
+                      </button>
+                      <input
+                        data-role="qty"
+                        value="1"
+                        inputmode="numeric"
+                        class="mb-w-10 mb-text-center mb-bg-transparent mb-outline-none mb-text-sm mb-font-semibold mb-text-mb-heading"
+                      >
+                      <button
+                        type="button"
+                        data-role="qty-plus"
+                        class="mb-text-xl mb-text-mb-heading"
+                        aria-label="Increase quantity"
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <button
+                      type="submit"
+                      data-role="atc-btn"
+                      data-label="{{ section.settings.cta_label }}"
+                      class="
+                        mb-flex-1 mb-items-center mb-h-12 mb-rounded-xl mb-text-white mb-font-semibold mb-text-sm md:mb-text-base mb-shadow-sm mb-transition-colors
+                        mb-bg-mb-primary hover:mb-bg-mb-accent
+                      "
+                      {% unless available %}
+                        disabled
+                      {% endunless %}
+                    >
+                      <span class="mb-inline-flex mb-items-center mb-justify-center mb-gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          height="20"
+                          width="20"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path d="M0 0h24v24H0z" fill="none"/><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                        </svg>
+                        <span>
+                          {{ section.settings.cta_label }}
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+
+                  <p data-role="status" class="mb-mt-3 mb-text-xs mb-text-red-600"></p>
+                </form>
+
+                <div class="mb-mt-5 mb-rounded-xl mb-bg-mb-gray mb-border mb-border-gray-50 mb-px-2 mb-py-2">
+                  <div class="mb-flex mb-flex-wrap mb-items-center mb-gap-x-8 mb-gap-y-3">
+                    {% for i in (1..3) %}
+                      {% assign icon_key = 'trust_' | append: i | append: '_icon' %}
+                      {% assign text_key = 'trust_' | append: i %}
+
+                      {% if section.settings[text_key] != blank %}
                         <div class="mb-inline-flex mb-items-center mb-gap-2">
-                          {% if block.settings.icon != blank %}
-                            <img
-                              src="{{ block.settings.icon | image_url: width: 64 }}"
-                              alt=""
-                              class="mb-h-5 mb-w-5 mb-object-contain"
-                              loading="lazy"
-                            >
-                          {% else %}
-                            <span class="mb-h-5 mb-w-5 mb-rounded-full mb-bg-black/10"></span>
-                          {% endif %}
+                          <span class="mb-grid mb-place-items-center mb-h-10 mb-w-10 mb-rounded-full">
+                            {% if section.settings[icon_key] != blank %}
+                              <img
+                                src="{{ section.settings[icon_key] | image_url: width: 40 }}"
+                                alt=""
+                                class="mb-h-8 mb-w-8 mb-object-contain mb-rounded-full"
+                                loading="lazy"
+                              >
+                            {% endif %}
+                          </span>
 
-                          <span class="mb-text-sm mb-text-mb-subheading">{{ block.settings.text }}</span>
+                          <span class="mb-text-sm md:mb-text-base mb-text-mb-subheading">
+                            {{ section.settings[text_key] }}
+                          </span>
                         </div>
                       {% endif %}
                     {% endfor %}
                   </div>
                 </div>
-              {% endif %}
-
-              <!-- ATC -->
-              <form data-role="atc-form" class="mb-mt-6">
-                <input type="hidden" data-role="variant-id" value="{{ v.id }}">
-                <div class="mb-flex mb-items-center mb-gap-3">
-                  <div class="mb-flex mb-items-center mb-justify-between mb-rounded-2xl mb-bg-white mb-border mb-border-black/10 mb-w-[160px] mb-h-12 mb-px-3">
-                    <button type="button" data-role="qty-minus" class="mb-text-xl mb-text-black/60">–</button>
-                    <input
-                      data-role="qty"
-                      value="1"
-                      inputmode="numeric"
-                      class="mb-w-10 mb-text-center mb-bg-transparent mb-outline-none mb-text-sm mb-font-medium mb-text-[#111111]"
-                    >
-                    <button type="button" data-role="qty-plus" class="mb-text-xl mb-text-black/60">+</button>
-                  </div>
-
-                  <button
-                    type="submit"
-                    data-role="atc-btn"
-                    data-label="{{ section.settings.cta_label }}"
-                    class="mb-flex-1 mb-h-12 mb-rounded-2xl mb-text-white mb-font-semibold mb-text-sm mb-shadow-sm"
-                    style="background: {{ section.settings.accent }};"
-                    {% unless available %}disabled{% endunless %}
-                  >
-                    {{ section.settings.cta_label }}
-                  </button>
-                </div>
-
-                <p data-role="status" class="mb-mt-3 mb-text-xs mb-text-red-600"></p>
-              </form>
-
-              {% assign t1 = section.settings.trust_1 | default: 'Free Shipping' %}
-              {% assign t2 = section.settings.trust_2 | default: 'Easy Returns' %}
-              {% assign t3 = section.settings.trust_3 | default: 'COD Available' %}
-
-              <div class="mb-mt-4 mb-rounded-2xl mb-bg-white/70 mb-border mb-border-black/10 mb-px-4 mb-py-3">
-                <div class="mb-flex mb-flex-wrap mb-items-center mb-gap-x-6 mb-gap-y-3">
-                  <div class="mb-inline-flex mb-items-center mb-gap-2">
-                    <span class="mb-grid mb-place-items-center mb-h-8 mb-w-8 mb-rounded-full mb-bg-black/5 mb-border mb-border-black/10">
-                      <svg viewBox="0 0 24 24" class="mb-h-4 mb-w-4 mb-text-black/70" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 7h11v10H3z"></path>
-                        <path d="M14 10h4l3 3v4h-7z"></path>
-                        <circle cx="7" cy="19" r="1.5"></circle>
-                        <circle cx="17" cy="19" r="1.5"></circle>
-                      </svg>
-                    </span>
-                    <span class="mb-text-sm mb-text-black/70">{{ t1 }}</span>
-                  </div>
-
-                  <div class="mb-inline-flex mb-items-center mb-gap-2">
-                    <span class="mb-grid mb-place-items-center mb-h-8 mb-w-8 mb-rounded-full mb-bg-black/5 mb-border mb-border-black/10">
-                      <svg viewBox="0 0 24 24" class="mb-h-4 mb-w-4 mb-text-black/70" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 12a9 9 0 1 0 3-6.7"></path>
-                        <path d="M3 4v6h6"></path>
-                      </svg>
-                    </span>
-                    <span class="mb-text-sm mb-text-black/70">{{ t2 }}</span>
-                  </div>
-
-                  <div class="mb-inline-flex mb-items-center mb-gap-2">
-                    <span class="mb-grid mb-place-items-center mb-h-8 mb-w-8 mb-rounded-full mb-bg-black/5 mb-border mb-border-black/10">
-                      <svg viewBox="0 0 24 24" class="mb-h-4 mb-w-4 mb-text-black/70" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 7h18v10H3z"></path>
-                        <path d="M16 12h3"></path>
-                      </svg>
-                    </span>
-                    <span class="mb-text-sm mb-text-black/70">{{ t3 }}</span>
-                  </div>
-                </div>
               </div>
-
-              {% if section.settings.show_payments %}
-                <div class="mb-mt-5 mb-rounded-2xl mb-border mb-border-black/10 mb-bg-white mb-p-4">
-                  <p class="mb-text-xs mb-font-semibold mb-text-black/70">{{ section.settings.payment_title }}</p>
-                  <div class="mb-mt-3 mb-flex mb-flex-wrap mb-gap-2 mb-items-center">
-                    {% for type in shop.enabled_payment_types %}
-                      {{ type | payment_type_svg_tag: class: 'mb-h-7 mb-w-auto' }}
-                    {% endfor %}
-                  </div>
-                </div>
-              {% endif %}
-
-              <!-- MOBILE STICKY ATC -->
-              <div
-                data-role="sticky-atc"
-                class="
-                  mb-fixed mb-left-0 mb-right-0 mb-bottom-0 mb-z-[999]
-                  mb-bg-white mb-border-t mb-border-black/10
-                  mb-shadow-[0_-12px_30px_rgba(0,0,0,0.10)]
-                  mb-px-4 mb-pt-3 mb-pb-[calc(12px+env(safe-area-inset-bottom))]
-                  mb-transition mb-duration-300 mb-ease-out
-                  mb-translate-y-[120%] mb-opacity-0 mb-pointer-events-none
-                "
-              >
-                <div class="mb-flex mb-items-center mb-gap-3">
-                  <div class="mb-flex-1 mb-min-w-0">
-                    <div class="mb-text-[11px] mb-text-black/50 mb-leading-none">Total</div>
-                    <div data-role="sticky-price" class="mb-mt-1 mb-text-[16px] mb-font-semibold mb-text-[#111111] mb-leading-tight">
-                      {{ v.price | money }}
-                    </div>
-                  </div>
-
-                  <div class="mb-flex mb-items-center mb-justify-between mb-rounded-2xl mb-bg-white mb-border mb-border-black/10 mb-w-[132px] mb-h-11 mb-px-3">
-                    <button type="button" data-role="sticky-qty-minus" class="mb-text-xl mb-text-black/60">–</button>
-                    <input
-                      data-role="sticky-qty"
-                      value="1"
-                      inputmode="numeric"
-                      class="mb-w-10 mb-text-center mb-bg-transparent mb-outline-none mb-text-sm mb-font-medium mb-text-[#111111]"
-                    >
-                    <button type="button" data-role="sticky-qty-plus" class="mb-text-xl mb-text-black/60">+</button>
-                  </div>
-
-                  <button
-                    type="button"
-                    data-role="sticky-atc-btn"
-                    data-label="{{ section.settings.cta_label }}"
-                    class="mb-h-11 mb-rounded-2xl mb-px-5 mb-text-white mb-font-semibold mb-text-sm mb-shadow-sm"
-                    style="background: {{ section.settings.accent }};"
-                    {% unless available %}disabled{% endunless %}
-                  >
-                    {{ section.settings.cta_label }}
-                  </button>
-                </div>
-              </div>
-
             </div>
           </div>
-        </div>
 
-        <!-- ZOOM LIGHTBOX + SLIDER + SMOOTH ANIMATION (mb- only) -->
-        <div
-          id="mb-zoom-overlay-{{ section.id }}"
-          class="
-            mb-fixed mb-inset-0 mb-z-[99999] mb-flex mb-items-center mb-justify-center
-            mb-bg-black/70 mb-backdrop-blur-[6px] mb-p-4
-            mb-opacity-0 mb-pointer-events-none
-            mb-transition mb-duration-200 mb-ease-out
-          "
-          aria-hidden="true"
-        >
+          <!-- MOBILE STICKY ATC -->
           <div
-            data-lb-panel
+            data-role="sticky-atc"
             class="
-              mb-relative mb-w-full mb-max-w-[1100px] mb-h-[78vh]
-              mb-rounded-[18px] mb-overflow-hidden mb-border mb-border-white/20 mb-bg-white/5
-              mb-scale-[0.98] mb-opacity-0
-              mb-transition mb-duration-200 mb-ease-out
+              mb-fixed mb-left-0 mb-right-0 mb-bottom-0 mb-z-[999]
+              mb-bg-white mb-border-t mb-border-black/10
+              mb-shadow-[0_-12px_30px_rgba(0,0,0,0.10)]
+              mb-px-4 mb-pt-3 mb-pb-[calc(12px+env(safe-area-inset-bottom))]
+              mb-transition mb-duration-300 mb-ease-out
+              mb-translate-y-[120%] mb-opacity-0 mb-pointer-events-none
             "
           >
-            <!-- Top toolbar -->
-            <div class="mb-absolute mb-right-3 mb-top-3 mb-z-[3] mb-flex mb-gap-2">
-              {% comment %} <button type="button" data-zoom-out class="mb-h-10 mb-w-10 mb-rounded-xl mb-border mb-border-white/20 mb-bg-black/35 mb-text-white mb-grid mb-place-items-center" aria-label="Zoom out">
-                      
-              </button>
-              <button type="button" data-zoom-in class="mb-h-10 mb-w-10 mb-rounded-xl mb-border mb-border-white/20 mb-bg-black/35 mb-text-white mb-grid mb-place-items-center" aria-label="Zoom in">
-                      
-              </button>
-              <button type="button" data-zoom-reset class="mb-h-10 mb-w-10 mb-rounded-xl mb-border mb-border-white/20 mb-bg-black/35 mb-text-white mb-grid mb-place-items-center" aria-label="Reset">
-                      
-              </button> {% endcomment %}
-        
-              <button type="button" data-zoom-close  class="mb-grid mb-place-items-center mb-h-7 mb-w-7 mb-rounded-full mb-bg-[#FFF6FA] mb-border mb-border-black/5 mb-transition group-hover:mb-bg-white" aria-label="Close">
-                {% render 'icons-v2', icon:'icon-cross',class:"mb-fill-[#724430] mb-w-[14px] mb-h-[14px]" %}
-                </button>
-
-              
+            <div class="mb-text-lg mb-text-mb-heading mb-font-semibold mb-leading-none mb-mb-1">
+              {{ section.settings.heading | default: p.title }}
             </div>
+            <div class="mb-flex mb-items-center mb-gap-3">
+              <div class="mb-flex-1 mb-min-w-0">
+                <div
+                  data-role="sticky-price"
+                  class="mb-mt-1 mb-text-xl mb-font-heading mb-font-semibold mb-text-mb-heading mb-leading-tight"
+                >
+                  {{ v.price | money }}
+                </div>
+              </div>
 
-            <!-- Slider arrows -->
-            <button
-              type="button"
-              data-lb-prev
-              aria-label="Previous"
-              class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-left-3 mb-top-1/2 mb--translate-y-1/2 mb-z-[3] mb-h-11 mb-w-11 mb-rounded-full"
-            >
-                     <svg class="Icon Icon--arrow-left mb-w-5 mb-h-5" role="presentation" viewBox="0 0 11 21">
-                      <polyline fill="none" stroke="#724430" points="10.5 0.5 0.5 10.5 10.5 20.5" stroke-width="1.25"></polyline>
-                    </svg>
-            </button>
- 
-            <button
-              type="button"
-              data-lb-next
-              aria-label="Next"
-              class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-right-3 mb-top-1/2 mb--translate-y-1/2 mb-z-[3] mb-h-11 mb-w-11 mb-rounded-full"
-            >
-                    <svg class="Icon Icon--arrow-right  mb-w-5 mb-h-5" role="presentation" viewBox="0 0 11 21">
-                      <polyline
-                        fill="none"
-                        stroke="#724430"
-                        points="0.5 0.5 10.5 10.5 0.5 20.5"
-                        stroke-width="1.6"
-                      />
-                      </svg>  
-            </button>
+              <div class="mb-flex mb-items-center mb-justify-between mb-rounded-xl mb-bg-mb-gray mb-border mb-border-mb-gray mb-w-[132px] mb-h-11 mb-px-3">
+                <button type="button" data-role="sticky-qty-minus" class="mb-text-xl mb-text-mb-heading">–</button>
+                <input
+                  data-role="sticky-qty"
+                  value="1"
+                  inputmode="numeric"
+                  class="mb-w-10 mb-text-center mb-bg-transparent mb-outline-none mb-text-sm mb-font-semibold mb-text-mb-heading"
+                >
+                <button type="button" data-role="sticky-qty-plus" class="mb-text-xl mb-text-mb-heading ">+</button>
+              </div>
 
-            <!-- Track (slides injected by JS) -->
-            <div
-              data-lb-track
-              class="mb-h-full mb-w-full mb-flex mb-overflow-x-auto mb-overflow-y-hidden mb-scroll-smooth mb-snap-x mb-snap-mandatory mb-overscroll-x-contain mb-no-scrollbar"
-              aria-label="Zoomed product images"
-            ></div>
-           
+              <button
+                type="button"
+                data-role="sticky-atc-btn"
+                data-label="{{ section.settings.cta_label }}"
+                class="mb-h-11 mb-rounded-xl mb-px-5 mb-text-mb-surface mb-transition-colors mb-font-semibold mb-text-sm mb-shadow-sm mb-bg-mb-primary hover:mb-bg-mb-accent"
+                {% unless available %}
+                  disabled
+                {% endunless %}
+              >
+                {{ section.settings.cta_label }}
+              </button>
+            </div>
           </div>
-        </div>
 
-      </meziva-single-product-hero>
-    {% endif %}
-  </div>
-</section>
+          <!-- ✅ ZOOM OVERLAY (old functionality compatible) -->
+          <div
+            id="mb-zoom-overlay-{{ section.id }}"
+            class="
+              mb-fixed mb-inset-0 mb-z-[99999] mb-flex mb-items-center mb-justify-center
+              mb-bg-black/70 mb-backdrop-blur-[6px] mb-p-4
+              mb-opacity-0 mb-pointer-events-none
+              mb-transition mb-duration-200 mb-ease-out
+            "
+            aria-hidden="true"
+          >
+            <div
+              data-lb-panel
+              class="
+                mb-relative mb-w-full mb-max-w-[1100px] mb-h-[78vh]
+                mb-rounded-[18px] mb-overflow-hidden
+                mb-border mb-border-white/20 mb-bg-white/5
+                mb-scale-[0.98] mb-opacity-0
+                mb-transition mb-duration-200 mb-ease-out
+              "
+            >
+              <div class="mb-absolute mb-right-3 mb-top-3 mb-z-[3]">
+                <button
+                  type="button"
+                  data-zoom-close
+                  class="mb-grid mb-place-items-center mb-h-9 mb-w-9 mb-rounded-full mb-bg-[#FFF6FA] mb-border mb-border-black/5"
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <button
+                type="button"
+                data-lb-prev
+                aria-label="Previous"
+                class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-left-3 mb-top-1/2 mb--translate-y-1/2 mb-z-[3] mb-h-11 mb-w-11 mb-rounded-full mb-bg-white/20"
+              >
+                <svg class="mb-w-5 mb-h-5" viewBox="0 0 11 21" aria-hidden="true">
+                  <polyline fill="none" stroke="#4b1f00" points="10.5 0.5 0.5 10.5 10.5 20.5" stroke-width="1.6"></polyline>
+                </svg>
+              </button>
+
+              <button
+                type="button"
+                data-lb-next
+                aria-label="Next"
+                class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-right-3 mb-top-1/2 mb--translate-y-1/2 mb-z-[3] mb-h-11 mb-w-11 mb-rounded-full mb-bg-white/20"
+              >
+                <svg class="mb-w-5 mb-h-5" viewBox="0 0 11 21" aria-hidden="true">
+                  <polyline fill="none" stroke="#4b1f00" points="0.5 0.5 10.5 10.5 0.5 20.5" stroke-width="1.6"></polyline>
+                </svg>
+              </button>
+
+              <div
+                data-lb-track
+                class="mb-h-full mb-w-full mb-flex mb-overflow-x-auto mb-overflow-y-hidden mb-scroll-smooth mb-snap-x mb-snap-mandatory mb-overscroll-x-contain mb-no-scrollbar"
+                aria-label="Zoomed product images"
+              ></div>
+            </div>
+          </div>
+        </meziva-single-product-hero>
+      {% endif %}
+    </div>
+  </section>
 </div>
 
 <style>
-  .mb-no-scrollbar { scrollbar-width: none; }
-  .mb-no-scrollbar::-webkit-scrollbar { display: none; }
+  .mb-no-scrollbar {
+    scrollbar-width: none;
+  }
+  .mb-no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 </style>
 
 {% schema %}
 {
   "name": "Single Product Hero",
-  "settings": [
-    { "type": "text", "id": "section-id", "label": "Section ID", "info": "#banner" },
-    { "type": "color", "id": "section_bg", "label": "Section BG"},
-    { "type": "product", "id": "product", "label": "Product (Home page)" },
-
-    { "type": "text", "id": "kicker", "label": "Kicker", "default": "CLEAN • HYDRATING • TINTED" },
-    { "type": "text", "id": "heading", "label": "Heading (optional)" },
-
-    { "type": "checkbox", "id": "show_reviews", "label": "Show reviews widget", "default": true },
+      "settings": [
+        {
+      "type": "header",
+      "content": "Section Spacing"
+    },
     {
       "type": "range",
-      "id": "rating_value",
-      "label": "Rating (display only)",
-      "min": 1,
-      "max": 5,
-      "step": 1,
-      "default": 5
+      "id": "padding_top_mobile",
+      "label": "Padding Top (Mobile)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
     },
-    { "type": "number", "id": "rating_count", "label": "Reviews count (display only)", "default": 1200 },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Bottom (Mobile)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Padding Top (Desktop)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Bottom (Desktop)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+    { "type": "text", "id": "section_id", "label": "Section ID", "default": "banner" },
+    { "type": "color", "id": "section_bg", "label": "Section BG", "default": "#fff5f9" },
+    { "type": "product", "id": "product", "label": "Product" },
+
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Bake Me Up" },
+
+    { "type": "checkbox", "id": "show_reviews", "label": "Show reviews", "default": true },
+    { "type": "text", "id": "rating_value", "label": "Rating value", "default": "5" },
+    { "type": "text", "id": "rating_line", "label": "Rating line", "default": "Loved by 1,200+ women" },
+    { "type": "color", "id": "review_star_color", "label": "Star color", "default": "#ff4f8b" },
 
     {
       "type": "textarea",
       "id": "subheading",
-      "label": "Subheading",
+      "label": "Description",
       "default": "Skincare-first lip balm with hydration + tint in 1 swipe. Lightweight, non-sticky feel."
     },
-    {
-      "type": "url",
-      "id": "readmore_link",
-      "label": "Read more link",
-      "info": "Redirect user to product detail / about page"
-        },
-    {
-      "type": "color",
-      "id": "readmore_color",
-      "label": "Read more color",
-      "default": "#724430"
-    },
+
+    { "type": "text", "id": "bullet_1", "label": "Bullet 1", "default": "Deep hydration" },
+    { "type": "text", "id": "bullet_2", "label": "Bullet 2", "default": "Soft natural tint" },
+    { "type": "text", "id": "bullet_3", "label": "Bullet 3", "default": "Lightweight, non-sticky" },
+
+    { "type": "url", "id": "readmore_link", "label": "Read more link" },
+    { "type": "color", "id": "readmore_color", "label": "Read more color", "default": "#724430" },
+
     { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Buy Now" },
     { "type": "text", "id": "price_note", "label": "Price note", "default": "Inclusive of all taxes" },
 
-    { "type": "text", "id": "trust_1", "label": "Trust 1", "default": "Free Shipping" },
-    { "type": "text", "id": "trust_2", "label": "Trust 2", "default": "Easy Returns" },
-    { "type": "text", "id": "trust_3", "label": "Trust 3", "default": "COD Available" },
+    { "type": "text", "id": "save_pill_prefix", "label": "Save pill prefix", "default": "Save" },
+    { "type": "text", "id": "save_pill_suffix", "label": "Save pill suffix", "default": "today" },
+    { "type": "color", "id": "save_pill_bg", "label": "Save pill bg", "default": "#724430" },
+    { "type": "color", "id": "save_pill_text", "label": "Save pill text", "default": "#ffffff" },
 
+    { "type": "checkbox", "id": "show_launch_pill", "label": "Show launch pill", "default": true },
+    {
+      "type": "text",
+      "id": "launch_pill_text_line",
+      "label": "Launch pill text",
+      "default": "Limited-time launch offer"
+    },
+    { "type": "color", "id": "launch_pill_bg", "label": "Launch pill bg", "default": "#fde7f0" },
+    { "type": "color", "id": "launch_pill_text", "label": "Launch pill text", "default": "#724430" },
+
+    {
+      "type": "image_picker",
+      "id": "trust_1_icon",
+      "label": "Trust 1 Icon"
+    },
+    {
+      "type": "text",
+      "id": "trust_1",
+      "label": "Trust 1 Text",
+      "default": "Free Shipping"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "trust_2_icon",
+      "label": "Trust 2 Icon"
+    },
+    {
+      "type": "text",
+      "id": "trust_2",
+      "label": "Trust 2 Text",
+      "default": "Easy Returns"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "trust_3_icon",
+      "label": "Trust 3 Icon"
+    },
+    {
+      "type": "text",
+      "id": "trust_3",
+      "label": "Trust 3 Text",
+      "default": "COD Available"
+    },
     { "type": "color", "id": "accent", "label": "Accent", "default": "#FF60A6" },
 
     { "type": "checkbox", "id": "enable_sticky_atc", "label": "Enable mobile sticky ATC", "default": true },
@@ -490,48 +741,35 @@
     {
       "type": "range",
       "id": "slider_image_limit",
-      "label": "Max images in slider",
+      "label": "Max images",
       "min": 1,
       "max": 10,
       "step": 1,
       "default": 6
     },
-    { "type": "checkbox", "id": "slider_show_arrows", "label": "Show arrows", "default": true },
+    { "type": "checkbox", "id": "slider_show_arrows", "label": "Show arrows", "default": false },
     { "type": "checkbox", "id": "slider_show_dots", "label": "Show dots", "default": true },
-    { "type": "checkbox", "id": "slider_autoplay", "label": "Autoplay slider", "default": true },
+    { "type": "checkbox", "id": "slider_autoplay", "label": "Autoplay", "default": false },
     {
       "type": "range",
       "id": "slider_interval",
-      "label": "Autoplay interval (seconds)",
+      "label": "Autoplay interval (s)",
       "min": 2,
       "max": 10,
       "step": 1,
       "default": 4
     },
 
-    { "type": "text", "id": "solve_title", "label": "Solve section title", "default": "Made to solve" },
+    { "type": "image_picker", "id": "mini_card_1_image", "label": "Mini card 1 image (lips) [optional]" },
+    { "type": "image_picker", "id": "mini_card_2_image", "label": "Mini card 2 image (product/lifestyle) [optional]" },
 
-    { "type": "checkbox", "id": "show_payments", "label": "Show payment icons", "default": false },
-    { "type": "text", "id": "payment_title", "label": "Payment title", "default": "Secure Checkout" }
-  ],
-  "blocks": [
-    {
-      "type": "solve_item",
-      "name": "Solve item",
-      "settings": [
-        { "type": "image_picker", "id": "icon", "label": "Icon (PNG/SVG)" },
-        { "type": "text", "id": "text", "label": "Label", "default": "Dryness" }
-      ]
-    }
+    { "type": "text", "id": "solve_card_item_1", "label": "Solve card item 1", "default": "24H Hydration" },
+    { "type": "text", "id": "solve_card_item_2", "label": "Solve card item 2", "default": "Heals Cracks" },
+    { "type": "text", "id": "solve_card_item_3", "label": "Solve card item 3", "default": "Natural Tint Coverage" }
   ],
   "presets": [
     {
-      "name": "Single Product Hero",
-      "blocks": [
-        { "type": "solve_item", "settings": { "text": "Dryness" } },
-        { "type": "solve_item", "settings": { "text": "Chapping" } },
-        { "type": "solve_item", "settings": { "text": "Pigmentation" } }
-      ]
+      "name": "Single Product Hero"
     }
   ]
 }

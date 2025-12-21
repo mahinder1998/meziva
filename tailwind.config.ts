@@ -27,11 +27,14 @@ module.exports = {
       },
       colors: {
         mb: {
-          primary: "#f79ac3",
-          accent: "#724430",
-          text: "#111111",
-          bg: "#fff5f9", 
-          surface: "#FFFFFF"
+          heading: "#111111",
+          subheading: "#3a3a3a",
+          body: "#4a4a4a",
+          muted: "#777777",
+          primary: "#ff4f8b",
+          accent: "#4b1f00",
+          bg: "#fff5f9",
+          surface: "#ffffff"
         }
       },
       translate:{

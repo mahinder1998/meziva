@@ -108,18 +108,32 @@
                   {{ section.settings.kicker }}
                 </div>
               {% endif %}
-
-              <h2 class="mb-mt-3 mb-text-2xl md:mb-text-3xl mb-font-semibold mb-text-mb-text">
+              <h2 class="mb-mt-3 mb-text-2xl md:mb-text-3xl mb-font-semibold mb-text-mb-heading">
                 {{ section.settings.heading | default: p.title }}
               </h2>
 
-             {% if section.settings.subheading != blank %}
-              <div class="mb-mt-2 mb-text-sm md:mb-text-base mb-text-black/60">
-                {{ section.settings.subheading }}
+              {%- assign show_reviews = section.settings.show_reviews -%}
+              {%- assign rating_count = section.settings.rating_count | default: 1200 -%}
+              {% if show_reviews %}
+                <div class="mb-mt-4 mb-flex mb-items-center mb-gap-2">
+                  <div class="mb-flex mb-items-center mb-gap-0.5">
+                    {% for i in (1..5) %}
+                      <span class="mb-text-[14px] mb-text-mb-primary mb-leading-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14px" height="14px" viewBox="0 0 22.5 22.5"><g data-name="Group 13381" fill="none"><path data-name="Path 17274" d="M0 0h22.239v22.239H0Z"></path><path data-name="Path 17275" d="M0 0h22.239v22.239H0Z"></path></g><g data-name="Group 13382"><path data-name="Path 17276" d="m11.119 16.002 5.726 3.456-1.52-6.514 5.059-4.383-6.661-.565-2.604-6.143-2.6 6.143-6.666.566 5.059 4.383-1.519 6.514Z" fill="#ff4f8b"></path></g></svg>
+                      </span>
+                    {% endfor %}
+                  </div>
 
+                  <span class="mb-text-sm mb-text-mb-body">({{ rating_count }}+ reviews)</span>
+                </div>
+              {% endif %}
+
+             {% if section.settings.subheading != blank %}
+              <p class="mb-mt-3 mb-text-sm md:mb-text-base mb-text-mb-subheading mb-inline-block mb-leading-7 ">
+                {{ section.settings.subheading }}
                 <a
                   href="{{ section.settings.readmore_link }}"
-                  class="mb-ml mb-inline-flex mb-items-center mb-justify-center-1  mb-gap-1 mb-text-sm mb-font-semibold hover:mb-opacity-[.9]"
+                  class="mb-ml mb-inline-flex mb-items-center mb-justify-center-1  mb-gap-1 mb-text-sm mb-font-semibold hover:mb-text-mb-primary" 
                   style="color: {{ section.settings.readmore_color }};"
                 >
                   <span>Read more</span>
@@ -132,32 +146,14 @@
                       />
                       </svg>  
                 </a>
-              </div>
+              </p>
             {% endif %}
 
 
-              {%- assign show_reviews = section.settings.show_reviews -%}
-              {%- assign rating_count = section.settings.rating_count | default: 1200 -%}
-
-              {% if show_reviews %}
-                <div class="mb-mt-4 mb-flex mb-items-center mb-gap-2">
-                  <div class="mb-flex mb-items-center mb-gap-0.5">
-                    {% for i in (1..5) %}
-                      <span class="mb-text-[14px] mb-text-[#FF60A6] mb-leading-none">★</span>
-                    {% endfor %}
-                  </div>
-
-                  <span class="mb-text-sm mb-text-black/60">{{ rating_count }}+ reviews</span>
-
-                  <span class="mb-inline-flex mb-items-center mb-justify-center mb-h-5 mb-w-5 mb-rounded-full mb-bg-emerald-500/15 mb-text-emerald-600 mb-text-[12px]">
-                    ✓
-                  </span>
-                </div>
-              {% endif %}
 
               <!-- PRICE ROW -->
-              <div class="mb-mt-3 mb-flex mb-items-end mb-gap-3 mb-flex-wrap">
-                <span data-role="price" class="mb-text-3xl md:mb-text-4xl mb-font-semibold mb-text-[#111111] mb-leading-none">
+              <div class="mb-mt-4 mb-flex mb-gap-3 mb-flex-wrap mb-items-center ">
+                <span data-role="price" class="mb-text-3xl md:mb-text-3xl mb-font-semibold mb-text-mb-body mb-font-heading mb-leading-none">
                   {{ v.price | money }}
                 </span>
 
@@ -168,21 +164,24 @@
                     | divided_by: v.compare_at_price
                   -%}
 
-                  <span class="mb-text-lg mb-text-black/35 mb-line-through mb-leading-none">
+                  <span class="mb-text-lg mb-text-mb-muted  mb-line-through mb-leading-none">
                     {{ v.compare_at_price | money }}
                   </span>
-
-                  <span class="mb-inline-flex mb-items-center mb-rounded-full mb-bg-[#FF60A6]/10 mb-text-[#FF60A6] mb-text-sm mb-font-semibold mb-px-2.5 mb-py-1 mb-leading-none">
-                    -{{ discount_pct }}%
+                  <span class="mb-inline-flex mb-items-center mb-rounded-full mb-bg-mb-accent mb-text-mb-surface mb-text-sm mb-font-semibold mb-px-2.5 mb-py-1 mb-leading-none">
+                    {{ discount_pct }}% OFF
                   </span>
+                  <span class="mb-text-sm">
+                     (Inclusive of all taxes)
+                  </span>
+                  
                 {% endif %}
               </div>
 
               <!-- Badges -->
               {% assign solve_title = section.settings.solve_title | default: 'Made to solve' %}
               {% if section.blocks.size > 0 %}
-                <div class="mb-mt-4 mb-rounded-2xl mb-p-4">
-                  <p class="mb-text-sm mb-font-semibold mb-text-[#111111]">{{ solve_title }}</p>
+                <div class="mb-mt-4 mb-rounded-2xl ">
+                  <p class="mb-text-sm mb-font-semibold mb-text-mb-subheading">{{ solve_title }}</p>
 
                   <div class="mb-mt-3 mb-flex mb-flex-wrap mb-gap-x-6 mb-gap-y-3">
                     {% for block in section.blocks %}
@@ -199,7 +198,7 @@
                             <span class="mb-h-5 mb-w-5 mb-rounded-full mb-bg-black/10"></span>
                           {% endif %}
 
-                          <span class="mb-text-sm mb-text-black/70">{{ block.settings.text }}</span>
+                          <span class="mb-text-sm mb-text-mb-subheading">{{ block.settings.text }}</span>
                         </div>
                       {% endif %}
                     {% endfor %}
@@ -448,10 +447,10 @@
     { "type": "number", "id": "rating_count", "label": "Reviews count (display only)", "default": 1200 },
 
     {
-      "type": "richtext",
+      "type": "textarea",
       "id": "subheading",
       "label": "Subheading",
-      "default": "<p>Skincare-first lip balm with hydration + tint in 1 swipe. Lightweight, non-sticky feel.</p>"
+      "default": "Skincare-first lip balm with hydration + tint in 1 swipe. Lightweight, non-sticky feel."
     },
     {
       "type": "url",

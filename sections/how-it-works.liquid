@@ -1,44 +1,185 @@
-<section class="mb-max-w-7xl mb-mx-auto mb-px-4 mb-py-20">
+{% comment %}
+  mb-how-it-works (Keen Slider)
+  - Mobile: Keen slider (1 item per view)
+  - Desktop: 3 column grid + dotted connectors (with side dots)
+  - Tailwind prefix: mb-
+  - JS: assets/mb-how-it-works.js
+{% endcomment %}
 
-  <!-- Heading -->
-  <div class="mb-text-center mb-mb-20">
-    <h2 class="mb-text-3xl mb-font-light mb-tracking-[0.3em] mb-uppercase">
-      {{ section.settings.heading }}
-    </h2>
-  </div>
+<section class="mb-w-full mb-py-14 lg:mb-py-20" id="mb-how-it-works-{{ section.id }}">
+  <div class="mb-max-w-[1240px] mb-mx-auto mb-px-4 lg:mb-px-8">
 
-  <!-- Grid -->
-  <div class="mb-grid mb-grid-cols-1 lg:mb-grid-cols-3 mb-gap-y-20 mb-gap-x-16 mb-max-w-[1200px] mb-mx-auto">
-
-    {% for block in section.blocks %}
-      <div class="mb-flex mb-flex-col mb-items-center mb-text-center">
-
-        <!-- Circle Image -->
-        <div class="mb-w-[220px] mb-h-[220px] mb-rounded-full mb-overflow-hidden mb-border mb-bg-gray-100 mb-mb-8">
-          {% if block.settings.image != blank %}
-            <img
-              src="{{ block.settings.image | image_url: width: 500 }}"
-              alt=""
-              class="mb-w-full mb-h-full mb-object-cover"
-              loading="lazy"
-            >
-          {% endif %}
+    {% if section.settings.heading != blank %}
+      <div class="mb-text-center mb-mb-10 lg:mb-mb-20">
+        <div class="mb-flex mb-items-center mb-justify-center mb-gap-4">
+          <h2 class="mb-text-[18px] lg:mb-text-[30px] mb-uppercase mb-font-semibold mb-font-heading">
+            {{ section.settings.heading }}
+          </h2>
         </div>
-
-        <!-- Text -->
-        <p class="mb-text-sm mb-uppercase mb-tracking-wider mb-mb-2">
-          {{ block.settings.text_1 }}
-        </p>
-
-        <p class="mb-text-lg mb-font-light">
-          {{ block.settings.text_2 }}
-        </p>
-
       </div>
-    {% endfor %}
+    {% endif %}
+
+    {%- comment -%} MOBILE: slider {%- endcomment -%}
+    <meziva-simple-slider
+      class="mb-block lg:mb-hidden"
+      data-section-id="{{ section.id }}"
+      data-per-view-mobile="1"
+      data-spacing-mobile="16"
+    >
+      <div class="keen-slider mb-overflow-hidden" data-mb-keen>
+        {% for block in section.blocks %}
+          <div class="keen-slider__slide" data-mb-slide>
+            <div class="mb-flex mb-flex-col mb-items-center mb-text-center mb-px-1">
+              <div class="mb-w-[220px] mb-h-[220px]
+                  mb-rounded-full mb-overflow-hidden
+                  mb-border mb-border-[#d1a88b]
+                  mb-shadow-[0_10px_30px_rgba(0,0,0,0.08)]
+                  mb-mb-7 mb-p-1
+                "
+              >
+                {% if block.settings.image != blank %}
+                  <img
+                    src="{{ block.settings.image | image_url: width: 700 }}"
+                    alt="{{ block.settings.text_2 | escape }}"
+                    class="mb-w-full mb-h-full mb-object-cover mb-rounded-full"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="mb-w-full mb-h-full mb-flex mb-items-center mb-justify-center mb-text-[#9b8a72] mb-text-sm">
+                    Add image
+                  </div>
+                {% endif %}
+              </div>
+
+              {% if block.settings.text_1 != blank %}
+                <p class="mb-text-[16px] mb-font-medium mb-text-mb-accent mb-mb-2">
+                  {{ block.settings.text_1 }}
+                </p>
+              {% endif %}
+
+              {% if block.settings.text_2 != blank %}
+                <p class="mb-text-[18px] lg:mb-text-[22px] mb-font-medium mb-leading-[1.05] mb-text-[#1a1a1a]">
+                  {{ block.settings.text_2 }}
+                </p>
+              {% endif %}
+
+              {% if block.settings.text_3 != blank %}
+                <p class="mb-mt-2 mb-text-[16px] mb-font-light mb-text-[#8a8a8a]">
+                  {{ block.settings.text_3 }}
+                </p>
+              {% endif %}
+
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-flex mb-justify-center mb-gap-2 mb-mt-5" data-mb-dots></div>
+    </meziva-simple-slider>
+
+    {%- comment -%} DESKTOP: grid with connectors {%- endcomment -%}
+    <div class="mb-hidden lg:mb-grid lg:mb-grid-cols-3 lg:mb-gap-x-16 lg:mb-items-start">
+      {% for block in section.blocks %}
+        <div class="mb-flex mb-flex-col mb-items-center mb-text-center">
+            <div class="mb-mb-8 mb-relative">
+                <div class="mb-w-[200px] mb-h-[200px] mb-rounded-full mb-overflow-hidden mb-border mb-border-[#d1a88b] mb-shadow-[0_10px_30px_rgba(0,0,0,0.08)] mb-p-1">
+                    {% if block.settings.image != blank %}
+                    <img
+                        src="{{ block.settings.image | image_url: width: 800 }}"
+                        alt="{{ block.settings.text_2 | escape }}"
+                        class="mb-w-full mb-h-full mb-object-cover mb-rounded-full"
+                        loading="lazy"
+                    >
+                    {% endif %}
+                </div>
+                {%- comment -%}
+                    Connector EXACT like image:
+                    - only between step 1->2 and 2->3
+                    - centered vertically next to circles
+                    - left dot + dotted line + right dot
+                {%- endcomment -%}
+                {% if forloop.index == 1 %}
+                    <div class="mb-absolute mb-top-1/2 lg:mb-right-[-130px] xl:mb-right-[-150px] mb-w-[120px] mb-h-[26px]" aria-hidden="true">
+                    <div class="mb-relative mb-w-full mb-max-w-[140px] mb-mx-auto mb-h-full mb-flex mb-gap-[3px] mb-items-center mb-justify-center">
+                        <span class="mb-w-[8px] mb-h-[8px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+
+                        <span class="mb-w-[8px] mb-h-[8px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                    </div>
+                    </div>
+                {% endif %}
+         
+                {% if forloop.index == 2 %}
+                    <div class="mb-absolute mb-top-1/2 lg:mb-right-[-130px] xl:mb-right-[-150px] mb-w-[120px] mb-h-[26px]" aria-hidden="true">
+                    <div class="mb-relative mb-w-full mb-h-full mb-max-w-[140px] mb-mx-auto mb-flex mb-gap-[3px] mb-items-center mb-justify-center">
+                        <span class="mb-w-[8px] mb-h-[8px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        <span class="mb-w-[2px] mb-h-[2px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                        
+                        <span class="mb-w-[8px] mb-h-[8px] mb-rounded-full mb-bg-mb-accent mb-opacity-70"></span>
+                    </div>
+                    </div>
+                {% endif %}
+            </div>   
+
+            {% if block.settings.text_1 != blank %}
+                <p class="mb-text-[16px] mb-font-medium mb-text-mb-accent mb-mb-2">
+                {{ block.settings.text_1 }}
+                </p>
+            {% endif %}
+
+            {% if block.settings.text_2 != blank %}
+                <p class="mb-text-[18px] lg:mb-text-[22px] mb-font-medium mb-leading-[1.05] mb-text-[#1a1a1a]">
+                {{ block.settings.text_2 }}
+                </p>
+            {% endif %}
+
+            {% if block.settings.text_3 != blank %}
+                <p class="mb-mt-2 mb-text-[16px] mb-font-light mb-text-[#8a8a8a]">
+                {{ block.settings.text_3 }}
+                </p>
+            {% endif %}
+        </div>
+      {% endfor %}
+    </div>
 
   </div>
 </section>
+
+{% render 'vite-tag' with 'how-it-works.js' %}
 
 {% schema %}
 {
@@ -56,35 +197,19 @@
       "type": "item",
       "name": "Step",
       "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "text",
-          "id": "text_1",
-          "label": "Step Label",
-          "default": "STEP 1"
-        },
-        {
-          "type": "text",
-          "id": "text_2",
-          "label": "Step Title",
-          "default": "Remove Cap"
-        }
+        { "type": "image_picker", "id": "image", "label": "Circle Image" },
+        { "type": "text", "id": "text_1", "label": "Step Label", "default": "Step 1" },
+        { "type": "text", "id": "text_2", "label": "Step Title", "default": "Remove Cap" },
+        { "type": "text", "id": "text_3", "label": "Small subtitle", "default": "Open gently" }
       ]
     }
   ],
   "presets": [
     {
       "name": "How it works",
-      "blocks": [
-        { "type": "item" },
-        { "type": "item" },
-        { "type": "item" }
-      ]
+      "blocks": [{ "type": "item" }, { "type": "item" }, { "type": "item" }]
     }
   ]
 }
 {% endschema %}
+

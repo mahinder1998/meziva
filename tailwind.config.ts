@@ -34,7 +34,8 @@ module.exports = {
           primary: "#ff4f8b",
           accent: "#4b1f00",
           bg: "#fff5f9",
-          surface: "#ffffff"
+          surface: "#ffffff",
+          gray: "#f2f2f2"
         }
       },
       translate:{

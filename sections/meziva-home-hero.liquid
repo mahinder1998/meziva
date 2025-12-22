@@ -1,11 +1,11 @@
- <style>
-    @media (min-width: 1024px) {
-      #shopify-section-{{ section.id }} {
-        padding-top: {{ section.settings.padding_top_desktop }}px;
-        padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
-      }
+<style>
+  @media (min-width: 1024px) {
+    #meziva-single-hero-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
     }
-  </style>
+  }
+</style>
 
 {% assign p = section.settings.product %}
 
@@ -18,7 +18,7 @@
     padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
     "
   >
-    <div class="mb-relative mb-max-w-7xl mb-mx-auto mb-px-4 md:mb-px-8">
+    <div class="mb-relative mb-max-w-[1240px] mb-mx-auto mb-px-4 md:mb-px-8 xl:mb-px-0">
       {% if p == blank %}
         <div class="mb-rounded-2xl mb-bg-white mb-border mb-border-black/10 mb-p-6">
           <p class="mb-font-semibold mb-text-mb-heading">Select a product</p>
@@ -58,7 +58,7 @@
                 <!-- Main slider -->
                 <div class="mb-rounded-[12px] mb-overflow-hidden">
                   {% if section.settings.enable_image_slider and p.images.size > 1 %}
-                    <meziva-simple-slider
+                    <meziva-keen-slider
                       class="mb-relative mb-block"
                       data-autoplay="{{ section.settings.slider_autoplay }}"
                       data-interval="{{ section.settings.slider_interval }}"
@@ -66,13 +66,13 @@
                       data-show-dots="{{ section.settings.slider_show_dots }}"
                     >
                       <div
-                        data-slider-track
-                        class="mb-flex mb-overflow-x-auto mb-overflow-y-hidden mb-scroll-smooth mb-snap-x mb-snap-mandatory mb-overscroll-x-contain mb-no-scrollbar"
+                        data-keen-container
+                        class="keen-slider"
                         aria-label="Product images"
                       >
                         {% for img in p.images limit: section.settings.slider_image_limit %}
-                          <div data-slider-slide class="mb-min-w-full mb-snap-start">
-                            <div class="mb-relative mb-w-full mb-aspect-[4/3] md:mb-aspect-[5/4]">
+                          <div class="keen-slider__slide">
+                            <div class="mb-relative mb-w-full mb-aspect-[4/3] md:mb-aspect-[5/4] mb-bg-white">
                               <img
                                 src="{{ img | image_url: width: 900 }}"
                                 srcset="{{ img | image_url: width: 600 }} 600w, {{ img | image_url: width: 900 }} 900w, {{ img | image_url: width: 1200 }} 1200w, {{ img | image_url: width: 1800 }} 1800w"
@@ -80,7 +80,7 @@
                                 alt="{{ img.alt | default: p.title | escape }}"
                                 width="{{ img.width }}"
                                 height="{{ img.height }}"
-                                class="mb-absolute mb-inset-0 mb-h-full mb-w-full mb-object-cover mb-cursor-zoom-in"
+                                class="mb-absolute mb-inset-0 mb-h-full mb-w-full mb-object-cover lg:mb-object-contain mb-cursor-zoom-in"
                                 loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
                                 fetchpriority="{% if forloop.first %}high{% else %}auto{% endif %}"
                                 decoding="async"
@@ -96,7 +96,7 @@
                       {% if section.settings.slider_show_arrows %}
                         <button
                           type="button"
-                          data-slider-prev
+                          data-keen-prev
                           aria-label="Previous"
                           class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-left-4 mb-top-1/2 mb--translate-y-1/2 mb-h-11 mb-w-11 mb-rounded-full mb-bg-white/90 mb-border mb-border-black/10 mb-shadow-sm"
                         >
@@ -104,7 +104,7 @@
                         </button>
                         <button
                           type="button"
-                          data-slider-next
+                          data-keen-next
                           aria-label="Next"
                           class="mb-hidden md:mb-grid mb-place-items-center mb-absolute mb-right-4 mb-top-1/2 mb--translate-y-1/2 mb-h-11 mb-w-11 mb-rounded-full mb-bg-white/90 mb-border mb-border-black/10 mb-shadow-sm"
                         >
@@ -114,14 +114,14 @@
 
                       {% if section.settings.slider_show_dots %}
                         <div
-                          data-slider-dots
+                          data-keen-dots
                           class="mb-absolute mb-bottom-4 mb-left-1/2 mb--translate-x-1/2 mb-flex mb-gap-2"
                         ></div>
                       {% endif %}
-                    </meziva-simple-slider>
+                    </meziva-keen-slider>
                   {% else %}
                     {% assign img = p.featured_image %}
-                    <div class="mb-relative mb-w-full mb-aspect-[4/3] md:mb-aspect-[5/4]">
+                    <div class="mb-relative mb-w-full mb-aspect-[4/3] md:mb-aspect-[5/4] mb-bg-white">
                       <img
                         src="{{ img | image_url: width: 900 }}"
                         srcset="{{ img | image_url: width: 600 }} 600w, {{ img | image_url: width: 900 }} 900w, {{ img | image_url: width: 1200 }} 1200w, {{ img | image_url: width: 1800 }} 1800w"
@@ -129,7 +129,7 @@
                         alt="{{ img.alt | default: p.title | escape }}"
                         width="{{ img.width }}"
                         height="{{ img.height }}"
-                        class="mb-absolute mb-inset-0 mb-h-full mb-w-full mb-object-cover mb-cursor-zoom-in"
+                        class="mb-absolute mb-inset-0 mb-h-full mb-w-full mb-object-cover lg:mb-object-contain mb-cursor-zoom-in"
                         loading="eager"
                         fetchpriority="high"
                         decoding="async"
@@ -273,53 +273,27 @@
                   {% if section.settings.bullet_1 != blank %}
                     <li class="mb-flex mb-items-center mb-gap-2">
                       <span class="mb-mt-1" style="color: {{ section.settings.accent }};">
-                        <svg
-                          class="w-3 h-3 text-gray-800 dark:text-white"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
+                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
                           <path stroke="#4b1f00" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
                         </svg>
                       </span>
                       <span class="mb-text-mb-body mb-text-sm md:mb-text-lg">{{ section.settings.bullet_1 }}</span>
                     </li>
                   {% endif %}
-
                   {% if section.settings.bullet_2 != blank %}
                     <li class="mb-flex mb-items-center mb-gap-2">
                       <span class="mb-mt-1" style="color: {{ section.settings.accent }};">
-                        <svg
-                          class="w-3 h-3 text-gray-800 dark:text-white"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
+                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
                           <path stroke="#4b1f00" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
                         </svg>
                       </span>
                       <span class="mb-text-mb-body mb-text-sm md:mb-text-lg">{{ section.settings.bullet_2 }}</span>
                     </li>
                   {% endif %}
-
                   {% if section.settings.bullet_3 != blank %}
                     <li class="mb-flex mb-items-center mb-gap-2">
                       <span class="mb-mt-1" style="color: {{ section.settings.accent }};">
-                        <svg
-                          class="w-3 h-3 text-gray-800 dark:text-white"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
+                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
                           <path stroke="#4b1f00" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
                         </svg>
                       </span>
@@ -331,7 +305,7 @@
                 {% if section.settings.readmore_link != blank %}
                   <a
                     href="{{ section.settings.readmore_link }}"
-                    class="mb-inline-flex mb-items-center mb-gap-2 mb-mt-3 mb-text-sm mb-font-semibold md:mb-text-"
+                    class="mb-inline-flex mb-items-center mb-gap-2 mb-mt-3 mb-text-sm mb-font-semibold"
                     style="color: {{ section.settings.readmore_color }};"
                   >
                     <span>Read more</span>
@@ -349,7 +323,6 @@
                     <span class="mb-text-lg md:mb-text-xl mb-text-mb-muted mb-line-through mb-font-heading mb-leading-none">
                       {{ compare | money }}
                     </span>
-
                     <span
                       class="mb-inline-flex mb-items-center mb-rounded-full mb-px-5 mb-py-1 mb-text-sm md:mb-text-sm mb-font-semibold mb-leading-none"
                       style="background: {{ section.settings.save_pill_bg }}; color: {{ section.settings.save_pill_text }};"
@@ -359,7 +332,6 @@
                       {{ section.settings.save_pill_suffix }}
                     </span>
                   {% endif %}
-
                   <span class="mb-text-sm md:mb-text-base mb-text-mb-subheading">
                     {{ section.settings.price_note }}
                   </span>
@@ -379,63 +351,28 @@
 
                 <form data-role="atc-form" class="mb-mt-7">
                   <input type="hidden" data-role="variant-id" value="{{ v.id }}">
-
                   <div class="mb-flex mb-items-center mb-gap-4">
                     <div class="mb-flex mb-items-center mb-justify-between mb-rounded-xl mb-border mb-border-mb-gray mb-bg-mb-gray  mb-w-[170px] mb-h-12 mb-px-4">
-                      <button
-                        type="button"
-                        data-role="qty-minus"
-                        class="mb-text-xl mb-text-mb-heading"
-                        aria-label="Decrease quantity"
-                      >
-                        –
-                      </button>
-                      <input
-                        data-role="qty"
-                        value="1"
-                        inputmode="numeric"
-                        class="mb-w-10 mb-text-center mb-bg-transparent mb-outline-none mb-text-sm mb-font-semibold mb-text-mb-heading"
-                      >
-                      <button
-                        type="button"
-                        data-role="qty-plus"
-                        class="mb-text-xl mb-text-mb-heading"
-                        aria-label="Increase quantity"
-                      >
-                        +
-                      </button>
+                      <button type="button" data-role="qty-minus" class="mb-text-xl mb-text-mb-heading" aria-label="Decrease quantity">–</button>
+                      <input data-role="qty" value="1" inputmode="numeric" class="mb-w-10 mb-text-center mb-bg-transparent mb-outline-none mb-text-sm mb-font-semibold mb-text-mb-heading">
+                      <button type="button" data-role="qty-plus" class="mb-text-xl mb-text-mb-heading" aria-label="Increase quantity">+</button>
                     </div>
 
                     <button
                       type="submit"
                       data-role="atc-btn"
                       data-label="{{ section.settings.cta_label }}"
-                      class="
-                        mb-flex-1 mb-items-center mb-h-12 mb-rounded-xl mb-text-white mb-font-semibold mb-text-sm md:mb-text-base mb-shadow-sm mb-transition-colors
-                        mb-bg-mb-primary hover:mb-bg-mb-accent
-                      "
-                      {% unless available %}
-                        disabled
-                      {% endunless %}
+                      class="mb-flex-1 mb-items-center mb-h-12 mb-rounded-xl mb-text-white mb-font-semibold mb-text-sm md:mb-text-base mb-shadow-sm mb-transition-colors mb-bg-mb-primary hover:mb-bg-mb-accent"
+                      {% unless available %}disabled{% endunless %}
                     >
                       <span class="mb-inline-flex mb-items-center mb-justify-center mb-gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          height="20"
-                          width="20"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          aria-hidden="true"
-                        >
+                        <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                           <path d="M0 0h24v24H0z" fill="none"/><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
                         </svg>
-                        <span>
-                          {{ section.settings.cta_label }}
-                        </span>
+                        <span>{{ section.settings.cta_label }}</span>
                       </span>
                     </button>
                   </div>
-
                   <p data-role="status" class="mb-mt-3 mb-text-xs mb-text-red-600"></p>
                 </form>
 
@@ -444,23 +381,14 @@
                     {% for i in (1..3) %}
                       {% assign icon_key = 'trust_' | append: i | append: '_icon' %}
                       {% assign text_key = 'trust_' | append: i %}
-
                       {% if section.settings[text_key] != blank %}
                         <div class="mb-inline-flex mb-items-center mb-gap-2">
                           <span class="mb-grid mb-place-items-center mb-h-10 mb-w-10 mb-rounded-full">
                             {% if section.settings[icon_key] != blank %}
-                              <img
-                                src="{{ section.settings[icon_key] | image_url: width: 40 }}"
-                                alt=""
-                                class="mb-h-8 mb-w-8 mb-object-contain mb-rounded-full"
-                                loading="lazy"
-                              >
+                              <img src="{{ section.settings[icon_key] | image_url: width: 40 }}" alt="" class="mb-h-8 mb-w-8 mb-object-contain mb-rounded-full" loading="lazy">
                             {% endif %}
                           </span>
-
-                          <span class="mb-text-sm md:mb-text-base mb-text-mb-subheading">
-                            {{ section.settings[text_key] }}
-                          </span>
+                          <span class="mb-text-sm md:mb-text-base mb-text-mb-subheading">{{ section.settings[text_key] }}</span>
                         </div>
                       {% endif %}
                     {% endfor %}
@@ -487,22 +415,14 @@
             </div>
             <div class="mb-flex mb-items-center mb-gap-3">
               <div class="mb-flex-1 mb-min-w-0">
-                <div
-                  data-role="sticky-price"
-                  class="mb-mt-1 mb-text-xl mb-font-heading mb-font-semibold mb-text-mb-heading mb-leading-tight"
-                >
+                <div data-role="sticky-price" class="mb-mt-1 mb-text-xl mb-font-heading mb-font-semibold mb-text-mb-heading mb-leading-tight">
                   {{ v.price | money }}
                 </div>
               </div>
 
               <div class="mb-flex mb-items-center mb-justify-between mb-rounded-xl mb-bg-mb-gray mb-border mb-border-mb-gray mb-w-[132px] mb-h-11 mb-px-3">
                 <button type="button" data-role="sticky-qty-minus" class="mb-text-xl mb-text-mb-heading">–</button>
-                <input
-                  data-role="sticky-qty"
-                  value="1"
-                  inputmode="numeric"
-                  class="mb-w-10 mb-text-center mb-bg-transparent mb-outline-none mb-text-sm mb-font-semibold mb-text-mb-heading"
-                >
+                <input data-role="sticky-qty" value="1" inputmode="numeric" class="mb-w-10 mb-text-center mb-bg-transparent mb-outline-none mb-text-sm mb-font-semibold mb-text-mb-heading">
                 <button type="button" data-role="sticky-qty-plus" class="mb-text-xl mb-text-mb-heading ">+</button>
               </div>
 
@@ -511,16 +431,14 @@
                 data-role="sticky-atc-btn"
                 data-label="{{ section.settings.cta_label }}"
                 class="mb-h-11 mb-rounded-xl mb-px-5 mb-text-mb-surface mb-transition-colors mb-font-semibold mb-text-sm mb-shadow-sm mb-bg-mb-primary hover:mb-bg-mb-accent"
-                {% unless available %}
-                  disabled
-                {% endunless %}
+                {% unless available %}disabled{% endunless %}
               >
                 {{ section.settings.cta_label }}
               </button>
             </div>
           </div>
 
-          <!-- ✅ ZOOM OVERLAY (old functionality compatible) -->
+          <!-- ✅ ZOOM OVERLAY (same id/structure) -->
           <div
             id="mb-zoom-overlay-{{ section.id }}"
             class="
@@ -588,62 +506,20 @@
 </div>
 
 <style>
-  .mb-no-scrollbar {
-    scrollbar-width: none;
-  }
-  .mb-no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
+  .mb-no-scrollbar { scrollbar-width: none; }
+  .mb-no-scrollbar::-webkit-scrollbar { display: none; }
 </style>
 
 {% schema %}
 {
   "name": "Single Product Hero",
-      "settings": [
-        {
-      "type": "header",
-      "content": "Section Spacing"
-    },
-    {
-      "type": "range",
-      "id": "padding_top_mobile",
-      "label": "Padding Top (Mobile)",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "default": 40,
-      "unit": "px"
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom_mobile",
-      "label": "Padding Bottom (Mobile)",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "default": 40,
-      "unit": "px"
-    },
-    {
-      "type": "range",
-      "id": "padding_top_desktop",
-      "label": "Padding Top (Desktop)",
-      "min": 0,
-      "max": 160,
-      "step": 4,
-      "default": 80,
-      "unit": "px"
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom_desktop",
-      "label": "Padding Bottom (Desktop)",
-      "min": 0,
-      "max": 160,
-      "step": 4,
-      "default": 80,
-      "unit": "px"
-    },
+  "settings": [
+    { "type": "header", "content": "Section Spacing" },
+    { "type": "range", "id": "padding_top_mobile", "label": "Padding Top (Mobile)", "min": 0, "max": 120, "step": 4, "default": 40, "unit": "px" },
+    { "type": "range", "id": "padding_bottom_mobile", "label": "Padding Bottom (Mobile)", "min": 0, "max": 120, "step": 4, "default": 40, "unit": "px" },
+    { "type": "range", "id": "padding_top_desktop", "label": "Padding Top (Desktop)", "min": 0, "max": 160, "step": 4, "default": 80, "unit": "px" },
+    { "type": "range", "id": "padding_bottom_desktop", "label": "Padding Bottom (Desktop)", "min": 0, "max": 160, "step": 4, "default": 80, "unit": "px" },
+
     { "type": "text", "id": "section_id", "label": "Section ID", "default": "banner" },
     { "type": "color", "id": "section_bg", "label": "Section BG", "default": "#fff5f9" },
     { "type": "product", "id": "product", "label": "Product" },
@@ -655,12 +531,7 @@
     { "type": "text", "id": "rating_line", "label": "Rating line", "default": "Loved by 1,200+ women" },
     { "type": "color", "id": "review_star_color", "label": "Star color", "default": "#ff4f8b" },
 
-    {
-      "type": "textarea",
-      "id": "subheading",
-      "label": "Description",
-      "default": "Skincare-first lip balm with hydration + tint in 1 swipe. Lightweight, non-sticky feel."
-    },
+    { "type": "textarea", "id": "subheading", "label": "Description", "default": "Skincare-first lip balm with hydration + tint in 1 swipe. Lightweight, non-sticky feel." },
 
     { "type": "text", "id": "bullet_1", "label": "Bullet 1", "default": "Deep hydration" },
     { "type": "text", "id": "bullet_2", "label": "Bullet 2", "default": "Soft natural tint" },
@@ -678,50 +549,19 @@
     { "type": "color", "id": "save_pill_text", "label": "Save pill text", "default": "#ffffff" },
 
     { "type": "checkbox", "id": "show_launch_pill", "label": "Show launch pill", "default": true },
-    {
-      "type": "text",
-      "id": "launch_pill_text_line",
-      "label": "Launch pill text",
-      "default": "Limited-time launch offer"
-    },
+    { "type": "text", "id": "launch_pill_text_line", "label": "Launch pill text", "default": "Limited-time launch offer" },
     { "type": "color", "id": "launch_pill_bg", "label": "Launch pill bg", "default": "#fde7f0" },
     { "type": "color", "id": "launch_pill_text", "label": "Launch pill text", "default": "#724430" },
 
-    {
-      "type": "image_picker",
-      "id": "trust_1_icon",
-      "label": "Trust 1 Icon"
-    },
-    {
-      "type": "text",
-      "id": "trust_1",
-      "label": "Trust 1 Text",
-      "default": "Free Shipping"
-    },
+    { "type": "image_picker", "id": "trust_1_icon", "label": "Trust 1 Icon" },
+    { "type": "text", "id": "trust_1", "label": "Trust 1 Text", "default": "Free Shipping" },
 
-    {
-      "type": "image_picker",
-      "id": "trust_2_icon",
-      "label": "Trust 2 Icon"
-    },
-    {
-      "type": "text",
-      "id": "trust_2",
-      "label": "Trust 2 Text",
-      "default": "Easy Returns"
-    },
+    { "type": "image_picker", "id": "trust_2_icon", "label": "Trust 2 Icon" },
+    { "type": "text", "id": "trust_2", "label": "Trust 2 Text", "default": "Easy Returns" },
 
-    {
-      "type": "image_picker",
-      "id": "trust_3_icon",
-      "label": "Trust 3 Icon"
-    },
-    {
-      "type": "text",
-      "id": "trust_3",
-      "label": "Trust 3 Text",
-      "default": "COD Available"
-    },
+    { "type": "image_picker", "id": "trust_3_icon", "label": "Trust 3 Icon" },
+    { "type": "text", "id": "trust_3", "label": "Trust 3 Text", "default": "COD Available" },
+
     { "type": "color", "id": "accent", "label": "Accent", "default": "#FF60A6" },
 
     { "type": "checkbox", "id": "enable_sticky_atc", "label": "Enable mobile sticky ATC", "default": true },
@@ -738,27 +578,11 @@
     },
 
     { "type": "checkbox", "id": "enable_image_slider", "label": "Enable image slider", "default": true },
-    {
-      "type": "range",
-      "id": "slider_image_limit",
-      "label": "Max images",
-      "min": 1,
-      "max": 10,
-      "step": 1,
-      "default": 6
-    },
+    { "type": "range", "id": "slider_image_limit", "label": "Max images", "min": 1, "max": 10, "step": 1, "default": 6 },
     { "type": "checkbox", "id": "slider_show_arrows", "label": "Show arrows", "default": false },
     { "type": "checkbox", "id": "slider_show_dots", "label": "Show dots", "default": true },
     { "type": "checkbox", "id": "slider_autoplay", "label": "Autoplay", "default": false },
-    {
-      "type": "range",
-      "id": "slider_interval",
-      "label": "Autoplay interval (s)",
-      "min": 2,
-      "max": 10,
-      "step": 1,
-      "default": 4
-    },
+    { "type": "range", "id": "slider_interval", "label": "Autoplay interval (s)", "min": 2, "max": 10, "step": 1, "default": 4 },
 
     { "type": "image_picker", "id": "mini_card_1_image", "label": "Mini card 1 image (lips) [optional]" },
     { "type": "image_picker", "id": "mini_card_2_image", "label": "Mini card 2 image (product/lifestyle) [optional]" },
@@ -768,9 +592,7 @@
     { "type": "text", "id": "solve_card_item_3", "label": "Solve card item 3", "default": "Natural Tint Coverage" }
   ],
   "presets": [
-    {
-      "name": "Single Product Hero"
-    }
+    { "name": "Single Product Hero" }
   ]
 }
 {% endschema %}

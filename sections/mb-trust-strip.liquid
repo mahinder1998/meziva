@@ -1,0 +1,218 @@
+{% comment %}
+  Section: MB Trust Strip (v2)
+  - Desktop: 4 icon-top items
+  - Mobile: Keen slider (icon-top)
+  - Tailwind prefix: mb-
+  - JS: assets/mb-trust-strip.js
+{% endcomment %}
+
+<style>
+  @media (min-width: 1024px) {
+    #mb-trust-strip-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_desktop }}px !important;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px !important;
+    }
+  }
+</style>
+
+<section
+  id="mb-trust-strip-{{ section.id }}"
+  class="mb-w-full"
+  style="
+    background-color: {{ section.settings.section_bg }};
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  "
+>
+  <div class="mb-max-w-[1240px] mb-mx-auto mb-px-4 lg:mb-px-8">
+    {% if section.settings.heading != blank %}
+      <div class="mb-text-center mb-mb-8 lg:mb-mb-10">
+        <h2 class="mb-text-3xl md:mb-text-5xl mb-font-semibold mb-text-mb-heading mb-leading-tight">
+          {{ section.settings.heading }}
+        </h2>
+      </div>
+    {% endif %}
+
+    {%- comment -%} MOBILE: slider {%- endcomment -%}
+    {% if section.settings.enable_slider %}
+      <mb-trust-slider
+        class="mb-block lg:mb-hidden"
+        data-enabled="{{ section.settings.enable_slider }}"
+        data-show-dots="{{ section.settings.show_dots }}"
+        data-autoplay="{{ section.settings.autoplay }}"
+        data-autoplay-time="{{ section.settings.autoplay_time }}"
+        data-per-view-mobile="{{ section.settings.per_view_mobile }}"
+        data-spacing-mobile="{{ section.settings.spacing_mobile }}"
+      >
+        <div class="mb-overflow-hidden" data-mb-keen>
+          {% for block in section.blocks %}
+            <div data-mb-slide>
+              <div class="mb-flex mb-flex-col mb-items-center mb-text-center mb-px-2">
+                <div class="mb-w-20 mb-h-20 mb-rounded-full  mb-flex mb-items-center mb-justify-center">
+                  {% if block.settings.icon != blank %}
+                    <img
+                      src="{{ block.settings.icon | image_url: width: 120 }}"
+                      alt="{{ block.settings.text | escape }}"
+                      class="mb-w-20 mb-h-120 mb-object-contain"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <div class="mb-w-8 mb-h-8 mb-rounded-full mb-bg-mb-surface"></div>
+                  {% endif %}
+                </div>
+
+                <p class="mb-pt-2 mb-text-base mb-font-semibold mb-text-mb-subheading">
+                  {{ block.settings.text }}
+                </p>
+
+                {% if block.settings.subtext != blank %}
+                  <p class="mb-mt-2 mb-text-[13px] mb-text-[#7a7a7a]">
+                    {{ block.settings.subtext }}
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        {% if section.settings.show_dots %}
+          <div class="mb-flex mb-justify-center mb-gap-2 mb-mt-6" data-mb-dots></div>
+        {% endif %}
+      </mb-trust-slider>
+    {% endif %}
+
+    {%- comment -%} DESKTOP: icon-top 4 items {%- endcomment -%}
+    <div class="mb-hidden lg:mb-block">
+      <div class="mb-grid mb-grid-cols-4 mb-gap-10 xl:mb-gap-14 mb-items-start">
+        {% for block in section.blocks %}
+          <div class="mb-flex mb-flex-col mb-items-center mb-text-center">
+            <div class="mb-w-20 mb-h-20 mb-rounded-full  mb-flex mb-items-center mb-justify-center ">
+              {% if block.settings.icon != blank %}
+                <img
+                  src="{{ block.settings.icon | image_url: width: 160 }}"
+                  alt="{{ block.settings.text | escape }}"
+                  class="mb-w-20 mb-h-20 mb-object-contain"
+                  loading="lazy"
+                >
+              {% else %}
+                <div class="mb-w-10 mb-h-10 mb-rounded-full mb-bg-mb-surface"></div>
+              {% endif %}
+            </div>
+
+            <p class="mb-mt-3 mb-text-base mb-font-semibold mb-text-mb-subheading ">
+              {{ block.settings.text }}
+            </p>
+
+            {% if block.settings.subtext != blank %}
+              <p class="mb-mt-3 mb-text-[14px] mb-text-[#7a7a7a]">
+                {{ block.settings.subtext }}
+              </p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% render 'vite-tag' with 'mb-trust-strip.js' %}
+
+{% schema %}
+{
+  "name": "MB Trust Strip",
+  "settings": [
+    { "type": "color", "id": "section_bg", "label": "Background color", "default": "#ffffff" },
+
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding Top (Mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Bottom (Mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Padding Top (Desktop)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Bottom (Desktop)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Trusted By" },
+
+    { "type": "header", "content": "Mobile Slider" },
+    { "type": "checkbox", "id": "enable_slider", "label": "Enable slider on mobile", "default": true },
+    { "type": "checkbox", "id": "show_dots", "label": "Show dots", "default": true },
+
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": false },
+    {
+      "type": "range",
+      "id": "autoplay_time",
+      "label": "Autoplay time (ms)",
+      "min": 1500,
+      "max": 8000,
+      "step": 500,
+      "default": 3500
+    },
+
+    {
+      "type": "range",
+      "id": "per_view_mobile",
+      "label": "Items per view (mobile)",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    { "type": "range", "id": "spacing_mobile", "label": "Spacing (px)", "min": 0, "max": 32, "step": 2, "default": 16 }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Trust Item",
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Icon" },
+        { "type": "text", "id": "text", "label": "Main text", "default": "CRUELTY-FREE" },
+        { "type": "text", "id": "subtext", "label": "Small subtext (optional)", "default": "welcome" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MB Trust Strip",
+      "blocks": [
+        { "type": "item", "settings": { "text": "CRUELTY-FREE" } },
+        { "type": "item", "settings": { "text": "SMUDGE-PROOF" } },
+        { "type": "item", "settings": { "text": "VEGAN-FRIENDLY" } },
+        { "type": "item", "settings": { "text": "GLUTEN FREE" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

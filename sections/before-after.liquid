@@ -1,0 +1,227 @@
+{%- comment -%}
+  FILE: sections/meziva-before-after.liquid
+  Meziva • Before After (Clean Single)
+  - Only one clean compare (no extra blur background, no labels, no captions)
+  - Image not cut: object-contain
+  - JS loaded via vite-tag: before-after.js
+{%- endcomment -%}
+
+<style>
+  @media (min-width: 1024px) {
+    #before-after-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_desktop }}px !important;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px !important;
+    }
+  }
+</style>
+
+<section
+  id="before-after-{{ section.id }}"
+  class="mb-w-full mb-py-10 md:mb-py-14"
+  data-mb-before-after-section
+  style="
+    background-color: {{ section.settings.section_bg }};
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  "
+>
+ {% if section.settings.heading != blank %}
+        <h2 class="mb-mt-2 mb-text-[28px] mb-mb-8 mb-text-center lg:mb-text-[44px] mb-leading-[1.05] mb-font-semibold mb-text-mb-heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+
+  <div class="mb-mx-auto mb-px-4 md:mb-px-6" style="max-width: {{ section.settings.container_max_width }}px;">
+    <div
+      class="mb-relative mb-w-full mb-overflow-hidden mb-rounded-[20px] mb-bg-white"
+      data-mb-compare
+      style="height: {{ section.settings.media_height }}px;"
+    >
+
+      {%- comment -%} BEFORE (contain – no crop) {%- endcomment -%}
+      {% if section.settings.before_image != blank %}
+        <img
+          class="mb-absolute mb-inset-0 mb-h-full mb-w-full mb-object-contain"
+          src="{{ section.settings.before_image | image_url: width: 2000 }}"
+          alt="{{ section.settings.before_alt | escape }}"
+          loading="lazy"
+          draggable="false"
+        >
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'mb-absolute mb-inset-0 mb-h-full mb-w-full' }}
+      {% endif %}
+
+      {%- comment -%} AFTER (contain + clipped) {%- endcomment -%}
+      {% if section.settings.after_image != blank %}
+        <img
+          class="mb-after mb-absolute mb-inset-0 mb-h-full mb-w-full mb-object-contain"
+          src="{{ section.settings.after_image | image_url: width: 2000 }}"
+          alt="{{ section.settings.after_alt | escape }}"
+          loading="lazy"
+          draggable="false"
+        >
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'mb-after mb-absolute mb-inset-0 mb-h-full mb-w-full' }}
+      {% endif %}
+
+      {%- comment -%} Divider {%- endcomment -%}
+      <span
+        class="mb-divider mb-hidden  mb-absolute mb-top-0 mb-bottom-0 mb-w-[2px] mb-bg-white mb-shadow-[0_0_0_1px_rgba(0,0,0,.12)] mb-pointer-events-none"
+      ></span>
+
+      {%- comment -%} Handle {%- endcomment -%}
+      <span class="mb-knob  mb-absolute mb-top-1/2 mb-h-[46px] mb-w-[46px] mb--translate-y-1/2 mb--translate-x-1/2 mb-rounded-full mb-bg-white mb-shadow-[0_12px_28px_rgba(0,0,0,.22)] mb-grid mb-place-items-center mb-pointer-events-none mb-p-2">
+        {% comment %} <svg class="mb-w-5 mb-h-5 mb-opacity-90" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 6L3 12L9 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M15 6L21 12L15 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg> {% endcomment %}
+
+      <img src="{{ 'devider.png' | asset_url }}" alt="Image">
+
+
+      </span>
+
+      {%- comment -%} Range layer (hidden) {%- endcomment -%}
+      <input
+        class="mb-absolute mb-inset-0 mb-h-full mb-w-full mb-opacity-0 mb-cursor-ew-resize mb-hidden"
+        type="range"
+        min="0"
+        max="100"
+        value="{{ section.settings.initial_percent | default: 50 }}"
+        data-mb-range
+        aria-label="Before after slider"
+      >
+    </div>
+  </div>
+
+  <style>
+    /* Slider mechanics */
+    #shopify-section-{{ section.id }} [data-mb-compare] .mb-after { clip-path: inset(0 50% 0 0); }
+    #shopify-section-{{ section.id }} [data-mb-compare] .mb-divider { left: 50%; transform: translateX(-1px); }
+    #shopify-section-{{ section.id }} [data-mb-compare] .mb-knob { left: 50%; }
+
+    /* Desktop height override */
+    @media (min-width: 768px){
+      #shopify-section-{{ section.id }} [data-mb-compare]{
+        height: {{ section.settings.media_height_desktop }}px !important;
+      }
+    }
+  </style>
+
+  {% render 'vite-tag' with 'before-after.js' %}
+</section>
+
+{% schema %}
+{
+  "name": "Before After",
+  "settings": [
+    { "type": "color", "id": "section_bg", "label": "Background", "default": "#ffffff" },
+
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding Top (Mobile)",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "default": 36,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Bottom (Mobile)",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "default": 36,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Padding Top (Desktop)",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Bottom (Desktop)",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Before/After" },
+    {
+      "type": "image_picker",
+      "id": "before_image",
+      "label": "Before image"
+    },
+    {
+      "type": "text",
+      "id": "before_alt",
+      "label": "Before alt text",
+      "default": "Before"
+    },
+    {
+      "type": "image_picker",
+      "id": "after_image",
+      "label": "After image"
+    },
+    {
+      "type": "text",
+      "id": "after_alt",
+      "label": "After alt text",
+      "default": "After"
+    },
+    {
+      "type": "range",
+      "id": "initial_percent",
+      "label": "Initial slider position (%)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "media_height",
+      "label": "Media height (mobile px)",
+      "min": 360,
+      "max": 720,
+      "step": 10,
+      "default": 520
+    },
+    {
+      "type": "range",
+      "id": "media_height_desktop",
+      "label": "Media height (desktop px)",
+      "min": 360,
+      "max": 760,
+      "step": 10,
+      "default": 520
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container max width (px)",
+      "min": 820,
+      "max": 1400,
+      "step": 20,
+      "default": 1100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Before After"
+    }
+  ]
+}
+{% endschema %}

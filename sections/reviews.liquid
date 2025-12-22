@@ -1,0 +1,368 @@
+{%- comment -%}
+  FILE: sections/meziva-reviews-ugc.liquid
+  Meziva • Reviews / UGC (Keen Slider • Premium)
+  - Image + text mix (image optional)
+  - Location (Delhi/Gurgaon)
+  - Stars visible
+  - Controls: arrows/dots/progress show-hide, perView mobile/desktop, spacing, autoplay, loop
+  - JS: reviews.js (via vite-tag)
+{%- endcomment -%}
+<div id="{{ section.settings.section_id | escape }}">
+
+<section
+  id="meziva-reviews-ugc-{{ section.id }}"
+  class="mb-w-full mb-py-10 md:mb-py-14"
+  style="background: {{ section.settings.section_bg }};"
+  data-mb-ugc-section
+  data-perview-m="{{ section.settings.per_view_mobile }}"
+  data-perview-d="{{ section.settings.per_view_desktop }}"
+  data-spacing="{{ section.settings.spacing }}"
+  data-loop="{{ section.settings.loop }}"
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-autoplay-ms="{{ section.settings.autoplay_ms }}"
+  data-show-arrows="{{ section.settings.show_arrows }}"
+  data-show-dots="{{ section.settings.show_dots }}"
+  data-show-progress="{{ section.settings.show_progress }}"
+
+   style="background-color: {{ section.settings.section_bg }};
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;"
+>
+  <div class="mb-relative mb-max-w-[1240px] mb-mx-auto mb-px-4 md:mb-px-8 xl:mb-px-0" style="max-width: {{ section.settings.container_max_width }}px;">
+    <div class="mb-grid md:mb-grid-cols-[1fr_auto] mb-gap-4 md:mb-gap-6 mb-items-end mb-mb-6 md:mb-mb-8">
+        {% if section.settings.heading != blank %}
+          <h2
+            class="mb-mt-2 mb-text-[28px] mb-text-center mb-text-center lg:mb-text-[44px] mb-leading-[1.05] mb-font-semibold mb-text-mb-heading"
+            style="color: {{ section.settings.heading_color }};"
+          >
+            {{ section.settings.heading }}
+          </h2>
+        {% endif %}
+
+      
+      {% if section.settings.show_happy_customers %}
+        <div class="mb-justify-self-start md:mb-justify-self-end">
+          <div class="mb-inline-flex mb-items-center mb-gap-3 mb-rounded-[16px] mb-border mb-border-black/10 mb-bg-white/80 mb-backdrop-blur mb-px-4 mb-py-3 mb-shadow-[0_12px_30px_rgba(0,0,0,.06)]">
+            <div
+              class="mb-h-10 mb-w-10 mb-rounded-[14px] mb-grid mb-place-items-center"
+              style="background: {{ section.settings.accent_bg }};"
+            >
+              <svg class="mb-h-5 mb-w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M20 12c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8Z" stroke="currentColor" stroke-width="2" />
+                <path d="M8.5 12.2l2.2 2.2 4.8-5.1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <div
+                class="mb-text-[12px] mb-leading-none mb-opacity-70"
+                style="color: {{ section.settings.text_color }};"
+              >
+                {{ section.settings.happy_label_small }}
+              </div>
+              <div
+                class="mb-mt-1 mb-text-[16px] md:mb-text-[18px] mb-leading-none mb-font-semibold"
+                style="color: {{ section.settings.heading_color }};"
+              >
+                {{ section.settings.happy_label_big }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Slider -->
+    <div class="mb-relative">
+      <div class="mb-overflow-hidden mb-rounded-[22px] md:mb-p-3">
+        <div class="keen-slider mb-ugc-keen" data-mb-ugc-keen>
+          {% for block in section.blocks %}
+            {% if block.type == 'review' %}
+              {% assign nm = block.settings.name | default: 'Customer' %}
+              {% assign initials = nm | split: ' ' %}
+              {% assign i1 = initials[0] | slice: 0, 1 %}
+              {% assign i2 = initials[1] | slice: 0, 1 %}
+              {% assign init = i1 | append: i2 %}
+
+              <article
+                class="keen-slider__slide mb-rounded-xl mb-bg-white mb-border mb-border-black/10  mb-overflow-hidden "
+                {{ block.shopify_attributes }}
+              >
+
+              <div class=" {% if block.settings.image != blank %} mb-grid mb-grid-cols-[150px,1fr] mb-place-content-center mb-items-center mb-p-3  {% endif %} mb-rounded-xl ">
+                    <!-- Media (optional) -->
+                {% if block.settings.image != blank %}
+                  <div class=" mb-bg-black/5 mb-border mb-h-[140px] md:mb-h-[140px] mb-rounded-full ">
+                    <img
+                      class="mb-w-full mb-h-[140px] md:mb-h-[140px] mb-rounded-full"
+                      src="{{ block.settings.image | image_url: width: 1200 }}"
+                      alt="{{ block.settings.image_alt | escape }}"
+                      loading="lazy"
+                    >
+                  </div>
+                {% endif %}
+
+                <div class="mb-p-8 md:mb-p-10 mb-rounded-xl">
+                  <!-- Top -->
+                  <div class="mb-gap-3">
+                        <div class=" mb-gap-2 mb-flex mb-items-center ">
+                          <div
+                            class="mb-text-xl mb-text-[22px] mb-font-heading  mb-leading-none"
+                            style="color: {{ section.settings.heading_color }};"
+                          >
+                            {{ nm }}
+                          </div>
+                          {% if block.settings.verified %}
+                            <span class="mb-inline-flex mb-ml-2 mb-items-center mb-gap-1 mb-rounded-full mb-border mb-border-mb-gray mb-bg-mb-gray mb-bg-white/80 mb-px-2 mb-py-[2px] mb-text-[11px]">
+                              <span
+                                class="mb-inline-block mb-h-[4px] mb-w-[4px] mb-rounded-full"
+                                style="background: {{ section.settings.verified_dot }};"
+                              ></span>
+                              Verified
+                            </span>
+                          {% endif %}
+                        </div>
+
+                         {% if block.settings.date != blank %}
+                        <div
+                          class="mb-mt-2 mb-inline-flex mb-items-center mb-gap-2 mb-text-[12px] mb-leading-none mb-opacity-75"
+                          style="color: {{ section.settings.text_color }};"
+                        >
+                          {% if block.settings.date != blank %}
+                            <span class="">•</span>
+                            <span class="mb-text-mb-subheading">{{ block.settings.date }}</span>
+                          {% endif %}
+                        </div>
+                        {% endif %}
+
+                 
+                  </div>
+
+                  <!-- Stars -->
+                  <div
+                    class="mb-mt-1 mb-flex mb-items-center "
+                    aria-label="{{ block.settings.rating }} out of 5 stars"
+                  >
+                    {% for i in (1..5) %}
+                      {% if i <= block.settings.rating %}
+                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 22.5 22.5">
+                            <path d="m11.119 16.002 5.726 3.456-1.52-6.514 5.059-4.383-6.661-.565-2.604-6.143-2.6 6.143-6.666.566 5.059 4.383-1.519 6.514Z" fill="{{ section.settings.review_star_color }}"></path>
+                          </svg>
+                      {% else %}
+                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 22.5 22.5">
+                            <path d="m11.119 16.002 5.726 3.456-1.52-6.514 5.059-4.383-6.661-.565-2.604-6.143-2.6 6.143-6.666.566 5.059 4.383-1.519 6.514Z" fill="{{ section.settings.review_star_color }}"></path>
+                          </svg>
+                      {% endif %}
+                    {% endfor %}
+                    <span
+                      class="mb-ml-2 mb-text-sm mb-font-semibold mb-text-mb-accent"
+                      style="color: {{ section.settings.text_color }};"
+                    >
+                      {{ block.settings.rating }}/5
+                    </span>
+                  </div>
+
+                  <!-- Title + Text -->
+                  {% if block.settings.title != blank %}
+                    <div
+                      class="mb-mt-3 mb-text-[14px] md:mb-text-[16px] mb-leading-[1.45] mb-font-semibold"
+                      style="color: {{ section.settings.heading_color }};"
+                    >
+                      {{ block.settings.title }}
+                    </div>
+                  {% endif %}
+
+                  {% if block.settings.text != blank %}
+                    <p
+                      class="mb-mt-2 mb-mb-0 mb-text-[15px] mb-leading-[1.75] mb-opacity-90"
+                      style="color: {{ section.settings.text_color }};"
+                    >
+                      {{ block.settings.text }}
+                    </p>
+                  {% endif %}
+
+               
+                </div>
+              </div>
+                
+
+
+              </article>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <!-- Progress bar -->
+        <div class="mb-mt-3 md:mb-mt-4 mb-px-3 {% if section.settings.show_progress == false %}mb-hidden{% endif %}">
+          <div class="mb-h-[3px] mb-w-full mb-rounded-full mb-bg-black/10 mb-overflow-hidden">
+            <div
+              class="mb-h-full mb-w-0 mb-rounded-full"
+              data-mb-ugc-progress
+              style="background: {{ section.settings.progress_color }};"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrows -->
+      <button
+        type="button"
+        class="mb-ugc-prev mb-hidden md:mb-grid mb-absolute mb-left-[-50px] mb-top-1/2 mb--translate-y-1/2 mb-h-[46px] mb-w-[46px] mb-rounded-full mb-bg-white/90 mb-backdrop-blur mb-border mb-border-black/10 mb-shadow-[0_14px_30px_rgba(0,0,0,.14)] mb-place-items-center
+        xl:mb-mt-[-20px]
+        "
+        data-mb-ugc-prev
+        aria-label="Previous reviews"
+      >
+        <svg class="mb-h-5 mb-w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="mb-ugc-next mb-hidden md:mb-grid mb-absolute mb-right-[-50px] mb-top-1/2 mb--translate-y-1/2 mb-h-[46px] mb-w-[46px] mb-rounded-full mb-bg-white/90 mb-backdrop-blur mb-border mb-border-black/10 mb-shadow-[0_14px_30px_rgba(0,0,0,.14)] mb-place-items-center
+         xl:mb-mt-[-20px]
+        "
+        data-mb-ugc-next
+        aria-label="Next reviews"
+      >
+        <svg class="mb-h-5 mb-w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <!-- Dots -->
+      <div class="mb-mt-5 mb-flex mb-justify-center mb-gap-2" data-mb-ugc-dots></div>
+    </div>
+  </div>
+
+  <style>
+    /* Hide controls via settings */
+    #shopify-section-{{ section.id }} [data-mb-ugc-prev],
+    #shopify-section-{{ section.id }} [data-mb-ugc-next]{
+      display: {% if section.settings.show_arrows %}grid{% else %}none{% endif %};
+    }
+    #shopify-section-{{ section.id }} [data-mb-ugc-dots]{
+      display: {% if section.settings.show_dots %}flex{% else %}none{% endif %};
+    }
+    @media (max-width: 767px){
+      #shopify-section-{{ section.id }} [data-mb-ugc-prev],
+      #shopify-section-{{ section.id }} [data-mb-ugc-next]{ display:none !important; }
+    }
+  </style>
+
+  {% render 'vite-tag' with 'reviews.js' %}
+</section>
+
+</div>
+
+{% schema %}
+{
+  "name": "Reviews",
+  "settings": [
+    { "type": "header", "content": "Section Spacing" },
+    { "type": "range", "id": "padding_top_mobile", "label": "Padding Top (Mobile)", "min": 0, "max": 120, "step": 4, "default": 40, "unit": "px" },
+    { "type": "range", "id": "padding_bottom_mobile", "label": "Padding Bottom (Mobile)", "min": 0, "max": 120, "step": 4, "default": 40, "unit": "px" },
+    { "type": "range", "id": "padding_top_desktop", "label": "Padding Top (Desktop)", "min": 0, "max": 160, "step": 4, "default": 80, "unit": "px" },
+    { "type": "range", "id": "padding_bottom_desktop", "label": "Padding Bottom (Desktop)", "min": 0, "max": 160, "step": 4, "default": 80, "unit": "px" },
+
+    { "type": "text", "id": "section_id", "label": "Section ID", "default": "banner" },
+    { "type": "color", "id": "section_bg", "label": "Section BG", "default": "#fff5f9" },
+
+
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Loved by customers" },
+        { "type": "color", "id": "review_star_color", "label": "Star color", "default": "#ff4f8b" },
+
+    { "type": "checkbox", "id": "show_happy_customers", "label": "Show “Happy customers” badge", "default": false },
+    { "type": "text", "id": "happy_label_small", "label": "Badge small text", "default": "Community" },
+    { "type": "text", "id": "happy_label_big", "label": "Badge big text", "default": "1,20,000+ Happy Customers" },
+
+    {
+      "type": "range",
+      "id": "per_view_mobile",
+      "label": "Slides per view (mobile)",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "per_view_desktop",
+      "label": "Slides per view (desktop)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    { "type": "range", "id": "spacing", "label": "Spacing (px)", "min": 8, "max": 28, "step": 2, "default": 16 },
+
+    { "type": "checkbox", "id": "show_arrows", "label": "Show arrows (desktop)", "default": true },
+    { "type": "checkbox", "id": "show_dots", "label": "Show dots", "default": true },
+    { "type": "checkbox", "id": "show_progress", "label": "Show progress bar", "default": true },
+
+    { "type": "checkbox", "id": "loop", "label": "Loop", "default": true },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": false },
+    {
+      "type": "range",
+      "id": "autoplay_ms",
+      "label": "Autoplay interval (ms)",
+      "min": 2000,
+      "max": 9000,
+      "step": 500,
+      "default": 4500
+    },
+
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container max width (px)",
+      "min": 960,
+      "max": 1400,
+      "step": 20,
+      "default": 1200
+    },
+
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#1A1A1A" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#2A2A2A" },
+
+    { "type": "color", "id": "star_color", "label": "Star color", "default": "#111111" },
+    { "type": "color", "id": "accent_bg", "label": "Badge icon bg", "default": "#F4E7E2" },
+
+
+    { "type": "color", "id": "verified_dot", "label": "Verified dot", "default": "#111111" },
+    { "type": "color", "id": "progress_color", "label": "Progress color", "default": "#111111" }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image (optional)" },
+        { "type": "text", "id": "image_alt", "label": "Image alt", "default": "Customer photo" },
+
+        { "type": "text", "id": "name", "label": "Customer name", "default": "Aarohi" },
+        { "type": "text", "id": "location", "label": "Location (Delhi/Gurgaon)", "default": "Gurgaon" },
+        { "type": "text", "id": "date", "label": "Date (optional)", "default": "Dec 2025" },
+
+        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "checkbox", "id": "verified", "label": "Verified", "default": true },
+
+        { "type": "text", "id": "title", "label": "Title (optional)", "default": "Super hydrating & looks natural" },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Review text",
+          "default": "I use it daily—light tint, comfy feel, and the finish looks really healthy."
+        },
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Reviews / UGC",
+      "blocks": [{ "type": "review" }, { "type": "review" }, { "type": "review" }, { "type": "review" }]
+    }
+  ]
+}
+{% endschema %}

@@ -1,8 +1,8 @@
 <style>
   @media (min-width: 1024px) {
     #how-it-works-{{ section.id }} {
-      padding-top: {{ section.settings.padding_top_desktop }}px;
-      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+      padding-top: {{ section.settings.padding_top_desktop }}px !important;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px !important;
     }
   }
 </style>
@@ -98,7 +98,7 @@ style="background-color: {{ section.settings.section_bg }};
       {% for block in section.blocks %}
         <div class="mb-flex mb-flex-col mb-items-center mb-text-center">
           <div class="mb-mb-8 mb-relative">
-            <div class="mb-w-[230px] mb-h-[230px]  xl:mb-w-[270px] xl:mb-h-[270px]  mb-rounded-full mb-overflow-hidden mb-border mb-border-[#d1a88b] mb-shadow-[0_10px_30px_rgba(0,0,0,0.08)] mb-p-1">
+            <div class="mb-w-[230px] mb-h-[230px] md:mb-w-[200px] md:mb-h-[200px]  xl:mb-w-[270px] xl:mb-h-[270px]  mb-rounded-full mb-overflow-hidden mb-border mb-border-[#d1a88b] mb-shadow-[0_10px_30px_rgba(0,0,0,0.08)] mb-p-1">
               {% if block.settings.image != blank %}
                 <img
                   src="{{ block.settings.image | image_url: width: 800 }}"

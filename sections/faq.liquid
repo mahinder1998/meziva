@@ -1,0 +1,162 @@
+{%- comment -%}
+  FILE: sections/meziva-faq.liquid
+  Meziva • FAQ (Objection Handler)
+  - Clean premium accordion (NO quick topics, NO expand/collapse button)
+  - mb- Tailwind prefix
+  - JS: faq.js (via vite-tag)
+{%- endcomment -%}
+
+<section
+  id="meziva-faq-{{ section.id }}"
+  class="mb-w-full mb-py-10 md:mb-py-14"
+  style="background: {{ section.settings.section_bg }};"
+  data-mb-faq-section
+>
+  <div class="mb-relative mb-max-w-[1240px] mb-mx-auto mb-px-4 md:mb-px-8 xl:mb-px-0" style="max-width: {{ section.settings.container_max_width }}px;">
+   
+  {% if section.settings.heading != blank %}
+          <h2
+            class="mb-mt-2 mb-text-[28px] mb-mb-8 mb-text-center lg:mb-text-[44px] mb-leading-[1.05] mb-font-semibold mb-text-mb-heading"
+            style="color: {{ section.settings.heading_color }};"
+          >
+            {{ section.settings.heading }}
+          </h2>
+        {% endif %}
+
+    <!-- Accordion Card -->
+    <div class="mb-overflow-hidden">
+        <div class="mb-flex mb-flex-col mb-gap-3" data-mb-faq-list>
+          {% for block in section.blocks %}
+            {% if block.type == 'faq' %}
+              <div
+                class="mb-faq-item mb-rounded-[16px] mb-border mb-border-black/10 mb-bg-white"
+                data-mb-faq-item
+                {{ block.shopify_attributes }}
+              >
+                <button
+                  type="button"
+                  class="mb-w-full mb-flex mb-items-center mb-justify-between mb-gap-4 mb-text-left mb-px-4 md:mb-px-5 mb-py-4"
+                  data-mb-faq-trigger
+                  aria-expanded="false"
+                >
+                  <div class="mb-flex mb-items-center mb-gap-3">
+                    <!-- icon bubble -->
+                    <span class="mb-mt-[2px] mb-inline-flex mb-h-9 mb-w-9 mb-rounded-[14px] mb-items-center mb-justify-center"
+                          style="background: {{ section.settings.icon_bg }};">
+                      <svg class="mb-h-5 mb-w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="color: {{ section.settings.icon_color }};">
+                        <path d="M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M9.09 9a3 3 0 1 1 5.82 1c-.53 1.06-1.91 1.5-2.41 2.5-.13.26-.2.55-.2.85V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10Z" stroke="currentColor" stroke-width="2"/>
+                      </svg>
+                    </span>
+
+                    <div>
+                      <div class="mb-text-[14px] md:mb-text-[15px] mb-leading-[1.35] mb-font-semibold" style="color: {{ section.settings.heading_color }};">
+                        {{ block.settings.question }}
+                      </div>
+
+                   
+                    </div>
+                  </div>
+
+                  <!-- chevron -->
+                  <span class="mb-faq-chevron mb-mt-1 mb-inline-flex mb-h-9 mb-w-9 mb-rounded-full mb-items-center mb-justify-center mb-bg-black/5">
+                    <svg class="mb-h-5 mb-w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+
+                <div class="mb-faq-panel mb-hidden" data-mb-faq-panel>
+                  <div class="mb-px-4 md:mb-px-5 mb-pb-4 md:mb-pb-5">
+                    <div class="mb-pl-[52px] md:mb-pl-[46px]">
+                      <div class="mb-text-[14px] mb-leading-[1.75] mb-opacity-90" style="color: {{ section.settings.text_color }};">
+                        {{ block.settings.answer }}
+                      </div>
+
+                      {% if block.settings.cta_label != blank and block.settings.cta_link != blank %}
+                        <a
+                          class="mb-inline-flex mb-items-center mb-gap-2 mb-mt-4 mb-text-[13px] mb-font-semibold"
+                          href="{{ block.settings.cta_link }}"
+                          style="color: {{ section.settings.link_color }};"
+                        >
+                          {{ block.settings.cta_label }}
+                          <svg class="mb-h-4 mb-w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                          </svg>
+                        </a>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        {% if section.settings.disclaimer != blank %}
+          <div class="mb-mt-5 mb-text-[12px] mb-leading-[1.6] mb-opacity-70" style="color: {{ section.settings.text_color }};">
+            {{ section.settings.disclaimer }}
+          </div>
+        {% endif %}
+    </div>
+  </div>
+
+  <style>
+    #shopify-section-{{ section.id }} .mb-faq-item[data-open="true"] .mb-faq-chevron svg { transform: rotate(180deg); }
+    #shopify-section-{{ section.id }} .mb-faq-item .mb-faq-chevron svg { transition: transform .25s ease; }
+  </style>
+
+  {% render 'vite-tag' with 'faq.js' %}
+</section>
+
+{% schema %}
+{
+  "name": "Meziva • FAQ",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Questions? We’ve got you." },
+ 
+    { "type": "select", "id": "heading_align", "label": "Heading align", "default": "left", "options": [
+      { "value": "left", "label": "Left" },
+      { "value": "center", "label": "Center" }
+    ]},
+
+
+    { "type": "range", "id": "container_max_width", "label": "Container max width (px)", "min": 960, "max": 1400, "step": 20, "default": 1200 },
+
+    { "type": "color", "id": "section_bg", "label": "Section background", "default": "#FFFFFF" },
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#1A1A1A" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#2A2A2A" },
+    { "type": "color", "id": "link_color", "label": "Link color", "default": "#1A1A1A" },
+
+    { "type": "color", "id": "icon_bg", "label": "Icon bubble bg", "default": "#F4E7E2" },
+    { "type": "color", "id": "icon_color", "label": "Icon color", "default": "#1A1A1A" }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Is it safe for daily use?" },
+        { "type": "textarea", "id": "answer", "label": "Answer", "default": "Yes. Our formula is designed for daily wear. If you have very sensitive skin, we recommend a patch test first." },
+        { "type": "text", "id": "cta_label", "label": "CTA label (optional)" },
+        { "type": "url", "id": "cta_link", "label": "CTA link (optional)" }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Meziva • FAQ",
+      "blocks": [
+        { "type": "faq" },
+        { "type": "faq" },
+        { "type": "faq" },
+        { "type": "faq" },
+        { "type": "faq" }
+      ]
+    }
+  ]
+}
+{% endschema %}

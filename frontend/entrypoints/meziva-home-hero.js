@@ -1,162 +1,130 @@
 // frontend/entrypoints/meziva-home-hero.js
-
 // ------------------------------
-// SIMPLE SLIDER (in-section)
+// KEEN SLIDER (in-section)
 // ------------------------------
-class MezivaSimpleSlider extends HTMLElement {
+class MezivaKeenSlider extends HTMLElement {
   constructor() {
     super();
-    this.track = this.querySelector("[data-slider-track]");
-    this.prev = this.querySelector("[data-slider-prev]");
-    this.next = this.querySelector("[data-slider-next]");
-    this.dotsWrap = this.querySelector("[data-slider-dots]");
+    this.container = this.querySelector("[data-keen-container]");
+    this.prev = this.querySelector("[data-keen-prev]");
+    this.next = this.querySelector("[data-keen-next]");
+    this.dotsWrap = this.querySelector("[data-keen-dots]");
 
     this.showArrows = this.dataset.showArrows !== "false";
     this.showDots = this.dataset.showDots !== "false";
     this.autoplay = this.dataset.autoplay === "true";
     this.intervalSec = Math.max(2, parseInt(this.dataset.interval || "4", 10) || 4);
 
-    this.index = 0;
-    this.step = 1;
-    this.timer = null;
-    this.isInteracting = false;
-
-    this.onScroll = this.onScroll.bind(this);
-    this.onResize = this.onResize.bind(this);
-    this.onPointerDown = this.onPointerDown.bind(this);
-    this.onPointerUp = this.onPointerUp.bind(this);
+    this.slider = null;
+    this._timer = null;
+    this._isHover = false;
   }
 
   connectedCallback() {
-    if (!this.track) return;
+    if (!this.container) return;
 
     if (!this.showArrows) {
       this.prev?.classList.add("mb-hidden");
       this.next?.classList.add("mb-hidden");
     }
 
-    this.prev?.addEventListener("click", () => this.goTo(this.index - 1));
-    this.next?.addEventListener("click", () => this.goTo(this.index + 1));
-    this.track.addEventListener("scroll", this.onScroll, { passive: true });
-    window.addEventListener("resize", this.onResize, { passive: true });
+    const autoplayPlugin = (slider) => {
+      if (!this.autoplay) return;
 
-    this.track.addEventListener("pointerdown", this.onPointerDown, { passive: true });
-    window.addEventListener("pointerup", this.onPointerUp, { passive: true });
+      const clear = () => {
+        if (this._timer) window.clearInterval(this._timer);
+        this._timer = null;
+      };
 
-    requestAnimationFrame(() => this.rebuild());
-    window.addEventListener("load", () => this.rebuild(), { once: true });
+      const start = () => {
+        clear();
+        this._timer = window.setInterval(() => slider.next(), this.intervalSec * 1000);
+      };
 
-    this.startAutoplay();
+      slider.on("created", () => {
+        this.container.addEventListener("mouseenter", () => {
+          this._isHover = true;
+          clear();
+        });
+        this.container.addEventListener("mouseleave", () => {
+          this._isHover = false;
+          start();
+        });
+
+        this.container.addEventListener("touchstart", clear, { passive: true });
+        this.container.addEventListener("touchend", () => {
+          if (!this._isHover) start();
+        });
+
+        start();
+      });
+
+      slider.on("dragStarted", clear);
+      slider.on("animationEnded", () => {
+        if (!this._isHover) start();
+      });
+      slider.on("updated", () => {
+        if (!this._isHover) start();
+      });
+    };
+
+    this.slider = new KeenSlider(
+      this.container,
+      {
+        loop: false,
+        rubberband: true,
+        renderMode: "performance",
+        slides: { perView: 1, spacing: 0 }
+      },
+      [autoplayPlugin]
+    );
+
+    this.prev?.addEventListener("click", () => this.slider?.prev());
+    this.next?.addEventListener("click", () => this.slider?.next());
+
+    if (this.showDots) this.buildDots();
+    this.slider.on("slideChanged", () => this.updateDots());
+    this.slider.on("created", () => this.updateDots());
+    this.slider.on("updated", () => this.updateDots());
   }
 
   disconnectedCallback() {
-    this.stopAutoplay();
-    this.track?.removeEventListener("scroll", this.onScroll);
-    window.removeEventListener("resize", this.onResize);
-    this.track?.removeEventListener("pointerdown", this.onPointerDown);
-    window.removeEventListener("pointerup", this.onPointerUp);
-  }
-
-  slides() {
-    return this.track ? [...this.track.querySelectorAll("[data-slider-slide]")] : [];
-  }
-
-  slidesCount() {
-    return this.slides().length;
-  }
-
-  computeStep() {
-    if (!this.track) return;
-    const slide = this.track.querySelector("[data-slider-slide]");
-    const slideW = slide?.getBoundingClientRect().width || 0;
-    const trackW = this.track.getBoundingClientRect().width || 1;
-    this.step = slideW > 0 ? slideW : trackW;
+    if (this._timer) window.clearInterval(this._timer);
+    this._timer = null;
+    this.slider?.destroy();
+    this.slider = null;
   }
 
   buildDots() {
-    if (!this.showDots || !this.dotsWrap) return;
-    const count = this.slidesCount();
+    if (!this.dotsWrap || !this.slider) return;
+    const count = this.slider.track?.details?.slides?.length || 0;
     this.dotsWrap.innerHTML = "";
 
     for (let i = 0; i < count; i++) {
       const b = document.createElement("button");
       b.type = "button";
       b.setAttribute("aria-label", `Go to slide ${i + 1}`);
-      b.className = "mb-h-2.5 mb-w-2.5 mb-rounded-full mb-border mb-border-[#724430]/10 mb-bg-white/80";
-      b.addEventListener("click", () => this.goTo(i));
+      b.className =
+        "mb-h-2.5 mb-w-2.5 mb-rounded-full mb-border mb-border-[#724430]/10 mb-bg-white/80";
+      b.addEventListener("click", () => this.slider?.moveToIdx(i));
       this.dotsWrap.appendChild(b);
     }
-    this.updateDots();
   }
 
   updateDots() {
-    if (!this.dotsWrap) return;
+    if (!this.dotsWrap || !this.slider) return;
+    const rel = this.slider.track?.details?.rel ?? 0;
+
     [...this.dotsWrap.children].forEach((el, i) => {
-      el.classList.toggle("mb-bg-black/70", i === this.index);
-      el.classList.toggle("mb-bg-white/80", i !== this.index);
+      el.classList.toggle("mb-bg-black/70", i === rel);
+      el.classList.toggle("mb-bg-white/80", i !== rel);
     });
   }
-
-  goTo(i, smooth = true) {
-    if (!this.track) return;
-    this.computeStep();
-    const max = Math.max(0, this.slidesCount() - 1);
-    this.index = Math.max(0, Math.min(i, max));
-    this.track.scrollTo({ left: this.step * this.index, behavior: smooth ? "smooth" : "auto" });
-    this.updateDots();
-  }
-
-  onScroll() {
-    if (!this.track) return;
-    this.computeStep();
-    const i = Math.round(this.track.scrollLeft / (this.step || 1));
-    if (i !== this.index) {
-      this.index = i;
-      this.updateDots();
-    }
-  }
-
-  onResize() {
-    this.computeStep();
-    this.goTo(this.index, false);
-  }
-
-  rebuild() {
-    this.computeStep();
-    this.buildDots();
-    this.goTo(this.index, false);
-    this.updateDots();
-  }
-
-  onPointerDown() {
-    this.isInteracting = true;
-    this.stopAutoplay();
-  }
-
-  onPointerUp() {
-    this.isInteracting = false;
-    this.startAutoplay();
-  }
-
-  startAutoplay() {
-    if (!this.autoplay || this.timer || this.isInteracting) return;
-    const count = this.slidesCount();
-    if (count <= 1) return;
-
-    this.timer = window.setInterval(() => {
-      const next = this.index + 1 >= count ? 0 : this.index + 1;
-      this.goTo(next);
-    }, this.intervalSec * 1000);
-  }
-
-  stopAutoplay() {
-    if (this.timer) {
-      window.clearInterval(this.timer);
-      this.timer = null;
-    }
-  }
 }
-customElements.define("meziva-simple-slider", MezivaSimpleSlider);
+
+if (!customElements.get("meziva-keen-slider")) {
+  customElements.define("meziva-keen-slider", MezivaKeenSlider);
+}
 
 // ------------------------------
 // PRODUCT HERO (ATC + Sticky)
@@ -172,7 +140,6 @@ class MezivaSingleProductHero extends HTMLElement {
     this.form = this.querySelector("[data-role='atc-form']");
     this.btn = this.querySelector("[data-role='atc-btn']");
     this.status = this.querySelector("[data-role='status']");
-    this.priceEl = this.querySelector("[data-role='price']");
 
     // sticky refs first
     this.sticky = this.querySelector("[data-role='sticky-atc']");
@@ -258,11 +225,13 @@ class MezivaSingleProductHero extends HTMLElement {
     const sLabel = this.stickyBtn?.dataset.label || "Buy Now";
 
     if (this.btn) {
-      this.btn.disabled = on || this.btn.hasAttribute("disabled");
+      const hardDisabled = this.btn.hasAttribute("disabled");
+      this.btn.disabled = hardDisabled ? true : !!on;
       this.btn.textContent = on ? "Adding..." : label;
     }
     if (this.stickyBtn) {
-      this.stickyBtn.disabled = on || this.stickyBtn.hasAttribute("disabled");
+      const hardDisabled = this.stickyBtn.hasAttribute("disabled");
+      this.stickyBtn.disabled = hardDisabled ? true : !!on;
       this.stickyBtn.textContent = on ? "Adding..." : sLabel;
     }
   }
@@ -270,9 +239,6 @@ class MezivaSingleProductHero extends HTMLElement {
   syncSticky() {
     const qty = this.getQty();
     if (this.stickyQtyEl) this.stickyQtyEl.value = String(qty);
-
-    const priceText = (this.priceEl?.textContent || "").trim();
-    if (priceText && this.stickyPrice) this.stickyPrice.textContent = priceText;
 
     const disabled = this.btn?.disabled || this.btn?.hasAttribute("disabled");
     if (this.stickyBtn) this.stickyBtn.disabled = !!disabled;
@@ -293,7 +259,6 @@ class MezivaSingleProductHero extends HTMLElement {
       }
 
       this.sticky.classList.remove("mb-hidden");
-
       if (this._stickyObserver) this._stickyObserver.disconnect();
 
       this._stickyObserver = new IntersectionObserver(
@@ -356,10 +321,15 @@ class MezivaSingleProductHero extends HTMLElement {
     }
   }
 }
-customElements.define("meziva-single-product-hero", MezivaSingleProductHero);
+
+if (!customElements.get("meziva-single-product-hero")) {
+  customElements.define("meziva-single-product-hero", MezivaSingleProductHero);
+}
 
 // ------------------------------
-// LIGHTBOX POPUP: Slider + Zoom + Smooth open/close + LOW->HI swap
+// LIGHTBOX POPUP: Slider + Zoom + LOW->HI swap
+// + Drag-guard so swipe doesn't open popup
+// + ✅ No-crop: object-contain
 // ------------------------------
 (function () {
   const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
@@ -375,13 +345,9 @@ customElements.define("meziva-single-product-hero", MezivaSingleProductHero);
       this.track = this.overlay.querySelector("[data-lb-track]");
       this.btnPrev = this.overlay.querySelector("[data-lb-prev]");
       this.btnNext = this.overlay.querySelector("[data-lb-next]");
-
-      this.btnIn = this.overlay.querySelector("[data-zoom-in]");
-      this.btnOut = this.overlay.querySelector("[data-zoom-out]");
-      this.btnReset = this.overlay.querySelector("[data-zoom-reset]");
       this.btnClose = this.overlay.querySelector("[data-zoom-close]");
 
-      this.images = []; // { src (hi), low, alt }
+      this.images = [];
       this.index = 0;
 
       // zoom state
@@ -398,7 +364,6 @@ customElements.define("meziva-single-product-hero", MezivaSingleProductHero);
       this.startTy = 0;
       this.raf = null;
 
-      // binds
       this.onKeyDown = this.onKeyDown.bind(this);
       this.onWheel = this.onWheel.bind(this);
       this.onPointerDown = this.onPointerDown.bind(this);
@@ -406,20 +371,14 @@ customElements.define("meziva-single-product-hero", MezivaSingleProductHero);
       this.onPointerUp = this.onPointerUp.bind(this);
       this.onScroll = this.onScroll.bind(this);
 
-      // UI events
       this.btnClose?.addEventListener("click", () => this.close());
-      this.btnIn?.addEventListener("click", () => this.zoomBy(+0.25));
-      this.btnOut?.addEventListener("click", () => this.zoomBy(-0.25));
-      this.btnReset?.addEventListener("click", () => this.resetZoom(true));
       this.btnPrev?.addEventListener("click", () => this.goTo(this.index - 1));
       this.btnNext?.addEventListener("click", () => this.goTo(this.index + 1));
 
-      // click outside panel closes
       this.overlay.addEventListener("click", (e) => {
         if (e.target === this.overlay) this.close();
       });
 
-      // ensure hidden initial state for first open
       this.overlay.classList.add("mb-opacity-0", "mb-pointer-events-none");
       this.panel?.classList.add("mb-opacity-0", "mb-scale-[0.98]");
     }
@@ -435,23 +394,24 @@ customElements.define("meziva-single-product-hero", MezivaSingleProductHero);
 
       this.images.forEach((it) => {
         const slide = document.createElement("div");
-        slide.className = "mb-min-w-full mb-h-full mb-snap-start mb-grid mb-place-items-center";
+        slide.className = "mb-min-w-full mb-h-full mb-snap-start mb-flex mb-items-center mb-justify-center";
 
         const stage = document.createElement("div");
         stage.className =
-          "mb-h-full mb-w-full mb-grid mb-place-items-center mb-overflow-hidden mb-cursor-grab active:mb-cursor-grabbing";
+          "mb-h-full mb-w-full mb-flex mb-items-center mb-justify-center mb-overflow-hidden mb-cursor-grab active:mb-cursor-grabbing";
         stage.setAttribute("data-lb-stage", "true");
 
         const img = document.createElement("img");
-        img.className = "mb-max-h-full mb-max-w-full mb-select-none mb-pointer-events-none";
+        // ✅ NO CROP in popup
+        img.className = "mb-h-full mb-w-full mb-object-contain mb-select-none mb-pointer-events-none";
         img.decoding = "async";
         img.loading = "eager";
         img.alt = it.alt || "";
 
-        // ✅ show low instantly
+        // low first
         img.src = it.low || it.src;
 
-        // ✅ preload high and swap when ready
+        // swap hi
         if (it.src && (it.low || "") !== it.src) {
           const hi = new Image();
           hi.decoding = "async";
@@ -476,16 +436,13 @@ customElements.define("meziva-single-product-hero", MezivaSingleProductHero);
       this.buildSlides();
       this.index = clamp(startIndex, 0, this.images.length - 1);
 
-      // lock scroll
       document.documentElement.classList.add("mb-overflow-hidden");
       document.body.classList.add("mb-overflow-hidden");
 
-      // force start hidden state
       this.overlay.classList.add("mb-opacity-0", "mb-pointer-events-none");
       this.panel?.classList.add("mb-opacity-0", "mb-scale-[0.98]");
       this.panel?.classList.remove("mb-opacity-100", "mb-scale-100");
 
-      // animate open
       requestAnimationFrame(() => {
         this.overlay.classList.remove("mb-opacity-0", "mb-pointer-events-none");
         this.overlay.classList.add("mb-opacity-100");
@@ -504,7 +461,6 @@ customElements.define("meziva-single-product-hero", MezivaSingleProductHero);
     close() {
       if (!this.overlay) return;
 
-      // animate close
       this.panel?.classList.remove("mb-opacity-100", "mb-scale-100");
       this.panel?.classList.add("mb-opacity-0", "mb-scale-[0.98]");
 
@@ -679,32 +635,40 @@ customElements.define("meziva-single-product-hero", MezivaSingleProductHero);
 
     return imgs
       .map((el) => ({
-        src: el.getAttribute("data-zoom-src"), // hi
-        low: el.getAttribute("data-zoom-src-low") || el.getAttribute("data-zoom-src"), // low
+        src: el.getAttribute("data-zoom-src"),
+        low: el.getAttribute("data-zoom-src-low") || el.getAttribute("data-zoom-src"),
         alt: el.getAttribute("alt") || "",
         el
       }))
       .filter((x) => !!x.src);
   };
 
-  // OPTIONAL: hover warm-up (only once per image)
-  const warmed = new Set();
+  // ✅ Drag guard: swipe on keen should not open popup
+  let MB_DRAGGING = false;
+
   document.addEventListener(
-    "mouseover",
+    "pointerdown",
     (e) => {
-      const img = e.target?.closest?.("img[data-zoom-src]");
-      if (!img) return;
-      const src = img.getAttribute("data-zoom-src");
-      if (!src || warmed.has(src)) return;
-      warmed.add(src);
-      const pre = new Image();
-      pre.decoding = "async";
-      pre.src = src;
+      const withinKeen = e.target?.closest?.("[data-keen-container]");
+      if (!withinKeen) return;
+      MB_DRAGGING = false;
+    },
+    { passive: true }
+  );
+
+  document.addEventListener(
+    "pointermove",
+    (e) => {
+      const withinKeen = e.target?.closest?.("[data-keen-container]");
+      if (!withinKeen) return;
+      MB_DRAGGING = true;
     },
     { passive: true }
   );
 
   document.addEventListener("click", (e) => {
+    if (MB_DRAGGING) return;
+
     const img = e.target?.closest?.("img[data-zoom-src]");
     if (!img) return;
 

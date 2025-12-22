@@ -1,3 +1,99 @@
+const TAG = "meziva-simple-slider";
+
+function DotsPlugin(dotsWrap) {
+  return (slider) => {
+    if (!dotsWrap) return;
+
+    let dots = [];
+
+    function dotClasses(active) {
+      // mb- prefixed tailwind utilities
+      // (active/inactive size same, just opacity)
+      return [
+        "mb-w-[8px]",
+        "mb-h-[8px]",
+        "mb-rounded-full",
+        "mb-bg-mb-accent",
+        active ? "mb-opacity-100" : "mb-opacity-30",
+        "mb-transition",
+      ].join(" ");
+    }
+
+    function update() {
+      const rel = slider.track.details.rel;
+      dots.forEach((dot, idx) => {
+        dot.className = dotClasses(idx === rel);
+        dot.setAttribute("aria-current", idx === rel ? "true" : "false");
+      });
+    }
+
+    slider.on("created", () => {
+      dotsWrap.innerHTML = "";
+      const count = slider.track.details.slides.length;
+
+      dots = Array.from({ length: count }).map((_, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = dotClasses(idx === 0);
+        btn.setAttribute("aria-label", `Go to slide ${idx + 1}`);
+        btn.addEventListener("click", () => slider.moveToIdx(idx));
+        dotsWrap.appendChild(btn);
+        return btn;
+      });
+
+      update();
+    });
+
+    slider.on("slideChanged", update);
+    slider.on("updated", update);
+  };
+}
+
+function AutoplayPlugin(getInterval) {
+  return (slider) => {
+    let timeout = null;
+    let mouseOver = false;
+
+    const clear = () => {
+      if (timeout) window.clearTimeout(timeout);
+      timeout = null;
+    };
+
+    const next = () => {
+      clear();
+      if (mouseOver) return;
+
+      const interval = Number(getInterval?.() || 3500);
+      timeout = window.setTimeout(() => {
+        slider.next();
+      }, interval);
+    };
+
+    slider.on("created", () => {
+      const el = slider.container;
+
+      el.addEventListener("mouseover", () => {
+        mouseOver = true;
+        clear();
+      });
+
+      el.addEventListener("mouseout", () => {
+        mouseOver = false;
+        next();
+      });
+
+      el.addEventListener("touchstart", clear, { passive: true });
+      el.addEventListener("touchend", next, { passive: true });
+
+      next();
+    });
+
+    slider.on("dragStarted", clear);
+    slider.on("animationEnded", next);
+    slider.on("updated", next);
+    slider.on("destroyed", clear);
+  };
+}
 
 class MezivaSimpleSlider extends HTMLElement {
   constructor() {
@@ -5,7 +101,6 @@ class MezivaSimpleSlider extends HTMLElement {
     this.slider = null;
     this._inited = false;
     this._onResize = this._onResize.bind(this);
-    this._onSectionUnload = this._onSectionUnload.bind(this);
   }
 
   connectedCallback() {
@@ -16,60 +111,91 @@ class MezivaSimpleSlider extends HTMLElement {
     this.dotsWrap = this.querySelector("[data-mb-dots]");
     this.slides = Array.from(this.querySelectorAll("[data-mb-slide]"));
 
-    if (!this.keenEl || !this.dotsWrap || this.slides.length === 0) return;
+    if (!this.keenEl || this.slides.length === 0) return;
 
-    // ensure required keen classes (in case you forgot in liquid)
+    // Ensure classes
     this.keenEl.classList.add("keen-slider");
     this.slides.forEach((s) => s.classList.add("keen-slider__slide"));
 
-    this._mountIfMobile();
+    this._mount();
     window.addEventListener("resize", this._onResize, { passive: true });
 
-    // Shopify editor safety (when section is removed)
-    document.addEventListener("shopify:section:unload", this._onSectionUnload);
+    // If keen loads later
+    if (!window.KeenSlider) {
+      window.addEventListener(
+        "custom:KeenLoaded",
+        () => this._mount(),
+        { once: true }
+      );
+    }
   }
 
   disconnectedCallback() {
     window.removeEventListener("resize", this._onResize);
-    document.removeEventListener("shopify:section:unload", this._onSectionUnload);
     this._destroy();
   }
 
-  _onSectionUnload(e) {
-    if (e?.target && e.target.contains(this)) this._destroy();
-  }
-
-  _isMobile() {
-    return window.matchMedia("(max-width: 1023px)").matches;
-  }
-
   _onResize() {
-    this._mountIfMobile();
+    this._mount();
   }
 
-  _mountIfMobile() {
-    if (this._isMobile()) {
-      this._initKeen();
+  _isVisible() {
+    return window.getComputedStyle(this).display !== "none"; // lg:hidden safe
+  }
+
+  _enabled() {
+    return String(this.dataset.enabled ?? "true") === "true";
+  }
+
+  _showDots() {
+    return String(this.dataset.showDots ?? "false") === "true";
+  }
+
+  _autoplay() {
+    return String(this.dataset.autoplay ?? "false") === "true";
+  }
+
+  _autoplayTime() {
+    return Number(this.dataset.autoplayTime || 3500);
+  }
+
+  _mount() {
+    // only when visible (mobile) + enabled + keen present
+    if (this._enabled() && this._isVisible() && window.KeenSlider) {
+      this._init();
     } else {
-      // desktop: no slider, but content visible
       this._destroy();
     }
   }
 
-  _initKeen() {
+  _init() {
     if (this.slider) return;
 
-    const perView = Number(this.getAttribute("data-per-view-mobile") || 1);
-    const spacing = Number(this.getAttribute("data-spacing-mobile") || 16);
+    const perView = Number(this.dataset.perViewMobile || 1);
+    const spacing = Number(this.dataset.spacingMobile || 16);
 
-    this._buildDots(0);
+    const plugins = [];
 
-    this.slider = new KeenSlider(this.keenEl, {
-      loop: false,
-      slides: { perView, spacing },
-      created: (s) => this._buildDots(s.track.details.rel),
-      slideChanged: (s) => this._setActiveDot(s.track.details.rel),
-    });
+    // ✅ dots
+    if (this._showDots() && this.dotsWrap) {
+      plugins.push(DotsPlugin(this.dotsWrap));
+    }
+
+    // ✅ autoplay
+    if (this._autoplay()) {
+      plugins.push(AutoplayPlugin(() => this._autoplayTime()));
+    }
+
+    this.slider = new window.KeenSlider(
+      this.keenEl,
+      {
+        loop: false,
+        slides: { perView, spacing },
+      },
+      plugins
+    );
+
+    this.setAttribute("data-slider-ready", "true");
   }
 
   _destroy() {
@@ -77,55 +203,23 @@ class MezivaSimpleSlider extends HTMLElement {
       this.slider.destroy();
       this.slider = null;
     }
-    if (this.dotsWrap) this.dotsWrap.innerHTML = "";
-  }
-
-  _buildDots(activeIndex = 0) {
-    if (!this.dotsWrap) return;
-
-    this.dotsWrap.innerHTML = "";
-    this.dots = this.slides.map((_, idx) => {
-      const dot = document.createElement("button");
-      dot.type = "button";
-      dot.setAttribute("aria-label", `Go to slide ${idx + 1}`);
-      dot.className =
-        "mb-w-[7px] mb-h-[7px] mb-rounded-full mb-bg-[#c4a880]/35 mb-transition mb-duration-200";
-
-      dot.addEventListener("click", () => {
-        if (this.slider) this.slider.moveToIdx(idx);
-      });
-
-      this.dotsWrap.appendChild(dot);
-      return dot;
-    });
-
-    this._setActiveDot(activeIndex);
-  }
-
-  _setActiveDot(index) {
-    if (!this.dots?.length) return;
-
-    const i = Math.max(0, Math.min(index, this.dots.length - 1));
-    this.dots.forEach((dot, di) => {
-      const active = di === i;
-      dot.classList.toggle("mb-bg-[#c4a880]/90", active);
-      dot.classList.toggle("mb-bg-[#c4a880]/35", !active);
-      dot.style.transform = active ? "scale(1.15)" : "scale(1)";
-    });
+    this.removeAttribute("data-slider-ready");
   }
 }
 
-if (!customElements.get("meziva-simple-slider")) {
-  customElements.define("meziva-simple-slider", MezivaSimpleSlider);
+if (!customElements.get(TAG)) {
+  customElements.define(TAG, MezivaSimpleSlider);
 }
 
-// IMPORTANT: section re-render in theme editor
+// Shopify editor re-render (customizer)
 document.addEventListener("shopify:section:load", (e) => {
-  e.target.querySelectorAll("meziva-simple-slider").forEach((el) => {
-    // force re-connect init in editor
-    if (el._destroy) el._destroy();
+  e.target.querySelectorAll(TAG).forEach((el) => {
+    el._destroy?.();
     el._inited = false;
     el.connectedCallback?.();
   });
 });
 
+document.addEventListener("shopify:section:unload", (e) => {
+  e.target.querySelectorAll(TAG).forEach((el) => el._destroy?.());
+});

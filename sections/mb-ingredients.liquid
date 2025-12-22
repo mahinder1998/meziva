@@ -1,0 +1,439 @@
+{% comment %}
+  Section: MB Ingredients (Ecommerce layout)
+  - Desktop: Left info panel + Right ingredient mapping cards
+  - Mobile: Stacked left panel + slider cards
+  - Tailwind prefix: mb-
+  - JS: assets/mb-ingredients.js
+{% endcomment %}
+
+<style>
+  @media (min-width: 1024px) {
+    #mb-ingredients-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_desktop }}px !important;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px !important;
+    }
+  }
+</style>
+
+<section
+  id="mb-ingredients-{{ section.id }}"
+  class="mb-w-full"
+  style="
+    background-color: {{ section.settings.section_bg }};
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  "
+>
+  <div class="mb-max-w-[1240px] mb-mx-auto mb-px-4 lg:mb-px-8 xl:mb-px-0">
+    {%- comment -%} Header {%- endcomment -%}
+    <div class="mb-text-center mb-mb-8 lg:mb-mb-12">
+      {% if section.settings.kicker != blank %}
+        <p class="mb-text-[12px] lg:mb-text-[13px] mb-uppercase mb-tracking-[0.16em] mb-text-[#7a7a7a] mb-font-medium">
+          {{ section.settings.kicker }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="mb-mt-2 mb-text-[28px] lg:mb-text-[44px] mb-leading-[1.05] mb-font-semibold mb-text-mb-heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <p class="mb-mt-3 mb-text-[14px] lg:mb-text-[16px] mb-text-[#6b6b6b] mb-max-w-[760px] mb-mx-auto">
+          {{ section.settings.subheading }}
+        </p>
+      {% endif %}
+    </div>
+
+    {%- comment -%} Layout wrapper {%- endcomment -%}
+    <div class="lg:mb-grid lg:mb-grid-cols-12 lg:mb-gap-12 xl:mb-gap-10 lg:mb-items-start">
+      {%- comment -%} LEFT PANEL (mobile + desktop) {%- endcomment -%}
+      <div class="lg:mb-col-span-6">
+        <div class="mb-rounded-xl mb-border mb-border-[#f0e6de] mb-bg-white/70 mb-backdrop-blur mb-overflow-hidden
+        
+        
+        ">
+          {%- comment -%} Image area {%- endcomment -%}
+          <div class="mb-relative">
+            {% if section.settings.visual_image != blank %}
+              <img
+                src="{{ section.settings.visual_image | image_url: width: 1200 }}"
+                alt="{{ section.settings.heading | escape }}"
+                class="mb-w-full mb-h-[240px] lg:mb-h-[340px] mb-object-cover"
+                loading="lazy"
+              >
+            {% else %}
+              <div class="mb-w-full mb-h-[240px] lg:mb-h-[340px] mb-bg-[#fffaf7] mb-flex mb-items-center mb-justify-center">
+                <p class="mb-text-[13px] mb-text-[#7a7a7a]">Add a clean ingredient visual (texture / jar)</p>
+              </div>
+            {% endif %}
+
+            {%- comment -%} Small badge {%- endcomment -%}
+            {% if section.settings.left_badge != blank %}
+              <div class="mb-absolute mb-left-1 mb-bottom-1 mb-inline-flex mb-items-center mb-gap-2 mb-rounded-full mb-bg-white/90 mb-border mb-border-[#f0e6de] mb-px-4 mb-py-2">
+                <span class="mb-w-2 mb-h-2 mb-rounded-full mb-bg-mb-accent"></span>
+                <span class="mb-text-[12px] mb-font-medium mb-text-[#1a1a1a]">{{ section.settings.left_badge }}</span>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="mb-p-2 lg:mb-p-5">
+
+          <div class="xl:mb-grid xl:mb-grid-cols-[1fr,1fr] xl:mb-gap-2">
+
+          <div>
+            {%- comment -%} Title + bullets {%- endcomment -%}
+            {% if section.settings.left_title != blank %}
+              <p class="mb-text-lg lg:mb-text-xl mb-font-semibold mb-text-mb-subheading">
+                {{ section.settings.left_title }}
+              </p>
+            {% endif %}
+            {% if section.settings.left_desc != blank %}
+              <p class="mb-mt-2 mb-text-sm mb-text-mb-subheading">
+                {{ section.settings.left_desc }}
+              </p>
+            {% endif %}
+            {% if section.settings.left_points != blank %}
+              <div class="mb-mt-2">
+                <div class="mb-text-sm  mb-leading-6 mb-text-mb-accent">
+                  {{ section.settings.left_points }}
+                </div>
+              </div>
+            {% endif %}
+            </div>
+
+            {%- comment -%} WHY IT'S SAFE box {%- endcomment -%}
+            <div class="mb-mt-3 mb-rounded-xl mb-border mb-border-mb-gray mb-bg-mb-gray mb-p-2">
+              <div class="mb-flex mb-items-start mb-gap-3">
+                <div class="mb-min-w-0">
+                  <p class="mb-text-lg lg:mb-text-xl mb-font-semibold mb-text-mb-heading">
+                    {{ section.settings.safe_title }}
+                  </p>
+                  <p class="mb-mt-2 mb-text-sm mb-text-mb-subheading">
+                    {{ section.settings.safe_line }}
+                  </p>
+                </div>
+              </div>
+              {% if section.settings.safe_points != blank %}
+                <div class="mb-mt-2 mb-text-sm  mb-leading-6 mb-text-mb-accent">
+                  {{ section.settings.safe_points }}
+                </div>
+              {% endif %}
+            </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} RIGHT PANEL: Ingredient mapping cards (desktop) {%- endcomment -%}
+      <div class="mb-hidden lg:mb-block lg:mb-col-span-6">
+        <div class="mb-grid mb-grid-cols-2 xl:mb-grid-cols-2 mb-gap-6">
+          {% for block in section.blocks %}
+            <article class="mb-group mb-rounded-xl mb-border mb-border-gray-50 mb-bg-mb-surface mb-p-5 mb-transition mb-duration-200 hover:mb-translate-y-[-3px] hover:mb-shadow-[0_18px_50px_rgba(0,0,0,0.08)]">
+              <div class="mb-flex mb-items-center mb-justify-between mb-gap-4">
+                <div class="mb-flex mb-items-center mb-gap-3">
+                  <div class="mb-w-20 mb-h-20 mb-rounded-full mb-bg-[#fff4ef] mb-border mb-border-[#f0e6de] mb-flex mb-items-center mb-justify-center">
+                    {% if block.settings.icon != blank %}
+                      <img
+                        src="{{ block.settings.icon | image_url: width: 120 }}"
+                        alt="{{ block.settings.ingredient | escape }}"
+                        class="mb-w-20 mb-h-20 mb-object-contain mb-rounded-full"
+                        loading="lazy"
+                      >
+                    {% else %}
+                      <span class="mb-text-[18px]">✨</span>
+                    {% endif %}
+                  </div>
+
+                  <div class="mb-min-w-0">
+                    <p class="mb-text-xl mb-font-semibold mb-text-mb-heading mb-truncate">
+                      {{ block.settings.ingredient }}
+                    </p>
+                    <p class="mb-mt-0 mb-text-sm mb-text-[#6b6b6b] mb-truncate">
+                      {{ block.settings.short_line }}
+                    </p>
+                  </div>
+                </div>
+
+                {% comment %} {% if block.settings.tag != blank %}
+                  <span class="mb-inline-flex mb-items-center mb-rounded-full mb-border mb-border-[#f0e6de] mb-bg-[#fffaf7] mb-px-3 mb-py-1 mb-text-[11px] mb-uppercase mb-tracking-[0.14em] mb-text-[#7a7a7a]">
+                    {{ block.settings.tag }}
+                  </span>
+                {% endif %} {% endcomment %}
+              </div>
+
+              
+
+              {% if block.settings.note != blank %}
+                <p class="mb-mt-2 mb-text-sm mb-leading-[1.6] mb-text-mb-body">
+                  {{ block.settings.note }}
+                </p>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+
+      {%- comment -%} MOBILE: Ingredient slider cards {%- endcomment -%}
+      <div class="mb-mt-2 lg:mb-hidden">
+        {% if section.settings.enable_mobile_slider %}
+          <mb-ingredients-slider
+            class="mb-block"
+            data-enabled="{{ section.settings.enable_mobile_slider }}"
+            data-show-dots="{{ section.settings.show_dots }}"
+            data-autoplay="{{ section.settings.autoplay }}"
+            data-autoplay-time="{{ section.settings.autoplay_time }}"
+            data-per-view-mobile="{{ section.settings.per_view_mobile }}"
+            data-spacing-mobile="{{ section.settings.spacing_mobile }}"
+          >
+            <div class="mb-overflow-hidden" data-mb-keen>
+              {% for block in section.blocks %}
+                <div data-mb-slide>
+                  <article class=" mb-p-2">
+                    <div class="mb-flex mb-items-start mb-justify-between mb-gap-4">
+                      <div class="mb-flex mb-items-center mb-gap-3 mb-grid-cols-[150px,1fr]">
+                        <div >
+                            <div class="mb-w-28 mb-h-28 mb-rounded-full mb-bg-[#fff4ef] mb-border mb-border-[#f0e6de] mb-flex mb-items-center mb-justify-center">
+                          {% if block.settings.icon != blank %}
+                            <img
+                              src="{{ block.settings.icon | image_url: width: 120 }}"
+                              alt="{{ block.settings.ingredient | escape }}"
+                              class="mb-w-28 mb-h-28 mb-object-contain mb-rounded-full"
+                              loading="lazy"
+                            >
+                          {% else %}
+                            <span class="mb-text-[18px]">✨</span>
+                          {% endif %}
+                        </div>
+                        </div>
+
+                        <div class="">
+                          <p class="mb-text-lg mb-font-semibold mb-text-mb-heading mb-truncate">
+                            {{ block.settings.ingredient }}
+                          </p>
+                          <p class="mb-mt-1 mb-text-xs mb-text-mb-subheading mb-truncate">
+                            {{ block.settings.short_line }}
+                          </p>
+                          {% if block.settings.note != blank %}
+                            <p class="mb-mt-1 mb-text-sm mb-leading-[1.6] mb-text-mb-body">
+                                {{ block.settings.note }}
+                            </p>
+                            {% endif %}
+                        </div>
+                      </div>
+
+                      {% comment %} {% if block.settings.tag != blank %}
+                        <span class="mb-inline-flex mb-items-center mb-rounded-full mb-border mb-border-[#f0e6de] mb-bg-[#fffaf7] mb-px-3 mb-py-1 mb-text-[11px] mb-uppercase mb-tracking-[0.14em] mb-text-[#7a7a7a]">
+                          {{ block.settings.tag }}
+                        </span>
+                      {% endif %} {% endcomment %}
+                    </div>
+
+                    {% comment %} <div class="mb-mt-4 mb-rounded-xl mb-bg-[#fffaf7] mb-border mb-border-[#f0e6de] mb-p-4">
+                      <p class="mb-text-[12px] mb-text-[#7a7a7a] mb-mb-2">Ingredient → Benefit</p>
+                      <div class="mb-flex mb-items-center mb-gap-2 mb-flex-wrap">
+                        <span class="mb-text-[13px] mb-font-medium mb-text-[#1a1a1a]">
+                          {{ block.settings.ingredient }}
+                        </span>
+                        <span class="mb-text-[12px] mb-text-[#9a9a9a]">→</span>
+                        <span class="mb-text-[13px] mb-font-semibold mb-text-mb-accent">
+                          {{ block.settings.benefit }}
+                        </span>
+                      </div>
+                    </div> {% endcomment %}
+
+                    
+                  </article>
+                </div>
+              {% endfor %}
+            </div>
+
+            {% if section.settings.show_dots %}
+              <div class="mb-flex mb-justify-center mb-gap-2 mb-mt-6" data-mb-dots></div>
+            {% endif %}
+          </mb-ingredients-slider>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% render 'vite-tag' with 'mb-ingredients.js' %}
+
+{% schema %}
+{
+  "name": "MB Ingredients",
+  "settings": [
+    { "type": "color", "id": "section_bg", "label": "Background", "default": "#ffffff" },
+
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding Top (Mobile)",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "default": 36,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Bottom (Mobile)",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "default": 36,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Padding Top (Desktop)",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Bottom (Desktop)",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+
+    { "type": "text", "id": "kicker", "label": "Kicker (small)", "default": "POWERED BY NOURISHING INGREDIENTS" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Ingredients your lips will love" },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Ingredient → Benefit mapping, explained simply. No heavy science."
+    },
+
+    { "type": "header", "content": "Left panel" },
+    { "type": "image_picker", "id": "visual_image", "label": "Left image (texture / jar / product)" },
+    { "type": "text", "id": "left_badge", "label": "Badge text", "default": "Dermatologically tested" },
+    { "type": "text", "id": "left_title", "label": "Left title", "default": "Clean ingredients. Real results." },
+    {
+      "type": "text",
+      "id": "left_desc",
+      "label": "Left description",
+      "default": "Each ingredient is chosen to hydrate, protect & soften — without the sticky feel."
+    },
+    {
+      "type": "richtext",
+      "id": "left_points",
+      "label": "Left points (optional)",
+      "default": "<ul><li>Hydration that lasts</li><li>Non-sticky comfort</li><li>Soft tint-friendly formula</li></ul>"
+    },
+
+    { "type": "header", "content": "Why it’s safe" },
+    { "type": "text", "id": "safe_title", "label": "Safe title", "default": "Why it’s safe" },
+    {
+      "type": "text",
+      "id": "safe_line",
+      "label": "One line",
+      "default": "Designed for daily use, even on sensitive lips."
+    },
+    {
+      "type": "richtext",
+      "id": "safe_points",
+      "label": "Safe points",
+      "default": "<ul><li>No harsh drying alcohols</li><li>Gentle & non-irritating feel</li><li>Everyday wear, no sticky residue</li></ul>"
+    },
+
+    { "type": "header", "content": "Mobile Slider" },
+    { "type": "checkbox", "id": "enable_mobile_slider", "label": "Enable slider on mobile", "default": true },
+    { "type": "checkbox", "id": "show_dots", "label": "Show dots", "default": true },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": false },
+    {
+      "type": "range",
+      "id": "autoplay_time",
+      "label": "Autoplay time (ms)",
+      "min": 1500,
+      "max": 8000,
+      "step": 500,
+      "default": 3500
+    },
+    {
+      "type": "range",
+      "id": "per_view_mobile",
+      "label": "Cards per view (mobile)",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    },
+    { "type": "range", "id": "spacing_mobile", "label": "Spacing (px)", "min": 0, "max": 40, "step": 2, "default": 16 }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "Ingredient",
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Icon (optional)" },
+        { "type": "text", "id": "tag", "label": "Tag", "default": "HYDRATION" },
+        { "type": "text", "id": "ingredient", "label": "Ingredient", "default": "Shea Butter" },
+        { "type": "text", "id": "short_line", "label": "Short line", "default": "Moisturizes & softens" },
+        { "type": "text", "id": "benefit", "label": "Benefit (mapping)", "default": "Deep Hydration" },
+        {
+          "type": "textarea",
+          "id": "note",
+          "label": "Small note (optional)",
+          "default": "Helps reduce dryness and keeps lips comfortable for longer."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MB Ingredients",
+      "blocks": [
+        {
+          "type": "ingredient",
+          "settings": {
+            "tag": "HYDRATION",
+            "ingredient": "Shea Butter",
+            "benefit": "Deep Hydration",
+            "short_line": "Moisturizes & softens"
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "tag": "PROTECT",
+            "ingredient": "Vitamin E",
+            "benefit": "Repair + Protection",
+            "short_line": "Protects from dryness"
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "tag": "NOURISH",
+            "ingredient": "Jojoba Oil",
+            "benefit": "Smooth Finish",
+            "short_line": "Non-sticky nourishment"
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "tag": "LOCK",
+            "ingredient": "Natural Waxes",
+            "benefit": "Lock-in Moisture",
+            "short_line": "Seals hydration in"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

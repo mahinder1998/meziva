@@ -39,7 +39,7 @@
 .default-pages-wrapper h6 {
   margin-bottom: 10px;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 18px;
 }
 
 .default-pages-wrapper a {
@@ -59,6 +59,15 @@
     font-size: 16px;
     color: #4a4a4a;
     line-height: 30px;
+  }
+  .default-pages-wrapper h1,
+  .default-pages-wrapper h2,
+  .default-pages-wrapper h3,
+  .default-pages-wrapper h4,
+  .default-pages-wrapper h5,
+  .default-pages-wrapper h6 {
+    margin-bottom: 15px;
+    font-size: 20px;
   }
 
 }

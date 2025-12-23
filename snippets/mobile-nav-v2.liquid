@@ -1,4 +1,6 @@
 
+
+
 {% liquid
   assign mobile_navigation = section.settings.mobile_navigation
 %}
@@ -6,12 +8,16 @@
     toggle-expand.active > [data-role="header"] svg{
         transform:rotate(180deg);
     }
+    .mobile-nav-wrap svg{
+        width:100% !important;
+        height:auto !important;
+    }
 {% endstyle %}
 <div data-role="header-overlay" class="mb-fixed mb-top-0 mb-left-0 mb-w-full mb-h-full mb-bg-[rgba(0,0,0,0.4)] mb-z-999 mb-backdrop-blur-sm mb-hidden [&.active]:mb-block mb-z-[999]"></div>
 <div class="mb-fixed mb-left-0 xl:mb-hidden mb-top-0 mb-h-full mb-w-[calc(100%_-_20px)] md:mb-max-w-[400px] mb-bg-[#ffffff] mb-hidden [&.active]:mb-block before:mb-content-[''] before:mb-w-full before:mb-opacity-0 before:mb-transition-all [&.updating]:before:mb-opacity-100 before:mb-pointer-events-none before:mb-h-full before:mb-bg-[#ffffff] before:mb-absolute before:mb-left-0 before:mb-top-0 before:mb-duration-[400ms] mb-z-[1000]" data-role="mobile-nav">
     <div class="mb-py-5 mb-px-5">
         <div class="mb-flex mb-justify-between mb-items-center"> 
-            <h1 class="mb-mb-0">
+            <h1 class="mb-mb-0 mobile-nav-wrap">
                 <a href="{{ shop.url }}" class="mb-text-[24px] mb-flex mb-justify-center mb-items-center">
                      {% liquid
                       assign logo_type = section.settings.logo_type
@@ -23,7 +29,7 @@
                     %}
                     {% if logo != blank %}
                         {% if logo_type == 'svg' %}
-                            <span class="mb-flex mb-items-center mb-w-[200px] xl:mb-w-[220px]">{{ logo }}</span>
+                            <span class="mb-flex mb-items-center mb-w-[120px] xl:mb-w-[120px]">{{ logo }}</span>
                         {% else %}
                         <span class="mb-inline-block">
                             {{ logo | image_url: width: 140 | image_tag: loading: 'lazy', alt: shop.name }}

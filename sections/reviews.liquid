@@ -10,7 +10,7 @@
 <div id="{{ section.settings.section_id | escape }}">
 
 <section
-  id="meziva-reviews-ugc-{{ section.id }}"
+  id="meziva-reviews-ugc-{{ section.id }}" 
   class="mb-w-full mb-py-10 md:mb-py-14"
   style="background: {{ section.settings.section_bg }};"
   data-mb-ugc-section
@@ -29,15 +29,29 @@
     padding-bottom: {{ section.settings.padding_bottom_mobile }}px;"
 >
   <div class="mb-relative mb-max-w-[1240px] mb-mx-auto mb-px-4 md:mb-px-8 xl:mb-px-0" style="max-width: {{ section.settings.container_max_width }}px;">
-    <div class="mb-grid md:mb-grid-cols-[1fr_auto] mb-gap-4 md:mb-gap-6 mb-items-end mb-mb-6 md:mb-mb-8">
-        {% if section.settings.heading != blank %}
-          <h2
-            class="mb-mt-2 mb-text-[28px] mb-text-center mb-text-center lg:mb-text-[44px] mb-leading-[1.05] mb-font-semibold mb-text-mb-heading"
-            style="color: {{ section.settings.heading_color }};"
-          >
-            {{ section.settings.heading }}
-          </h2>
-        {% endif %}
+    <div class="mb-grid md:mb-grid-cols-[1fr_auto] mb-gap-4 md:mb-gap-6 mb-items-end">
+       
+     {%- comment -%} Header {%- endcomment -%}
+    <div class="mb-text-center mb-mb-8 lg:mb-mb-12">
+      {% if section.settings.kicker != blank %}
+        <p class="mb-text-[12px] lg:mb-text-[13px] mb-uppercase mb-tracking-[0.16em] mb-text-[#7a7a7a] mb-font-medium">
+          {{ section.settings.kicker }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="mb-mt-2 mb-text-[28px] lg:mb-text-[44px] mb-leading-[1.05] mb-font-semibold mb-text-mb-heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <p class="mb-mt-3 mb-text-[14px] lg:mb-text-[16px] mb-text-[#6b6b6b] mb-max-w-[760px] mb-mx-auto">
+          {{ section.settings.subheading }}
+        </p>
+      {% endif %}
+    </div>
+
 
       
       {% if section.settings.show_happy_customers %}
@@ -73,7 +87,7 @@
 
     <!-- Slider -->
     <div class="mb-relative">
-      <div class="mb-overflow-hidden mb-rounded-[22px] md:mb-p-3">
+      <div class="mb-overflow-hidden mb-rounded-[22px] md:mb-p-3 xl:mb-p-0">
         <div class="keen-slider mb-ugc-keen" data-mb-ugc-keen>
           {% for block in section.blocks %}
             {% if block.type == 'review' %}
@@ -84,7 +98,7 @@
               {% assign init = i1 | append: i2 %}
 
               <article
-                class="keen-slider__slide mb-rounded-xl mb-bg-white mb-border mb-border-black/10  mb-overflow-hidden "
+                class="keen-slider__slide mb-rounded-xlmb-group mb-rounded-xl mb-border mb-border-gray-50 mb-bg-mb-surface mb-p-4 hover:mb-shadow-[0_18px_50px_rgba(0,0,0,0.08)]"
                 {{ block.shopify_attributes }}
               >
 
@@ -101,7 +115,7 @@
                   </div>
                 {% endif %}
 
-                <div class="mb-p-8 md:mb-p-10 mb-rounded-xl">
+                <div class="mb-p-4 md:mb-p-6 mb-rounded-xl">
                   <!-- Top -->
                   <div class="mb-gap-3">
                         <div class=" mb-gap-2 mb-flex mb-items-center ">
@@ -270,6 +284,13 @@
 
 
     { "type": "text", "id": "heading", "label": "Heading", "default": "Loved by customers" },
+    { "type": "text", "id": "kicker", "label": "Kicker (small)", "default": "kicker" },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "subheading"
+    },
         { "type": "color", "id": "review_star_color", "label": "Star color", "default": "#ff4f8b" },
 
     { "type": "checkbox", "id": "show_happy_customers", "label": "Show “Happy customers” badge", "default": false },

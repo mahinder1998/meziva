@@ -14,17 +14,29 @@
 >
   <div class="mb-relative mb-max-w-[1240px] mb-mx-auto mb-px-4 md:mb-px-8 xl:mb-px-0" style="max-width: {{ section.settings.container_max_width }}px;">
    
-  {% if section.settings.heading != blank %}
-          <h2
-            class="mb-mt-2 mb-text-[28px] mb-mb-8 mb-text-center lg:mb-text-[44px] mb-leading-[1.05] mb-font-semibold mb-text-mb-heading"
-            style="color: {{ section.settings.heading_color }};"
-          >
-            {{ section.settings.heading }}
-          </h2>
-        {% endif %}
+  {%- comment -%} Header {%- endcomment -%}
+    <div class="mb-text-center mb-mb-8 lg:mb-mb-12">
+      {% if section.settings.kicker != blank %}
+        <p class="mb-text-[12px] lg:mb-text-[13px] mb-uppercase mb-tracking-[0.16em] mb-text-[#7a7a7a] mb-font-medium">
+          {{ section.settings.kicker }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="mb-mt-2 mb-text-[28px] lg:mb-text-[44px] mb-leading-[1.05] mb-font-semibold mb-text-mb-heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <p class="mb-mt-3 mb-text-[14px] lg:mb-text-[16px] mb-text-[#6b6b6b] mb-max-w-[760px] mb-mx-auto">
+          {{ section.settings.subheading }}
+        </p>
+      {% endif %}
+    </div>
 
     <!-- Accordion Card -->
-    <div class="mb-overflow-hidden">
+    <div class="mb-overflow-hidden mb-max-w-[850px] mb-mx-auto">
         <div class="mb-flex mb-flex-col mb-gap-3" data-mb-faq-list>
           {% for block in section.blocks %}
             {% if block.type == 'faq' %}
@@ -35,13 +47,13 @@
               >
                 <button
                   type="button"
-                  class="mb-w-full mb-flex mb-items-center mb-justify-between mb-gap-4 mb-text-left mb-px-4 md:mb-px-5 mb-py-4"
+                  class="mb-w-full mb-flex mb-items-center mb-justify-between mb-gap-4 mb-text-left mb-px-4 md:mb-px-4 mb-py-3"
                   data-mb-faq-trigger
                   aria-expanded="false"
                 >
                   <div class="mb-flex mb-items-center mb-gap-3">
                     <!-- icon bubble -->
-                    <span class="mb-mt-[2px] mb-inline-flex mb-h-9 mb-w-9 mb-rounded-[14px] mb-items-center mb-justify-center"
+                    <span class="mb-mt-[2px] mb-inline-flex mb-h-8 mb-w-8 mb-rounded-full mb-items-center mb-justify-center"
                           style="background: {{ section.settings.icon_bg }};">
                       <svg class="mb-h-5 mb-w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="color: {{ section.settings.icon_color }};">
                         <path d="M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -51,7 +63,7 @@
                     </span>
 
                     <div>
-                      <div class="mb-text-[14px] md:mb-text-[15px] mb-leading-[1.35] mb-font-semibold" style="color: {{ section.settings.heading_color }};">
+                      <div class="mb-text-base  md:mb-text-xl mb-leading-[1.35] mb-font-semibold" style="color: {{ section.settings.heading_color }};">
                         {{ block.settings.question }}
                       </div>
 
@@ -60,8 +72,8 @@
                   </div>
 
                   <!-- chevron -->
-                  <span class="mb-faq-chevron mb-mt-1 mb-inline-flex mb-h-9 mb-w-9 mb-rounded-full mb-items-center mb-justify-center mb-bg-black/5">
-                    <svg class="mb-h-5 mb-w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <span class="mb-faq-chevron mb-mt-1 mb-inline-flex mb-h-8 mb-w-8 mb-rounded-full mb-items-center mb-justify-center mb-bg-black/5">
+                    <svg class="mb-h-4 mb-w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                       <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                   </span>
@@ -69,7 +81,7 @@
 
                 <div class="mb-faq-panel mb-hidden" data-mb-faq-panel>
                   <div class="mb-px-4 md:mb-px-5 mb-pb-4 md:mb-pb-5">
-                    <div class="mb-pl-[52px] md:mb-pl-[46px]">
+                    <div class="mb-pl-[45px] md:mb-pl-[40px]">
                       <div class="mb-text-[14px] mb-leading-[1.75] mb-opacity-90" style="color: {{ section.settings.text_color }};">
                         {{ block.settings.answer }}
                       </div>
@@ -115,7 +127,14 @@
 {
   "name": "Meziva • FAQ",
   "settings": [
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Questions? We’ve got you." },
+     { "type": "text", "id": "kicker", "label": "Kicker (small)", "default": "kicker" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Before After" },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "subheading"
+    },
  
     { "type": "select", "id": "heading_align", "label": "Heading align", "default": "left", "options": [
       { "value": "left", "label": "Left" },

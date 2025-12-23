@@ -33,7 +33,7 @@
   "
 >
  {%- comment -%} Header {%- endcomment -%}
-    <div class="mb-text-center mb-mb-8 lg:mb-mb-12">
+    <div class="mb-text-center mb-mb-8 lg:mb-mb-12"  id="{{ section.settings.section_id | escape }}" >
       {% if section.settings.kicker != blank %}
         <p class="mb-text-[12px] lg:mb-text-[13px] mb-uppercase mb-tracking-[0.16em] mb-text-[#7a7a7a] mb-font-medium">
           {{ section.settings.kicker }}
@@ -138,6 +138,8 @@
 {
   "name": "Before After",
   "settings": [
+        { "type": "text", "id": "section_id", "label": "Section ID", "default": "before-after" },
+
     { "type": "color", "id": "section_bg", "label": "Background", "default": "#ffffff" },
 
     {

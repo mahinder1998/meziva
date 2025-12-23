@@ -212,11 +212,23 @@
     </div>
 
     <!-- Bottom line -->
-    <div class="mb-mt-7 md:mb-mt-8 mb-pt-4 mb-border-t mb-border-black/10 mb-flex mb-flex-col md:mb-flex-row md:mb-items-center md:mb-justify-center mb-gap-2">
-      <div class="mb-text-[12px] mb-opacity-70 mb-text-center" style="color: {{ section.settings.text_color }};">
+    <div class="mb-mt-7 md:mb-mt-8 mb-pt-4 mb-border-t mb-border-black/10 mb-flex mb-flex-col md:mb-flex-row md:mb-items-center md:mb-justify-between mb-gap-3">
+
+      <div class="mb-text-[12px] mb-opacity-70 mb-text-center md:mb-text-left" style="color: {{ section.settings.text_color }};">
         © {{ 'now' | date: '%Y' }}
         {{ section.settings.brand_name }}. {{ section.settings.copyright_text }}
       </div>
+
+      {% if section.settings.show_payment_icons %}
+        <div class="mb-flex mb-items-center mb-justify-center md:mb-justify-end mb-gap-2">
+          {%- for type in shop.enabled_payment_types -%}
+            <span class="mb-inline-flex mb-items-center mb-justify-center mb-h-[24px]">
+              {{ type | payment_type_svg_tag: class: 'mb-h-[20px] mb-w-auto ' }}
+            </span>
+          {%- endfor -%}
+        </div>
+      {% endif %}
+
     </div>
   </div>
 </footer>
@@ -265,7 +277,7 @@
     { "type": "url", "id": "social_youtube", "label": "YouTube URL" },
 
     { "type": "textarea", "id": "copyright_text", "label": "Copyright text", "default": "All rights reserved." },
-
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true },
     {
       "type": "range",
       "id": "container_max_width",

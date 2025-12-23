@@ -1,11 +1,6 @@
 {{ 'section-main-page.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
-  .section-{{ section.id }}-padding {
-    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
-    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
-  }
-
   @media screen and (min-width: 750px) {
     .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top }}px;
@@ -14,14 +9,41 @@
   }
 {%- endstyle -%}
 
-<div class="page-width page-width--narrow section-{{ section.id }}-padding">
-  <h1 class="main-page-title page-title h0{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
-    {{ page.title | escape }}
-  </h1>
-  <div class="rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
-    {{ page.content }}
+<section
+  class="mb-w-full"
+>
+  <div
+    style="
+      background-color: {{ section.settings.bg_color }};
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    "
+  >
+    <div class="mb-max-w-[1200px] mb-mx-auto mb-px-4 md:mb-px-6 mb-text-center">
+      <h1
+        class="mb-text-[28px] md:mb-text-[40px] mb-font-semibold mb-leading-tight"
+        style="color: {{ section.settings.heading_color }};"
+      >
+        {{ page.title | escape }}
+      </h1>
+    </div>
   </div>
-</div>
+
+  <div class="default-pages-wrapper mb-py-6 mb-max-w-[1000px] mb-mx-auto mb-px-4 md:mb-px-6 mb">
+    <div class="rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+      {{ page.content }}
+    </div>
+  </div>
+
+  <style>
+    @media (min-width: 768px) {
+      #default-page-header-{{ section.id }} {
+        padding-top: {{ section.settings.padding_top_desktop }}px !important;
+        padding-bottom: {{ section.settings.padding_bottom_desktop }}px !important;
+      }
+    }
+  </style>
+</section>
 
 {% schema %}
 {
@@ -52,6 +74,58 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 36
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFF5F8"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding Top (Mobile)",
+      "min": 20,
+      "max": 160,
+      "step": 4,
+      "default": 48,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Bottom (Mobile)",
+      "min": 20,
+      "max": 160,
+      "step": 4,
+      "default": 48,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Padding Top (Desktop)",
+      "min": 40,
+      "max": 220,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Bottom (Desktop)",
+      "min": 40,
+      "max": 220,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
     }
   ]
 }

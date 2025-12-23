@@ -21,3 +21,53 @@
   width: 52.5rem;
   height: 52.5rem;
 }
+
+
+
+.default-pages-wrapper p {
+  font-size: 14px;
+  color: #4a4a4a;
+  line-height: 26px;
+  margin-bottom: 30px;
+}
+
+.default-pages-wrapper h1,
+.default-pages-wrapper h2,
+.default-pages-wrapper h3,
+.default-pages-wrapper h4,
+.default-pages-wrapper h5,
+.default-pages-wrapper h6 {
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.default-pages-wrapper a {
+  color: #4b1f00;
+}
+
+.default-pages-wrapper ul>li {
+  list-style-type: disc;
+  font-size: 14px;
+  color: #4a4a4a;
+}
+
+@media screen and (min-width: 1024px) {
+
+  .default-pages-wrapper p,
+  .default-pages-wrapper ul>li {
+    font-size: 16px;
+    color: #4a4a4a;
+    line-height: 30px;
+  }
+  .default-pages-wrapper h1,
+  .default-pages-wrapper h2,
+  .default-pages-wrapper h3,
+  .default-pages-wrapper h4,
+  .default-pages-wrapper h5,
+  .default-pages-wrapper h6 {
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+
+}

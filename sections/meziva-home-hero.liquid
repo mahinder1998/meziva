@@ -9,7 +9,7 @@
 
 {% assign p = section.settings.product %}
 
-<div id="{{ section.settings.section_id | escape }}">
+
   <section
     id="meziva-single-hero-{{ section.id }}"
     class="mb-relative mb-overflow-hidden mb-py-10 md:mb-py-16"
@@ -18,7 +18,7 @@
     padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
     "
   >
-    <div class="mb-relative mb-max-w-[1240px] mb-mx-auto mb-px-4 md:mb-px-8 xl:mb-px-0">
+    <div class="mb-relative mb-max-w-[1240px] mb-mx-auto mb-px-4 md:mb-px-8 xl:mb-px-0" id="{{ section.settings.section_id | escape }}">
       {% if p == blank %}
         <div class="mb-rounded-2xl mb-bg-white mb-border mb-border-black/10 mb-p-6">
           <p class="mb-font-semibold mb-text-mb-heading">Select a product</p>
@@ -365,7 +365,7 @@
                       class="mb-flex-1 mb-items-center mb-h-12 mb-rounded-xl mb-text-white mb-font-semibold mb-text-sm md:mb-text-base mb-shadow-sm mb-transition-colors mb-bg-mb-primary hover:mb-bg-mb-accent"
                       {% unless available %}disabled{% endunless %}
                     >
-                      <span class="mb-inline-flex mb-items-center mb-justify-center mb-gap-2">
+                      <span class="mb-flex mb-items-center mb-justify-center mb-gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                           <path d="M0 0h24v24H0z" fill="none"/><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
                         </svg>
@@ -503,7 +503,6 @@
       {% endif %}
     </div>
   </section>
-</div>
 
 <style>
   .mb-no-scrollbar { scrollbar-width: none; }

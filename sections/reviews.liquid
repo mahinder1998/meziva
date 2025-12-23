@@ -7,7 +7,6 @@
   - Controls: arrows/dots/progress show-hide, perView mobile/desktop, spacing, autoplay, loop
   - JS: reviews.js (via vite-tag)
 {%- endcomment -%}
-<div id="{{ section.settings.section_id | escape }}">
 
 <section
   id="meziva-reviews-ugc-{{ section.id }}" 
@@ -28,7 +27,7 @@
     padding-top: {{ section.settings.padding_top_mobile }}px;
     padding-bottom: {{ section.settings.padding_bottom_mobile }}px;"
 >
-  <div class="mb-relative mb-max-w-[1240px] mb-mx-auto mb-px-4 md:mb-px-8 xl:mb-px-0" style="max-width: {{ section.settings.container_max_width }}px;">
+  <div class="mb-relative mb-max-w-[1240px] mb-mx-auto mb-px-4 md:mb-px-8 xl:mb-px-0" id="{{ section.settings.section_id | escape }}" style="max-width: {{ section.settings.container_max_width }}px;">
     <div class="mb-grid md:mb-grid-cols-[1fr_auto] mb-gap-4 md:mb-gap-6 mb-items-end">
        
      {%- comment -%} Header {%- endcomment -%}
@@ -279,7 +278,7 @@
     { "type": "range", "id": "padding_top_desktop", "label": "Padding Top (Desktop)", "min": 0, "max": 160, "step": 4, "default": 80, "unit": "px" },
     { "type": "range", "id": "padding_bottom_desktop", "label": "Padding Bottom (Desktop)", "min": 0, "max": 160, "step": 4, "default": 80, "unit": "px" },
 
-    { "type": "text", "id": "section_id", "label": "Section ID", "default": "banner" },
+    { "type": "text", "id": "section_id", "label": "Section ID", "default": "reviews" },
     { "type": "color", "id": "section_bg", "label": "Section BG", "default": "#fff5f9" },
 
 

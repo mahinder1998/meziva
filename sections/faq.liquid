@@ -12,7 +12,7 @@
   style="background: {{ section.settings.section_bg }};"
   data-mb-faq-section
 >
-  <div class="mb-relative mb-max-w-[1240px] mb-mx-auto mb-px-4 md:mb-px-8 xl:mb-px-0" style="max-width: {{ section.settings.container_max_width }}px;">
+  <div class="mb-relative mb-max-w-[1240px] mb-mx-auto mb-px-4 md:mb-px-8 xl:mb-px-0" id="{{ section.settings.section_id | escape }}" style="max-width: {{ section.settings.container_max_width }}px;">
    
   {%- comment -%} Header {%- endcomment -%}
     <div class="mb-text-center mb-mb-8 lg:mb-mb-12">
@@ -127,6 +127,8 @@
 {
   "name": "Meziva • FAQ",
   "settings": [
+        { "type": "text", "id": "section_id", "label": "Section ID", "default": "faq" },
+
      { "type": "text", "id": "kicker", "label": "Kicker (small)", "default": "kicker" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Before After" },
     {

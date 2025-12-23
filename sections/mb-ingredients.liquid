@@ -24,7 +24,7 @@
     padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
   "
 >
-  <div class="mb-max-w-[1240px] mb-mx-auto mb-px-4 lg:mb-px-8 xl:mb-px-0">
+  <div class="mb-max-w-[1240px] mb-mx-auto mb-px-4 lg:mb-px-8 xl:mb-px-0" id="{{ section.settings.section_id | escape }}">
     {%- comment -%} Header {%- endcomment -%}
     <div class="mb-text-center mb-mb-8 lg:mb-mb-12">
       {% if section.settings.kicker != blank %}
@@ -265,6 +265,8 @@
 {
   "name": "MB Ingredients",
   "settings": [
+            { "type": "text", "id": "section_id", "label": "Section ID", "default": "ingredients" },
+
     { "type": "color", "id": "section_bg", "label": "Background", "default": "#ffffff" },
 
     {
@@ -306,7 +308,7 @@
       "step": 4,
       "default": 80,
       "unit": "px"
-    },
+    }, 
 
     { "type": "text", "id": "kicker", "label": "Kicker (small)", "default": "POWERED BY NOURISHING INGREDIENTS" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Ingredients your lips will love" },

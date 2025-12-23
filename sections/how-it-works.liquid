@@ -20,7 +20,7 @@ style="background-color: {{ section.settings.section_bg }};
     padding-top: {{ section.settings.padding_top_mobile }}px;
     padding-bottom: {{ section.settings.padding_bottom_mobile }}px;"
 >
-  <div class="mb-max-w-[1240px] mb-mx-auto mb-px-4 lg:mb-px-8 xl:mb-px-0">
+  <div class="mb-max-w-[1240px] mb-mx-auto mb-px-4 lg:mb-px-8 xl:mb-px-0" id="{{ section.settings.section_id | escape }}" >
 
     {%- comment -%} Header {%- endcomment -%}
     <div class="mb-text-center mb-mb-8 lg:mb-mb-12">
@@ -163,6 +163,8 @@ style="background-color: {{ section.settings.section_bg }};
 {
   "name": "How it works",
   "settings": [
+        { "type": "text", "id": "section_id", "label": "Section ID", "default": "how-it-works" },
+
     { "type": "range", "id": "padding_top_mobile", "label": "Padding Top (Mobile)", "min": 0, "max": 120, "step": 4, "default": 40, "unit": "px" },
     { "type": "range", "id": "padding_bottom_mobile", "label": "Padding Bottom (Mobile)", "min": 0, "max": 120, "step": 4, "default": 40, "unit": "px" },
     { "type": "range", "id": "padding_top_desktop", "label": "Padding Top (Desktop)", "min": 0, "max": 160, "step": 4, "default": 80, "unit": "px" },

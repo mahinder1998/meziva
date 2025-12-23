@@ -1,6 +1,11 @@
 {% render 'vite-tag' with 'header-v2.js' %}
 
 {% style %}
+.header-logo svg{
+  width: 100% !important;
+  height: auto !important;
+}
+
   #shopify-section-{{ section.id }}{
       position:sticky;
       top:0px;
@@ -178,7 +183,7 @@
     >
       <button data-role="nav-display" class="xl:mb-hidden">{% render 'icons-v2', icon: 'icon-hamburger' %}</button>
       <div class="" data-role="header-icon">
-        <h1 class="mb-mb-0">
+        <h1 class="mb-mb-0 header-logo">
           <a href="{{ shop.url }}" class="mb-text-[24px] mb-flex mb-items-center mb-justify-center">
             {% liquid
               assign logo_type = section.settings.logo_type
@@ -190,10 +195,10 @@
             %}
             {% if logo != blank %}
               {% if logo_type == 'svg' %}
-                <span class="mb-flex mb-items-center mb-w-[200px] xl:mb-w-[220px]">{{ logo }}</span>
+                <span class="mb-flex mb-items-center mb-w-[120px] xl:mb-w-[160px]">{{ logo }}</span>
               {% else %}
               <span class="mb-inline-block xl:mb-hidden">
-                  {{ logo | image_url: width: 140 | image_tag: loading: 'lazy', alt: shop.name }}
+                  {{ logo | image_url: width: 100 | image_tag: loading: 'lazy', alt: shop.name }}
                 </span>
                  <span class=" mb-hidden xl:mb-inline-block">
                   {{ logo | image_url: width: 200 | image_tag: loading: 'lazy', alt: shop.name }}
@@ -282,7 +287,6 @@
         {% endcomment %}
       </div>
     </div>
-
     {% if section.settings.enable_search %}
       <div
         class="mb-px-[18px] mb-pb-2 md:mb-max-w-[400px] md:mb-mx-auto mb-relative mb-z-[9] xl:mb-hidden"
@@ -322,6 +326,8 @@
             </span>
           </button>
         </div>
+
+    
       </div>
 
       <div

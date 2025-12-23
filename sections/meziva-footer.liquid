@@ -6,6 +6,15 @@
   - mb- Tailwind prefix
 {%- endcomment -%}
 
+<style>
+  @media (min-width: 1024px) {
+    #meziva-footer-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_desktop }}px !important;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px !important;
+    }
+  }
+</style>
+ 
 <footer
   id="meziva-footer-{{ section.id }}"
   class="mb-w-full"
@@ -14,7 +23,7 @@
     padding-bottom: {{ section.settings.padding_bottom_mobile }}px;"
 >
   <div
-    class="mb-mx-auto mb-px-4 md:mb-px-6 mb-pt-8 md:mb-pt-10 mb-pb-5"
+    class="mb-px-4 xl:mb-px-0 mb-max-w-[1240px] mb-mx-auto"
     style="max-width: {{ section.settings.container_max_width }}px;"
   >
     <div class="mb-grid md:mb-grid-cols-[1fr_1fr_1fr] mb-gap-6 md:mb-gap-8 mb-items-start">
@@ -30,12 +39,7 @@
             >
           {% endif %}
 
-          <div
-            class="mb-text-[16px] mb-font-semibold mb-leading-none"
-            style="color: {{ section.settings.heading_color }};"
-          >
-            {{ section.settings.brand_name }}
-          </div>
+         
         </div>
 
         {% if section.settings.tagline != blank %}
@@ -46,17 +50,64 @@
             {{ section.settings.tagline }}
           </p>
         {% endif %}
+
+          {% if section.settings.show_social %}
+          <div class="mb-mt-4 mb-flex mb-items-center mb-gap-2">
+            {% if section.settings.social_facebook != blank %}
+              <a
+                href="{{ section.settings.social_facebook }}"
+                class="mb-h-8 mb-w-8 mb-rounded-full mb-border mb-border-black/10 mb-bg-white/80 mb-grid mb-place-items-center"
+                aria-label="Instagram"
+              >
+
+              <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="{{ section.settings.icon_color }}" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M13.135 6H15V3h-1.865a4.147 4.147 0 0 0-4.142 4.142V9H7v3h2v9.938h3V12h2.021l.592-3H12V6.591A.6.6 0 0 1 12.592 6h.543Z" clip-rule="evenodd"/>
+            </svg>
+                
+              </a>
+            {% endif %}
+
+
+            {% if section.settings.social_instagram != blank %}
+              <a
+                href="{{ section.settings.social_instagram }}"
+                class="mb-h-8 mb-w-8 mb-rounded-full mb-border mb-border-black/10 mb-bg-white/80 mb-grid mb-place-items-center"
+                aria-label="Instagram"
+              >
+              <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="{{ section.settings.icon_color }}" viewBox="0 0 24 24">
+              <path fill="currentColor" fill-rule="evenodd" d="M3 8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8Zm5-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H8Zm7.597 2.214a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2h-.01a1 1 0 0 1-1-1ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z" clip-rule="evenodd"/>
+            </svg>
+
+                
+              </a>
+            {% endif %}
+
+            {% if section.settings.social_youtube != blank %}
+              <a
+                href="{{ section.settings.social_youtube }}"
+                class="mb-h-8 mb-w-8 mb-rounded-full mb-border mb-border-black/10 mb-bg-white/80 mb-grid mb-place-items-center"
+                aria-label="YouTube"
+              >
+              <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill=" {{ section.settings.icon_color }};" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M21.7 8.037a4.26 4.26 0 0 0-.789-1.964 2.84 2.84 0 0 0-1.984-.839c-2.767-.2-6.926-.2-6.926-.2s-4.157 0-6.928.2a2.836 2.836 0 0 0-1.983.839 4.225 4.225 0 0 0-.79 1.965 30.146 30.146 0 0 0-.2 3.206v1.5a30.12 30.12 0 0 0 .2 3.206c.094.712.364 1.39.784 1.972.604.536 1.38.837 2.187.848 1.583.151 6.731.2 6.731.2s4.161 0 6.928-.2a2.844 2.844 0 0 0 1.985-.84 4.27 4.27 0 0 0 .787-1.965 30.12 30.12 0 0 0 .2-3.206v-1.516a30.672 30.672 0 0 0-.202-3.206Zm-11.692 6.554v-5.62l5.4 2.819-5.4 2.801Z" clip-rule="evenodd"/>
+              </svg>
+
+                
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
       </div>
 
         <!-- Policies + Social (compact) -->
-      <div class="md:mb-justify-self-end">
-        <div class="mb-text-[13px] mb-font-semibold" style="color: {{ section.settings.heading_color }};">Policies</div>
+      <div class="md:mb-justify-center md:mb-flex md:mb-flex-col md:mb-max-w-[150px] md:mb-mx-auto">
+        <div class="mb-text-base mb-font-semibold" style="color: {{ section.settings.heading_color }};">Policies</div>
 
         <ul class="mb-mt-3 mb-space-y-2">
           {% if section.settings.refund_policy_link != blank %}
             <li>
               <a
-                class="mb-text-[13px] mb-opacity-80 hover:mb-opacity-100"
+                class="mb-text-[13px] mb-text-mb-subheading hover:mb-text-mb-accent mb-transition-colors"
                 style="color: {{ section.settings.text_color }};"
                 href="{{ section.settings.refund_policy_link }}"
               >
@@ -88,54 +139,13 @@
           {% endif %}
         </ul>
 
-        {% if section.settings.show_social %}
-          <div class="mb-mt-4 mb-flex mb-items-center mb-gap-2">
-            {% if section.settings.social_instagram != blank %}
-              <a
-                href="{{ section.settings.social_instagram }}"
-                class="mb-h-9 mb-w-9 mb-rounded-full mb-border mb-border-black/10 mb-bg-white/80 mb-grid mb-place-items-center"
-                aria-label="Instagram"
-              >
-                <svg
-                  class="mb-h-5 mb-w-5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
-                  style="color: {{ section.settings.icon_color }};"
-                >
-                  <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Z" stroke="currentColor" stroke-width="2"/>
-                  <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="2"/>
-                  <path d="M17.5 6.5h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                </svg>
-              </a>
-            {% endif %}
-
-            {% if section.settings.social_youtube != blank %}
-              <a
-                href="{{ section.settings.social_youtube }}"
-                class="mb-h-9 mb-w-9 mb-rounded-full mb-border mb-border-black/10 mb-bg-white/80 mb-grid mb-place-items-center"
-                aria-label="YouTube"
-              >
-                <svg
-                  class="mb-h-5 mb-w-5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
-                  style="color: {{ section.settings.icon_color }};"
-                >
-                  <path d="M22 12s0-4-1-6c-1-1-3-1-3-1H6S4 5 3 6C2 8 2 12 2 12s0 4 1 6c1 1 3 1 3 1h12s2 0 3-1c1-2 1-6 1-6Z" stroke="currentColor" stroke-width="2"/>
-                  <path d="M10 15V9l5 3-5 3Z" fill="currentColor"/>
-                </svg>
-              </a>
-            {% endif %}
-          </div>
-        {% endif %}
+      
       </div>
 
       <!-- Newsletter (compact) -->
       <div>
         {% if section.settings.show_newsletter %}
-          <div class="mb-text-[13px] mb-font-semibold" style="color: {{ section.settings.heading_color }};">
+          <div class="mb-text-base mb-font-semibold" style="color: {{ section.settings.heading_color }};">
             {{ section.settings.newsletter_heading }}
           </div>
 
@@ -151,16 +161,15 @@
                 autocomplete="email"
                 placeholder="{{ section.settings.newsletter_placeholder }}"
                 required
-                class="mb-flex-1 mb-h-[40px] mb-rounded-[12px] mb-border mb-border-black/10 mb-bg-white/85 mb-px-3 mb-text-[13px] focus:mb-outline-none"
+                class="mb-flex-1 mb-h-[40px] mb-rounded-xl mb-border mb-border-black/10 mb-bg-white/85 mb-px-3 mb-text-[13px] focus:mb-outline-none"
                 style="color: {{ section.settings.heading_color }};"
               >
 
               <button
                 type="submit"
-                class="mb-h-[40px] mb-rounded-[12px] mb-px-4 mb-text-[13px] mb-font-semibold mb-border mb-border-black/10"
-                style="background: {{ section.settings.cta_bg }}; color: {{ section.settings.cta_text }};"
+                class="mb-h-[40px] mb-px-3 mb-rounded-[12px] mb-text-white mb-font-semibold mb-text-sm md:mb-text-base mb-shadow-sm mb-transition-colors mb-bg-mb-primary hover:mb-bg-mb-accent"
               >
-                {{ section.settings.newsletter_button }}
+                {{ section.settings.newsletter_button }} 
               </button>
             </div>
 
@@ -188,8 +197,8 @@
     </div>
 
     <!-- Bottom line -->
-    <div class="mb-mt-7 md:mb-mt-8 mb-pt-4 mb-border-t mb-border-black/10 mb-flex mb-flex-col md:mb-flex-row md:mb-items-center md:mb-justify-between mb-gap-2">
-      <div class="mb-text-[12px] mb-opacity-70" style="color: {{ section.settings.text_color }};">
+    <div class="mb-mt-7 md:mb-mt-8 mb-pt-4 mb-border-t mb-border-black/10 mb-flex mb-flex-col md:mb-flex-row md:mb-items-center md:mb-justify-center mb-gap-2">
+      <div class="mb-text-[12px] mb-opacity-70 mb-text-center" style="color: {{ section.settings.text_color }};">
         © {{ 'now' | date: '%Y' }}
         {{ section.settings.brand_name }}. {{ section.settings.copyright_text }}
       </div>
@@ -203,7 +212,7 @@
   "settings": [
     { "type": "header", "content": "Section Spacing" },
     { "type": "range", "id": "padding_top_mobile", "label": "Padding Top (Mobile)", "min": 0, "max": 120, "step": 4, "default": 40, "unit": "px" },
-    { "type": "range", "id": "padding_bottom_mobile", "label": "Padding Bottom (Mobile)", "min": 0, "max": 120, "step": 4, "default": 40, "unit": "px" },
+    { "type": "range", "id": "padding_bottom_mobile", "label": "Padding Bottom (Mobile)", "min": 0, "max": 120, "step": 4, "default": 20, "unit": "px" },
     { "type": "range", "id": "padding_top_desktop", "label": "Padding Top (Desktop)", "min": 0, "max": 160, "step": 4, "default": 80, "unit": "px" },
     { "type": "range", "id": "padding_bottom_desktop", "label": "Padding Bottom (Desktop)", "min": 0, "max": 160, "step": 4, "default": 80, "unit": "px" },
 
@@ -234,6 +243,7 @@
 
     { "type": "checkbox", "id": "show_social", "label": "Show social icons", "default": true },
     { "type": "url", "id": "social_instagram", "label": "Instagram URL" },
+    { "type": "url", "id": "social_facebook", "label": "Facebook URL" },
     { "type": "url", "id": "social_youtube", "label": "YouTube URL" },
 
     { "type": "textarea", "id": "copyright_text", "label": "Copyright text", "default": "All rights reserved." },
@@ -252,8 +262,6 @@
     { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#1A1A1A" },
     { "type": "color", "id": "text_color", "label": "Text color", "default": "#2A2A2A" },
 
-    { "type": "color", "id": "cta_bg", "label": "Button bg", "default": "#111111" },
-    { "type": "color", "id": "cta_text", "label": "Button text", "default": "#FFFFFF" },
     { "type": "color", "id": "icon_color", "label": "Icon color", "default": "#1A1A1A" },
     { "type": "color", "id": "error_color", "label": "Error color", "default": "#B00020" }
   ],
